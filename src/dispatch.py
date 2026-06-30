@@ -244,6 +244,14 @@ def main():
     except Exception as e:
         print(f"[dispatch] daily_brief failed: {e}")
 
+    # Weekly validation — private only, Sun 22:00 UTC
+    try:
+        from weekly_validation import maybe_publish_weekly_validation
+        if maybe_publish_weekly_validation():
+            actions.append(("weekly_validation", "UTC", now))
+    except Exception as e:
+        print(f"[dispatch] weekly_validation failed: {e}")
+
     if not actions:
         _log(f"[dispatch] no alerts due.")
     else:
