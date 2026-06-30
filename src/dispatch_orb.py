@@ -37,7 +37,9 @@ HOLD = 24         # 2-hour time exit
 TP_MULT = TP_MULT_DEFAULT
 REQUIRE_TREND = True
 BASIS_DIVERGE_PCT = 0.5  # flag if |basis| > this %
-MAX_BAR_LAG_MIN = 10     # max age of latest 5m bar vs or_close_ts to trust OR levels
+MAX_BAR_LAG_MIN = 15     # max age of latest 5m bar vs or_close_ts to trust OR levels
+PLAN_WINDOW_BEFORE = 10  # min before or_close still allowed to fire (asymmetric)
+PLAN_WINDOW_AFTER = 35   # min after or_close — wide enough for 14:30 backstop tick
 
 ROOT = Path(__file__).resolve().parent.parent
 STATE_FILE = ROOT / "data" / "dispatch_state.json"
@@ -210,8 +212,12 @@ def dispatch_orb_alerts():
                        f"   Will alert with levels once OR closes.")
                 _safe_send(msg, sent, k, actions, "orb_pre", sess_name, open_ts)
 
-        # ---- PLAN alert: OR just closed (within +/-10 min)
-        if pd.Timedelta(minutes=-10) <= (now - or_close_ts) <= pd.Timedelta(minutes=10):
+        # ---- PLAN alert: OR just closed. Asymmetric window: small grace
+        # before or_close (catches early dispatch ticks), wide buffer after
+        # so a deferred 14:00 tick gets a second chance at the 14:30 tick
+        # with fresh bars.
+        if (pd.Timedelta(minutes=-PLAN_WINDOW_BEFORE) <= (now - or_close_ts)
+              <= pd.Timedelta(minutes=PLAN_WINDOW_AFTER)):
             k = f"ORB|{open_ts.isoformat()}|{sess_name}|plan"
             if k not in sent:
                 # ----- Box 2: OR-window news stand-down (skip ONLY if OR bars overlap
