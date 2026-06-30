@@ -88,8 +88,10 @@ def main():
     state = load_state()
     sent = set(state.get("sent", []))
 
-    # Refresh GC bars first — pre-event ATR/trend must use current data
-    from health import bar_freshness, market_likely_open, maybe_send_heartbeat
+    # Watchdog: detect scheduler gap before anything else
+    from health import (bar_freshness, market_likely_open, maybe_send_heartbeat,
+                         check_and_record_dispatch_tick)
+    check_and_record_dispatch_tick()
     last_err = None
     for attempt in (1, 2, 3):
         try:

@@ -80,8 +80,49 @@ def maybe_send_heartbeat(force: bool = False):
            f"({bf['age_hours']:.1f}h old)  "
            f"{'⚠️ STALE' if bf['stale'] else '✅'}\n"
            f"  Market: {'OPEN' if open_ else 'CLOSED (weekend gap)'}")
-    r = send(msg)
+    r = send(msg, audience="private")
     if r.get("ok"):
         record_heartbeat()
         return True
     return False
+
+
+# ---- Dispatch-tick gap detection (watchdog) ----
+
+GAP_ALERT_MINUTES = 90  # alert if previous tick was this many minutes ago
+
+
+def check_and_record_dispatch_tick():
+    """Call at start of every dispatch.main().
+
+    1. Reads previous tick timestamp from health.json
+    2. If gap > GAP_ALERT_MINUTES AND market is now open, sends a PRIVATE
+       'resumed after gap' alert so the owner knows the scheduler skipped
+    3. Updates the timestamp to now
+
+    No-ops on the very first tick (no previous timestamp).
+    """
+    from telegram_bot import send
+    h = load_health()
+    prev = h.get("last_dispatch_utc")
+    now = pd.Timestamp.now(tz="UTC")
+    h["last_dispatch_utc"] = now.isoformat()
+    save_health(h)
+    if not prev:
+        return
+    try:
+        prev_ts = pd.Timestamp(prev)
+        if prev_ts.tz is None:
+            prev_ts = prev_ts.tz_localize("UTC")
+    except Exception:
+        return
+    gap_min = (now - prev_ts).total_seconds() / 60
+    if gap_min > GAP_ALERT_MINUTES and market_likely_open(now):
+        try:
+            send(f"⚠️ *dispatch gap detected*\n"
+                 f"   Previous tick: {prev_ts.strftime('%Y-%m-%d %H:%M UTC')}\n"
+                 f"   Gap: {gap_min:.0f} min (normal cadence is 30 min)\n"
+                 f"   Scheduler skipped or was offline. Resumed now.",
+                 audience="private")
+        except Exception:
+            pass
