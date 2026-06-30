@@ -5,13 +5,16 @@ Setup (one-time):
   2. Open Telegram, search for your new bot, click Start (send any message).
   3. Visit https://api.telegram.org/bot<TOKEN>/getUpdates to get your chat id.
   4. Set environment variables (PowerShell):
-        $env:GOLDTRADER_TG_TOKEN = "123456:ABC..."
-        $env:GOLDTRADER_TG_CHAT  = "987654321"
+        $env:GOLDTRADER_TG_TOKEN         = "123456:ABC..."
+        $env:GOLDTRADER_TG_CHAT          = "987654321"  # private/default chat
+        $env:GOLDTRADER_TG_CHAT_PUBLIC   = "-100..."    # optional public channel id
      Or write them to C:/golddaytrador/.telegram (key=value lines).
 
-Use:
-  from telegram_bot import send
-  send("Hello world")
+Routing:
+  send(text, audience="private")  -> GOLDTRADER_TG_CHAT
+  send(text, audience="public")   -> GOLDTRADER_TG_CHAT_PUBLIC if set,
+                                     else falls back to GOLDTRADER_TG_CHAT
+  send(text)                       -> default = private (preserves old behavior)
 """
 from __future__ import annotations
 import os
@@ -22,30 +25,49 @@ import requests
 ROOT = Path(__file__).resolve().parent.parent
 ENV_FILE = ROOT / ".telegram"
 
+_KEYS = ("GOLDTRADER_TG_TOKEN", "GOLDTRADER_TG_CHAT", "GOLDTRADER_TG_CHAT_PUBLIC")
 
-def load_creds():
-    tok = os.environ.get("GOLDTRADER_TG_TOKEN")
-    chat = os.environ.get("GOLDTRADER_TG_CHAT")
-    if (not tok or not chat) and ENV_FILE.exists():
+
+def _load_all() -> dict:
+    """Return dict with token + both chat ids (private + optional public)."""
+    out = {k: os.environ.get(k) for k in _KEYS}
+    if any(v is None for v in out.values()) and ENV_FILE.exists():
         for line in ENV_FILE.read_text().splitlines():
             line = line.strip()
             if not line or line.startswith("#") or "=" not in line:
                 continue
             k, _, v = line.partition("=")
             k = k.strip(); v = v.strip().strip('"').strip("'")
-            if k == "GOLDTRADER_TG_TOKEN" and not tok:
-                tok = v
-            if k == "GOLDTRADER_TG_CHAT" and not chat:
-                chat = v
-    return tok, chat
+            if k in _KEYS and not out.get(k):
+                out[k] = v
+    return out
 
 
-def send(text: str, parse_mode: str = "Markdown", silent: bool = False) -> dict:
-    """Send a message via Telegram. Returns API response dict."""
-    tok, chat = load_creds()
+def load_creds():
+    """Back-compat: (token, private_chat). Old callers continue to work."""
+    c = _load_all()
+    return c["GOLDTRADER_TG_TOKEN"], c["GOLDTRADER_TG_CHAT"]
+
+
+def send(text: str, parse_mode: str = "Markdown", silent: bool = False,
+          audience: str = "private") -> dict:
+    """Send a message via Telegram.
+
+    audience: "private" (default) or "public"
+      - private routes to GOLDTRADER_TG_CHAT
+      - public routes to GOLDTRADER_TG_CHAT_PUBLIC if set, else falls back
+        to GOLDTRADER_TG_CHAT with no error (lets you ship before the
+        public channel is provisioned)
+    """
+    c = _load_all()
+    tok = c["GOLDTRADER_TG_TOKEN"]
+    if audience == "public":
+        chat = c["GOLDTRADER_TG_CHAT_PUBLIC"] or c["GOLDTRADER_TG_CHAT"]
+    else:
+        chat = c["GOLDTRADER_TG_CHAT"]
     if not tok or not chat:
-        msg = ("[telegram] credentials missing. Set env GOLDTRADER_TG_TOKEN and "
-               "GOLDTRADER_TG_CHAT, or write them to .telegram file.")
+        msg = (f"[telegram] credentials missing for audience={audience}. "
+               f"Set GOLDTRADER_TG_TOKEN and chat id(s).")
         if not silent:
             print(msg, file=sys.stderr)
         return {"ok": False, "error": "no_credentials"}

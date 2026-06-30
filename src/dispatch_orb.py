@@ -136,7 +136,8 @@ def _log(msg: str):
 
 
 def _safe_send(msg: str, sent: set, key: str, actions: list, action_tag: str,
-                sess_name: str, open_ts: pd.Timestamp) -> bool:
+                sess_name: str, open_ts: pd.Timestamp,
+                audience: str = "public") -> bool:
     """Wrap send() so a Telegram failure still marks the key sent.
 
     This prevents duplicate-alert storms when Telegram glitches: at-most-once
@@ -144,10 +145,10 @@ def _safe_send(msg: str, sent: set, key: str, actions: list, action_tag: str,
     so it shows in dispatch output.
     """
     try:
-        send(msg)
+        send(msg, audience=audience)
         sent.add(key)
         actions.append((action_tag, sess_name, open_ts))
-        _log(f"[orb] SENT {action_tag} {sess_name} {open_ts}")
+        _log(f"[orb] SENT[{audience}] {action_tag} {sess_name} {open_ts}")
         return True
     except Exception as e:
         _log(f"[orb] send FAILED for {action_tag} {sess_name}: {type(e).__name__}: {e}")
@@ -202,7 +203,7 @@ def dispatch_orb_alerts():
                        f"{cfg_line}{sd_line}"
                        f"{_funding_context()}{_basis_context()}"
                        f"   Plan alert posts when OR closes.")
-                _safe_send(msg, sent, k, actions, "orb_preview", sess_name, open_ts)
+                _safe_send(msg, sent, k, actions, "orb_preview", sess_name, open_ts, audience="public")
 
         # ---- PRE alert: ~15 min before OR closes
         if pd.Timedelta(minutes=5) <= (or_close_ts - now) <= pd.Timedelta(minutes=30):
@@ -214,7 +215,7 @@ def dispatch_orb_alerts():
                        f"   Opening range builds: {fmt_et(open_ts)} -> {fmt_et(or_close_ts)}\n"
                        f"   Current 1h trend: *{trend}* (slope {cur_slope:+.2f})\n"
                        f"   Will alert with levels once OR closes.")
-                _safe_send(msg, sent, k, actions, "orb_pre", sess_name, open_ts)
+                _safe_send(msg, sent, k, actions, "orb_pre", sess_name, open_ts, audience="public")
 
         # ---- PLAN alert: OR just closed. Asymmetric window: small grace
         # before or_close (catches early dispatch ticks), wide buffer after
@@ -243,7 +244,7 @@ def dispatch_orb_alerts():
                     msg = (f"⏸ *{sess_name} ORB STAND-DOWN* {session_emoji(sess_name)}\n"
                            f"   Opening range overlaps news: {news_reason}\n"
                            f"   Skipping this session — OR levels unreliable on event bars.")
-                    _safe_send(msg, sent, k, actions, "orb_standdown", sess_name, open_ts)
+                    _safe_send(msg, sent, k, actions, "orb_standdown", sess_name, open_ts, audience="public")
                     continue
 
                 # Find or_close bar
@@ -281,7 +282,7 @@ def dispatch_orb_alerts():
                                f"   OR range ${or_range:.2f} > {cfg['or_vs_atr_max']}x ATR "
                                f"(${or_max:.2f})\n"
                                f"   Skipping — high-vol open historically loses on this session.")
-                        _safe_send(msg, sent, k, actions, "orb_filtered", sess_name, open_ts)
+                        _safe_send(msg, sent, k, actions, "orb_filtered", sess_name, open_ts, audience="public")
                         continue
 
                 # ----- Geometry per session config
@@ -335,7 +336,9 @@ def dispatch_orb_alerts():
                 sd_block = ("   ⛔ Don't enter during: " + " · ".join(sd_windows) + "\n"
                             if sd_windows else "")
 
-                msg = (f"📊 *{sess_name} ORB PLAN* {session_emoji(sess_name)}  ·  v7\n"
+                # PUBLIC version: levels, direction, stand-down, market context.
+                # No sizing block — subscribers have different equity.
+                public_msg = (f"📊 *{sess_name} ORB PLAN* {session_emoji(sess_name)}  ·  v7\n"
                        f"   OR window: {fmt_et(open_ts)} → {fmt_et(or_close_ts)}\n"
                        f"   H *${or_high:,.2f}*  ·  L *${or_low:,.2f}*  ·  range ${or_range:.2f}\n"
                        f"   Stop {geom_tag}  ·  target ${target_dist:.2f} ({rr_ratio:.1f}R)\n\n"
@@ -346,9 +349,15 @@ def dispatch_orb_alerts():
                        f"   Time-exit if still open after {HOLD*5}min.\n"
                        f"{sd_block}\n"
                        f"{fund_block}{basis_block}"
-                       f"{sizing_block}"
                        f"{DISCLAIMER}")
-                _safe_send(msg, sent, k, actions, "orb_plan", sess_name, open_ts)
+                _safe_send(public_msg, sent, k, actions, "orb_plan", sess_name,
+                            open_ts, audience="public")
+                # PRIVATE sizing follow-up (account-specific; never broadcast)
+                try:
+                    send(f"📐 *{sess_name} sizing* (for your config)\n{sizing_block}",
+                         audience="private")
+                except Exception as e:
+                    _log(f"[orb] private sizing send failed: {type(e).__name__}: {e}")
 
     state["sent"] = sorted(sent)
     save_state(state)

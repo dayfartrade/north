@@ -130,17 +130,27 @@ def _market_snapshot() -> str:
     return "\n".join(out)
 
 
-def build_brief() -> str:
+def build_public_brief() -> str:
+    """Public daily brief — broadcast to subscribers (no account-specific data)."""
     now = pd.Timestamp.now(tz="UTC")
     return (
         f"☀️ *Daily Brief — {now.strftime('%Y-%m-%d')} UTC*\n"
-        f"\n*Yesterday:*\n{_yesterday_summary()}\n"
         f"\n*Today — top events (next 24h):*\n{_todays_events()}\n"
         f"\n*Today — session schedule:*\n{_session_clock()}\n"
         f"\n*Market snapshot:*\n{_market_snapshot()}\n"
         f"\n_v7 hybrid live  ·  stand-down enabled  ·  4-box audit gate_"
         f"{DISCLAIMER}"
     )
+
+
+def build_private_brief() -> str:
+    """Private addendum — yesterday's P&L (account-specific, owner only)."""
+    return (f"📒 *Yesterday's results (private)*\n{_yesterday_summary()}")
+
+
+# Back-compat alias for any older caller (also used by `--dry` flag)
+def build_brief() -> str:
+    return build_public_brief() + "\n\n" + build_private_brief()
 
 
 def maybe_publish_daily_brief() -> bool:
@@ -152,7 +162,12 @@ def maybe_publish_daily_brief() -> bool:
     state = _load_state()
     if key in state.get("sent", []):
         return False
-    send(build_brief())
+    # Public daily brief goes to subscribers; private P&L goes to owner only
+    send(build_public_brief(), audience="public")
+    try:
+        send(build_private_brief(), audience="private")
+    except Exception:
+        pass
     state.setdefault("sent", []).append(key)
     _save_state(state)
     return True
