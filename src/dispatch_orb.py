@@ -80,6 +80,37 @@ def _funding_context() -> str:
         return f"   💱 Funding ctx unavailable ({type(e).__name__})\n"
 
 
+def _cot_context(direction_hint: str = "") -> str:
+    """COT managed-money percentile context (soft signal).
+
+    direction_hint: "UP"/"DOWN"/"FLAT" (from trend) to annotate alignment.
+    Empty string on failure or no data.
+    """
+    try:
+        from data_cot import latest_snapshot, refresh_cot
+        snap = latest_snapshot()
+        if not snap:
+            # First-time: fetch
+            refresh_cot()
+            snap = latest_snapshot()
+        if not snap:
+            return ""
+        pct = snap["pct_52w"]
+        if pct != pct:  # NaN
+            return ""
+        pct_i = int(pct * 100)
+        side = "net long" if snap["mm_net_long"] > 0 else "net short"
+        tag = ""
+        if pct_i >= 85:
+            tag = " ▲ crowded long — fade-short bias"
+        elif pct_i <= 15:
+            tag = " ▼ crowded short — fade-long bias"
+        return (f"   📑 COT {snap['report_date']}: managed money "
+                f"{side} {abs(int(snap['mm_net_long'])):,} (P{pct_i} 52w){tag}\n")
+    except Exception:
+        return ""
+
+
 def _basis_context() -> str:
     """Box 4: basis sanity warning. Empty unless divergence exceeds threshold."""
     try:
@@ -326,9 +357,10 @@ def dispatch_orb_alerts():
                 )
                 sizing_block = format_for_alert(sz)
 
-                # ----- Box 3 & 4 context blocks
+                # ----- Box 3, 4, 5 context blocks (all soft signals)
                 fund_block = _funding_context()
                 basis_block = _basis_context()
+                cot_block = _cot_context()
 
                 # Compute upcoming entry stand-down windows during watch
                 watch_end = or_close_ts + pd.Timedelta(minutes=5 * WATCH)
@@ -349,7 +381,7 @@ def dispatch_orb_alerts():
                        f"   Time-exit if still open after {HOLD*5}min.\n"
                        f"   📐 Size to your own risk: risk-per-trade ≈ stop-distance × $100/oz × contracts (GC), or × $10/oz × contracts (MGC).\n"
                        f"{sd_block}\n"
-                       f"{fund_block}{basis_block}"
+                       f"{fund_block}{basis_block}{cot_block}"
                        f"{DISCLAIMER}")
                 _safe_send(public_msg, sent, k, actions, "orb_plan", sess_name,
                             open_ts, audience="public")
