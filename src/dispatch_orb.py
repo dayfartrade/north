@@ -347,6 +347,7 @@ def dispatch_orb_alerts():
                        f"   Trend: *{dir_hint}*\n"
                        f"   Cancel both stops if no breakout in {WATCH*5}min.\n"
                        f"   Time-exit if still open after {HOLD*5}min.\n"
+                       f"   📐 Size to your own risk: risk-per-trade ≈ stop-distance × $100/oz × contracts (GC), or × $10/oz × contracts (MGC).\n"
                        f"{sd_block}\n"
                        f"{fund_block}{basis_block}"
                        f"{DISCLAIMER}")
