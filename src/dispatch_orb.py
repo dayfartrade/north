@@ -119,6 +119,16 @@ def _upcoming_standdown(start_ts: pd.Timestamp, end_ts: pd.Timestamp,
     return windows
 
 
+def _log(msg: str):
+    """File log when invoked under pythonw (stdout discarded)."""
+    import builtins
+    fn = getattr(builtins, "_dispatch_log", None)
+    if fn:
+        fn(msg)
+    else:
+        print(msg)
+
+
 def _safe_send(msg: str, sent: set, key: str, actions: list, action_tag: str,
                 sess_name: str, open_ts: pd.Timestamp) -> bool:
     """Wrap send() so a Telegram failure still marks the key sent.
@@ -131,9 +141,10 @@ def _safe_send(msg: str, sent: set, key: str, actions: list, action_tag: str,
         send(msg)
         sent.add(key)
         actions.append((action_tag, sess_name, open_ts))
+        _log(f"[orb] SENT {action_tag} {sess_name} {open_ts}")
         return True
     except Exception as e:
-        print(f"[orb] send FAILED for {action_tag} {sess_name}: {type(e).__name__}: {e}")
+        _log(f"[orb] send FAILED for {action_tag} {sess_name}: {type(e).__name__}: {e}")
         sent.add(key)  # don't retry — at-most-once
         actions.append((f"{action_tag}_send_failed", sess_name, open_ts))
         return False
@@ -237,9 +248,9 @@ def dispatch_orb_alerts():
                     if lag_min > MAX_BAR_LAG_MIN:
                         # Data lag too large — bars don't cover the OR window.
                         # Skip THIS tick (don't dedup) so a fresher tick can retry.
-                        print(f"[orb] {sess_name} PLAN deferred: latest bar "
-                              f"{latest_bar_ts} is {lag_min:.0f}min before "
-                              f"or_close_ts {or_close_ts}")
+                        _log(f"[orb] {sess_name} PLAN DEFERRED: latest bar "
+                             f"{latest_bar_ts} is {lag_min:.0f}min before "
+                             f"or_close_ts {or_close_ts} (lag > {MAX_BAR_LAG_MIN}min)")
                         continue
                     or_close_idx = bars5.index.get_loc(latest_bar_ts)
                 or_start_idx = max(0, or_close_idx - OR_BARS + 1)

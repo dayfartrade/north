@@ -1,5 +1,9 @@
 """Smart alert dispatcher.
 
+NOTE: scheduled via pythonw.exe which discards stdout. Every dispatch
+tick is also appended to data/dispatch.log so post-mortems are possible.
+
+
 Designed to be run periodically (e.g., every 30 min via Task Scheduler).
 For each top-tier event in the next 7 days, it emits Telegram alerts at the
 right moments:
@@ -32,6 +36,25 @@ from alert_formatter import upcoming_alert, event_emoji, fmt_et
 
 ROOT = Path(__file__).resolve().parent.parent
 STATE_FILE = ROOT / "data" / "dispatch_state.json"
+LOG_FILE = ROOT / "data" / "dispatch.log"
+
+
+def _log(msg: str):
+    """Append to dispatch.log AND print (print disappears under pythonw)."""
+    ts = pd.Timestamp.now(tz="UTC").isoformat(timespec="seconds")
+    line = f"{ts}  {msg}"
+    print(line)
+    try:
+        LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
+        with open(LOG_FILE, "a", encoding="utf-8") as f:
+            f.write(line + "\n")
+    except Exception:
+        pass
+
+
+# Make _log available to dispatch_orb without circular import
+import builtins
+builtins._dispatch_log = _log
 
 
 def load_state() -> dict:
@@ -220,11 +243,11 @@ def main():
         print(f"[dispatch] daily_brief failed: {e}")
 
     if not actions:
-        print(f"[dispatch] {now.isoformat(timespec='minutes')}  no alerts due.")
+        _log(f"[dispatch] no alerts due.")
     else:
         for item in actions:
             kind, ev, ts = item[0], item[1], item[2]
-            print(f"[dispatch] sent {kind} for {ev} @ {ts}")
+            _log(f"[dispatch] action={kind} ev={ev} ts={ts}")
 
 
 if __name__ == "__main__":
