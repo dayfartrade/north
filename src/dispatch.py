@@ -211,6 +211,14 @@ def main():
     except Exception as e:
         print(f"[dispatch] ORB sub-dispatch failed: {e}")
 
+    # Daily brief — 1 fixed publication per UTC day at 22:00
+    try:
+        from daily_brief import maybe_publish_daily_brief
+        if maybe_publish_daily_brief():
+            actions.append(("daily_brief", "UTC", now))
+    except Exception as e:
+        print(f"[dispatch] daily_brief failed: {e}")
+
     if not actions:
         print(f"[dispatch] {now.isoformat(timespec='minutes')}  no alerts due.")
     else:
