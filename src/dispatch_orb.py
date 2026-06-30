@@ -65,12 +65,13 @@ def _funding_context() -> str:
         r = get_current_regime()
         ann = r["current_rate"] * 1095  # 3x/day * 365
         if r["extreme"]:
-            arrow = "▲" if r["regime_tilt"] < 0 else "▼"  # crowded long -> fade short
-            return (f"   💱 funding {ann:+.1%} ann (P{int(r['abs_percentile']*100)}) "
-                    f"{arrow} {r['reason']}\n")
-        return f"   💱 funding {ann:+.1%} ann (P{int(r['abs_percentile']*100)}) neutral\n"
+            arrow = "▲ longs crowded — fade short" if r["regime_tilt"] < 0 \
+                    else "▼ shorts crowded — fade long"
+            return f"   💱 Funding {ann:+.1%} ann (extreme P{int(r['abs_percentile']*100)}) · {arrow}\n"
+        # Suppress neutral funding line to reduce noise; only show when interesting
+        return ""
     except Exception as e:
-        return f"   💱 funding ctx unavailable ({type(e).__name__})\n"
+        return f"   💱 Funding ctx unavailable ({type(e).__name__})\n"
 
 
 def _basis_context() -> str:
@@ -173,7 +174,7 @@ def dispatch_orb_alerts():
                 # Heads-up: upcoming entry stand-down windows during OR+watch
                 watch_end = open_ts + pd.Timedelta(minutes=5 * (OR_BARS + WATCH))
                 sd_windows = _upcoming_standdown(open_ts, watch_end, cal)
-                sd_line = ("   ⛔ entry stand-down inside watch: " + " · ".join(sd_windows) + "\n"
+                sd_line = ("   ⛔ Don't enter during: " + " · ".join(sd_windows) + "\n"
                            if sd_windows else "")
                 cfg_line = ("   geom: LON filter OR<2×ATR + fixed $13 stop, 1.5R target\n"
                             if cfg.get("use_or_filter") else
@@ -265,19 +266,20 @@ def dispatch_orb_alerts():
                 # ----- Geometry per session config
                 if cfg.get("stop_mode") == "fixed":
                     stop_dist = float(cfg["fixed_stop_price"])
-                    geom_tag = f"fixed ${stop_dist:.0f}"
+                    geom_tag = f"${stop_dist:.0f} fixed"
                 else:
                     stop_dist = or_range
-                    geom_tag = f"OR=${stop_dist:.2f}"
+                    geom_tag = f"${stop_dist:.2f} (=OR range)"
                 if cfg.get("target_mode") == "stop_x_tp":
                     target_dist = TP_MULT * stop_dist
                 else:
                     target_dist = TP_MULT * or_range
+                rr_ratio = target_dist / stop_dist if stop_dist > 0 else 0
 
                 trend = "UP" if cur_slope > 0 else "DOWN" if cur_slope < 0 else "FLAT"
-                dir_hint = ("LONG only" if cur_slope > 0
-                            else "SHORT only" if cur_slope < 0
-                            else "SKIP (flat)")
+                dir_hint = ("LONG only (trend up)" if cur_slope > 0
+                            else "SHORT only (trend down)" if cur_slope < 0
+                            else "SKIP — trend flat")
                 stop_long = or_high - stop_dist
                 target_long = or_high + target_dist
                 stop_short = or_low + stop_dist
@@ -309,21 +311,18 @@ def dispatch_orb_alerts():
                 # Compute upcoming entry stand-down windows during watch
                 watch_end = or_close_ts + pd.Timedelta(minutes=5 * WATCH)
                 sd_windows = _upcoming_standdown(or_close_ts, watch_end, cal)
-                sd_block = ("   ⛔ no-entry inside watch: " + " · ".join(sd_windows) + "\n"
-                            if sd_windows else
-                            "   ⛔ entry stand-down: ±15min news, ±10min London fix (none in watch)\n")
+                sd_block = ("   ⛔ Don't enter during: " + " · ".join(sd_windows) + "\n"
+                            if sd_windows else "")
 
-                msg = (f"📊 *{sess_name} ORB PLAN* {session_emoji(sess_name)}  v7\n"
-                       f"   Opening range ({fmt_et(open_ts)} -> {fmt_et(or_close_ts)})\n"
-                       f"   H = *${or_high:,.2f}*  ·  L = *${or_low:,.2f}*  ·  range ${or_range:.2f}\n"
-                       f"   Geometry: stop {geom_tag}  ·  TP {TP_MULT}x stop  ·  ATR ${cur_atr:.2f}\n\n"
-                       f"   ↗️ LONG: buy-stop *${or_high:,.2f}*  "
-                       f"stop ${stop_long:,.2f}  tgt ${target_long:,.2f}\n"
-                       f"   ↘️ SHORT: sell-stop *${or_low:,.2f}*  "
-                       f"stop ${stop_short:,.2f}  tgt ${target_short:,.2f}\n\n"
-                       f"   Trend filter (1h EMA50 slope {cur_slope:+.2f}): *{dir_hint}*\n"
-                       f"   Watch {WATCH * 5}min for breakout, cancel after.\n"
-                       f"   Time exit: {HOLD * 5}min max.\n"
+                msg = (f"📊 *{sess_name} ORB PLAN* {session_emoji(sess_name)}  ·  v7\n"
+                       f"   OR window: {fmt_et(open_ts)} → {fmt_et(or_close_ts)}\n"
+                       f"   H *${or_high:,.2f}*  ·  L *${or_low:,.2f}*  ·  range ${or_range:.2f}\n"
+                       f"   Stop {geom_tag}  ·  target ${target_dist:.2f} ({rr_ratio:.1f}R)\n\n"
+                       f"   ↗️ LONG  entry *${or_high:,.2f}*  ·  stop ${stop_long:,.2f}  ·  tgt ${target_long:,.2f}\n"
+                       f"   ↘️ SHORT entry *${or_low:,.2f}*  ·  stop ${stop_short:,.2f}  ·  tgt ${target_short:,.2f}\n\n"
+                       f"   Trend: *{dir_hint}*\n"
+                       f"   Cancel both stops if no breakout in {WATCH*5}min.\n"
+                       f"   Time-exit if still open after {HOLD*5}min.\n"
                        f"{sd_block}\n"
                        f"{fund_block}{basis_block}"
                        f"{sizing_block}")
