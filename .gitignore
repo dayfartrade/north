@@ -1,0 +1,34 @@
+# Secrets — NEVER commit
+.telegram
+.env
+*.pem
+*.key
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+
+# Virtual envs
+venv/
+.venv/
+env/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*~
+
+# Local runtime artifacts (keep tracker logs — they're the live record)
+*.log

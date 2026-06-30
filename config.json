@@ -1,0 +1,8 @@
+{
+  "account_equity": 25000,
+  "risk_pct_per_trade": 0.01,
+  "sizing_mode": "fixed_frac",
+  "vehicles_enabled": ["GC", "MGC", "GLD"],
+  "telegram_quiet_hours_et": [22, 7],
+  "min_trend_strength": 0.0
+}
