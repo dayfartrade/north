@@ -41,6 +41,10 @@ MAX_BAR_LAG_MIN = 15     # max age of latest 5m bar vs or_close_ts to trust OR l
 PLAN_WINDOW_BEFORE = 10  # min before or_close still allowed to fire (asymmetric)
 PLAN_WINDOW_AFTER = 35   # min after or_close — wide enough for 14:30 backstop tick
 
+DISCLAIMER = ("\n_Not financial advice. Futures trading involves substantial risk "
+              "of loss. Past results do not guarantee future performance. "
+              "Your capital, your decision._")
+
 ROOT = Path(__file__).resolve().parent.parent
 STATE_FILE = ROOT / "data" / "dispatch_state.json"
 
@@ -342,7 +346,8 @@ def dispatch_orb_alerts():
                        f"   Time-exit if still open after {HOLD*5}min.\n"
                        f"{sd_block}\n"
                        f"{fund_block}{basis_block}"
-                       f"{sizing_block}")
+                       f"{sizing_block}"
+                       f"{DISCLAIMER}")
                 _safe_send(msg, sent, k, actions, "orb_plan", sess_name, open_ts)
 
     state["sent"] = sorted(sent)

@@ -32,6 +32,10 @@ BRIEF_HOUR_UTC = 22  # UTC — fires once between 22:00 and 23:00 UTC
 TREND_N = 50
 ET = pytz.timezone("America/New_York")
 
+DISCLAIMER = ("\n_Not financial advice. Futures trading involves substantial risk "
+              "of loss. Past results do not guarantee future performance. "
+              "Your capital, your decision._")
+
 
 def _load_state() -> dict:
     if STATE_FILE.exists():
@@ -135,6 +139,7 @@ def build_brief() -> str:
         f"\n*Today — session schedule:*\n{_session_clock()}\n"
         f"\n*Market snapshot:*\n{_market_snapshot()}\n"
         f"\n_v7 hybrid live  ·  stand-down enabled  ·  4-box audit gate_"
+        f"{DISCLAIMER}"
     )
 
 
