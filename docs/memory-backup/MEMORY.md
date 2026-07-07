@@ -1,0 +1,25 @@
+- [🌅 Next gm agenda (READ FIRST)](next_gm_agenda.md) — 2026-07-08 ~00:35 UTC handoff: overnight checks, 5-item queue, N=17 registry, what NOT to do
+- [🔵 Current state](current_state.md) — 2026-07-07 ~13:45 UTC snapshot: audit fixes shipped, v7.2.1 live
+- [Session 2026-07-07/08 sprint](session_2026_07_07_polish.md) — 13 commits: shadow analyzer + registry (N=17), universal TG polish, post-mortem, checklist, meta-labeling REJECT
+- [Project goal & status](project_goal.md) — profitable GC day-trader; PRODUCT shipping by 2026-07-01
+- [Launch plan & timeline](launch_plan.md) — 12-day plan; code-freeze 2026-06-27
+- [Strategy MERS v5](strategy_mers_v5.md) — event-driven (FOMC/JOBS/CPI), what survived which nulls
+- [Strategy v6 ORB](strategy_v6_orb.md) — Session ORB (London/NY/Asia); pushes to ~1.5 trades/day
+- [v7 geometry finding](v7_geometry_finding.md) — per-session hybrid (LON-filter, NY/ASIA-unchanged) beats any unified rule; +40% backtest, +$7.5k live replay
+- [v7.1 OR/ATR gates](v7_1_or_atr_gates.md) — session-specific dead-zone filters; +75% mean/trade OOS-validated (commit a363282)
+- [v7.2 accuracy sweep](v7_2_accuracy_sweep.md) — 3 ships + 8 rejected hypotheses; v7->v7.2.1 = +12.3pp win rate, +26% total P&L
+- [DSR audit 2026-07-07](dsr_audit_2026_07_07.md) — Deflated Sharpe with honest N=15 = 0.0000. Not a revert but hardens future ship gates: live-only, DSR>0.95, record every variant SR
+- [Website: BINARY model](website_binary_model.md) — Rook's correction: Console (TOTP, Farhad only) + Public (no auth). No Stripe/JWT/subscribers. Defer refactor until after trader stable.
+- [v7 Bitget funding](v7_bitget_funding.md) — XAUUSDT perp passes OI test; funding-filter inconclusive at P85 (deploy as soft context, not gate)
+- [v7 stand-down finding](v7_stand_down_finding.md) — London 15:00 fix is THE NY leak; skip-and-retest adds +$10k on top of v7 hybrid
+- [Honest performance](performance_honest.md) — annualized Sharpe ~0.59 MERS, ~2.54 ORB; DSR caveats
+- [Audit findings (2 passes)](audit_findings.md) — DST + tracker + cost-model fixes; lookahead clean
+- [Forward test schedule](project_forward_test.md) — started 2026-06-19; first real macro: NFP 2026-07-03
+- [User profile](user_profile.md) — gold-trading background, will share priors when ready
+- [Collab feedback](feedback_collab.md) — sanity-check vs drift, 100% effort before testing, no docs files
+- [Pace: accelerate](feedback_pace.md) — when ready to ship, ship; don't propose "wait and see"; compress schedules, prefer action over description
+- [gm greeting](feedback_gm_greeting.md) — "gm" trigger: open as Knox + agenda dump (rename/color commands don't exist in CLI)
+- [Memory caution](feedback_memory_use.md) — verify memory against code before applying
+- [Telegram reference](ref_telegram.md) — bot @GOLDDAYTARDER_bot, creds in .telegram
+- [GitHub reference](ref_github.md) — repo far-reach/golddaytrador, push token in .github-token (arbabfar retired)
+- [Data sources reference](ref_data_sources.md) — yfinance limits, FRED CSV endpoints
