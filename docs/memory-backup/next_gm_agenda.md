@@ -22,6 +22,13 @@ Read (in order):
 
 If any of those show format regressions or exceptions, **that's priority 1**.
 
+**Non-bug note (documented 2026-07-07 22:00 UTC):** if either JSONL is still
+absent overnight even though a PLAN log line exists, check the PLAN
+timestamp against commit times. The `alerts_stream` emitter shipped 14:55
+UTC and shadow_log wiring shipped 17:57 UTC — the NY PLAN at 14:18 UTC on
+2026-07-07 predates both, which is why its dispatch produced no JSONL. Only
+PLANs firing AFTER 17:57 UTC 2026-07-07 will have both files populated.
+
 ### 2) Feedback loop from user
 
 Ask (or wait for) user's opinion on:
