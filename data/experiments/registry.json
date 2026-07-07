@@ -145,6 +145,15 @@
       "sr_per_period": null,
       "n_observations": null,
       "notes": "REJECTED per pre-reg (docs/experiments/2026-07-07_janus_q4_trailing_stop.md). Matched-pair OOS mean lift -$145, permutation p=0.6543, all 4 gates fail. Trailing schedule cut winner tails."
+    },
+    {
+      "id": "meta_labeling_v72_1",
+      "registered_utc": "2026-07-07T21:50:16.034095Z",
+      "layer": "session_config",
+      "verdict": "reject",
+      "sr_per_period": 0.4205047502775455,
+      "n_observations": 50,
+      "notes": "3-feature logistic (session, or_atr_ratio, trend_slope_abs). Purged 5-fold, embargo=1%, threshold=0.5. kept_win=68.0% mean=$+773 keep_frac=96.15% DSR=0.0000 PSR=0.9944"
     }
   ]
 }

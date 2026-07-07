@@ -96,16 +96,39 @@ This IS a new-hypothesis experiment. Increments N: 16 → 17. Recorded in
 
 - **Ran on:** 2026-07-08
 - **Sample size:** n=52
-- **Kept fraction:** _fill_ (need ≥ 60%)
-- **Kept-trade OOS win-rate:** _fill_% (need ≥ 74.2%)
-- **Kept-trade OOS mean/trade:** $_fill_ (need ≥ $912)
-- **Baseline win-rate:** 69.2%
-- **Baseline mean/trade:** $812
-- **DSR against N=17, V=0.5:** _fill_ (partial gate: > 0.50)
-- **Gates:** G1=_ G2=_ G3=_ G4=_
-- **Verdict:** _fill_
+- **Kept fraction:** 96.15% (50/52 kept)
+- **Kept-trade OOS win-rate:** 68.0% (baseline 69.2%, **worse by 1.2pp**)
+- **Kept-trade OOS mean/trade:** $+773 (baseline $812, **worse by $39**)
+- **DSR against N=16, V=0.5:** 0.0000 (registry read N=16 before self-registration)
+- **PSR vs SR=0:** 0.9944 (still >0 signal, but that's not the ship gate)
+- **Gates:** G1=FAIL  G2=FAIL  G3=PASS  G4=FAIL
+- **Verdict:** **REJECT**
 
 ### Notes to preserve honestly
 
-_(fill during analysis — reasons if gates failed, feature coefficients,
-anything the future me will want to see when re-reading this file)_
+The meta-labeler kept 50 of 52 trades — barely filtered anything. Of the 2
+it rejected, both turned out to be winners in the OOS folds. Net effect:
+threw away tiny signal without gaining anything.
+
+The 3 features (session one-hot, or_atr_ratio, trend_slope_abs) are
+insufficient to discriminate win vs loss at n=52. Either:
+  (a) The features contain the wrong information (unlikely — session and
+      OR/ATR ratio ARE what the manually-tuned v7.1 filter uses)
+  (b) There isn't enough sample to fit a discriminating boundary
+  (c) The primary v7.2.1 filter has already extracted the linear signal
+      these features contain, leaving only non-linear residual that a
+      3-feature logistic can't capture
+
+Interpretation: consistent with DSR audit — v7.2.1 has real per-strategy
+edge but at n=52 we can't build a secondary classifier that adds anything.
+
+The pre-registration discipline caught this cleanly. If I'd looked at data
+first I'd probably have juked the threshold, added ATR-of-ATR features,
+etc. until numbers looked good. Instead: LOCKED rule → REJECT → registered.
+
+Registered as trial #17 in `data/experiments/registry.json` regardless of
+outcome (Marcos's Third Law). Kept-trade PnL contributes to future V[SR_n]
+once we accumulate more trials with recorded SRs.
+
+Meta-labeling revisit at n≥100 live per DSR discipline. Do not retry on
+this sample.
