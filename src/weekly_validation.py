@@ -24,6 +24,37 @@ VERDICT_FILE = ROOT / "data" / "validation_state.json"
 
 WEEKLY_HOUR_UTC = 22
 WEEKLY_WEEKDAY = 6  # Sunday (Mon=0)
+SHADOW_ANALYZER = ROOT / "scripts" / "analyze_shadow_log.py"
+
+
+def _run_shadow_analyzer() -> str:
+    """Run the shadow analyzer and return stdout. Returns empty string on
+    failure so the weekly alert still sends (shadow analysis is additive)."""
+    try:
+        import os
+        env = {**os.environ, "PYTHONIOENCODING": "utf-8"}
+        r = subprocess.run(
+            [sys.executable, str(SHADOW_ANALYZER)],
+            capture_output=True, text=True, env=env, timeout=60,
+            encoding="utf-8", errors="replace",
+        )
+        # Trim boilerplate header so Telegram code block stays compact
+        out = r.stdout or ""
+        # Keep from "PER-CANDIDATE ANALYSIS" onward if present, else keep the
+        # "waiting for data" line + active candidate list
+        if "PER-CANDIDATE ANALYSIS" in out:
+            return out.split("PER-CANDIDATE ANALYSIS", 1)[1].strip()[:2000]
+        # Waiting-for-data path — pull the summary lines
+        keep_lines = []
+        for line in out.splitlines():
+            if any(marker in line for marker in ("Shadow log rows", "Forward log",
+                                                   "Joined", "waiting for data",
+                                                   "Active candidates", "- vol_",
+                                                   "- or_", "- hour_", "- cot_")):
+                keep_lines.append(line.strip())
+        return "\n".join(keep_lines)[:2000]
+    except Exception:
+        return ""
 
 
 def _load_state() -> dict:
@@ -109,10 +140,13 @@ def maybe_publish_weekly_validation() -> bool:
     output = _run_validation()
     _persist_verdict(output)
     verdict = _extract_verdict(output)
+    shadow_report = _run_shadow_analyzer()
     from alert_format_v2 import RULE
     msg = (f"🔎 *WEEKLY v7 VALIDATION*  ·  _{now.strftime('%Y-%m-%d')} UTC_\n"
            f"{RULE}\n"
            f"```\n{verdict}\n```")
+    if shadow_report:
+        msg += f"\n\n🕵 *SHADOW CANDIDATES*\n{RULE}\n```\n{shadow_report}\n```"
     send(msg, audience="private")
     state.setdefault("sent", []).append(key)
     _save_state(state)
