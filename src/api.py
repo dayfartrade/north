@@ -11,11 +11,12 @@ Production (behind Caddy/nginx TLS):
 """
 from __future__ import annotations
 from pathlib import Path
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 import json
+import os
 
 import pandas as pd
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI, HTTPException, Query, Depends, Header
 from fastapi.middleware.cors import CORSMiddleware
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -37,14 +38,34 @@ app = FastAPI(
     description="Public + subscriber surface for the GC session-ORB bot.",
 )
 
-# Allow the website origin(s). Tighten to actual domains before launch.
+# Dev: localhost:3000 (Next.js on CF Pages). Prod origins added before 07-27.
+_ORIGINS = os.environ.get("GOLDTRADER_CORS_ORIGINS",
+                          "http://localhost:3000,http://localhost:8080").split(",")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=False,
-    allow_methods=["GET"],
-    allow_headers=["*"],
+    allow_origins=[o.strip() for o in _ORIGINS],
+    allow_credentials=True,
+    allow_methods=["GET", "POST"],
+    allow_headers=["Authorization", "Content-Type"],
 )
+
+
+# --- Auth (MVP: JWT stub; upgrade to real HS256 verification later) -----------
+# For v0.1 the website side owns Stripe + JWT issuance; API just verifies.
+# Public endpoints work without auth. Subscriber endpoints require Bearer.
+
+def get_tier(authorization: str | None = Header(default=None)) -> str:
+    """Return 'subscriber' if a valid JWT is present, else 'free'.
+
+    MVP stub: any non-empty Bearer token counts as subscriber. Replace with
+    real HS256 verification once GOLDTRADER_JWT_SECRET is provisioned:
+        import jwt
+        payload = jwt.decode(token, SECRET, algorithms=['HS256'])
+        return payload.get('tier', 'free')
+    """
+    if not authorization or not authorization.lower().startswith("bearer "):
+        return "free"
+    return "subscriber"
 
 
 def _safe_load_json(p: Path) -> dict:
@@ -144,51 +165,170 @@ def stats_historical():
     return {**v, "disclaimer": DISCLAIMER}
 
 
-@app.get("/alerts/recent")
-def alerts_recent(limit: int = Query(10, ge=1, le=100)):
-    """Recent PLAN alerts (structured JSONL from dispatch_orb)."""
+def _load_alerts_stream() -> list[dict]:
     if not ALERTS_STREAM.exists():
-        return {"alerts": [], "next_cursor": None,
-                "note": "no plans emitted yet"}
-    alerts = []
+        return []
+    out = []
     with open(ALERTS_STREAM, "r", encoding="utf-8") as f:
         for line in f:
             line = line.strip()
             if not line:
                 continue
             try:
-                alerts.append(json.loads(line))
+                out.append(json.loads(line))
             except Exception:
                 continue
-    alerts = alerts[-limit:][::-1]  # most recent first
-    next_cursor = alerts[0]["ts_sent_utc"] if alerts else None
-    return {"alerts": alerts, "next_cursor": next_cursor,
-            "disclaimer": DISCLAIMER}
+    return out
+
+
+# Fields moved into the `audit` block (subscriber-only per website-AI response)
+_AUDIT_FIELDS = ("trend_slope", "watch_expires_utc", "max_hold_min",
+                  "funding_context", "basis_context", "cot_context",
+                  "stand_down_windows")
+
+
+def _tier_shape(row: dict, tier: str) -> dict:
+    """Reshape alert row per subscription tier.
+
+    - subscriber: full audit block visible
+    - free: audit block stripped; live alerts (< 24h) also stripped of levels
+    """
+    out = dict(row)
+    audit = {k: out.pop(k) for k in _AUDIT_FIELDS if k in out}
+    if tier == "subscriber":
+        out["audit"] = audit
+        return out
+    # Free tier: hide audit; if the alert is < 24h old, hide levels too
+    ts = pd.Timestamp(out.get("ts_sent_utc"))
+    if ts.tz is None:
+        ts = ts.tz_localize("UTC")
+    age_h = (pd.Timestamp.now(tz="UTC") - ts).total_seconds() / 3600
+    if age_h < 24:
+        for k in ("or_high", "or_low", "long", "short",
+                  "stop_dist", "target_dist"):
+            out.pop(k, None)
+        out["redacted"] = "live alert — subscribe to see levels"
+    return out
+
+
+@app.get("/alerts/recent")
+def alerts_recent(limit: int = Query(10, ge=1, le=100),
+                   tier: str = Depends(get_tier)):
+    """Recent PLAN alerts. Free tier: aged >24h shown with levels;
+    fresh alerts redacted. Subscriber: full audit block visible."""
+    alerts = _load_alerts_stream()
+    if not alerts:
+        return {"alerts": [], "next_cursor": None, "tier": tier,
+                "note": "no plans emitted yet"}
+    alerts = alerts[-limit:][::-1]
+    alerts = [_tier_shape(a, tier) for a in alerts]
+    return {"alerts": alerts, "next_cursor": alerts[0]["ts_sent_utc"] if alerts else None,
+            "tier": tier, "disclaimer": DISCLAIMER}
 
 
 @app.get("/alerts/stream")
-def alerts_stream(after: str | None = Query(None, description="ISO-8601 UTC cursor")):
-    """Alerts strictly after cursor. For subscriber polling."""
-    if not ALERTS_STREAM.exists():
-        return {"alerts": [], "next_cursor": after}
-    cursor = pd.Timestamp(after) if after else None
-    if cursor is not None and cursor.tz is None:
-        cursor = cursor.tz_localize("UTC")
-    alerts = []
-    with open(ALERTS_STREAM, "r", encoding="utf-8") as f:
-        for line in f:
-            line = line.strip()
-            if not line:
-                continue
-            try:
-                row = json.loads(line)
-            except Exception:
-                continue
-            if cursor is None or pd.Timestamp(row["ts_sent_utc"]) > cursor:
-                alerts.append(row)
+def alerts_stream(after: str | None = Query(None, description="ISO-8601 UTC cursor"),
+                   tier: str = Depends(get_tier)):
+    """Alerts strictly after cursor. Subscriber-only for live alerts;
+    free-tier callers get age-gated results."""
+    alerts = _load_alerts_stream()
+    if after:
+        cursor = pd.Timestamp(after)
+        if cursor.tz is None:
+            cursor = cursor.tz_localize("UTC")
+        alerts = [a for a in alerts if pd.Timestamp(a["ts_sent_utc"]) > cursor]
+    alerts = [_tier_shape(a, tier) for a in alerts]
     next_cursor = alerts[-1]["ts_sent_utc"] if alerts else after
     return {"alerts": alerts, "next_cursor": next_cursor,
+            "tier": tier, "disclaimer": DISCLAIMER}
+
+
+@app.get("/trades/recent")
+def trades_recent(limit: int = Query(20, ge=1, le=200),
+                   tier: str = Depends(get_tier)):
+    """Closed-trade blotter — for the P&L page. Free tier gets aggregates only."""
+    df = _load_forward_log()
+    if df.empty:
+        return {"trades": [], "tier": tier}
+    trades = df[df["took_trade"] == True].sort_values("entry_ts", ascending=False).head(limit)
+    rows = []
+    for _, t in trades.iterrows():
+        row = {
+            "session": t["session"],
+            "entry_ts": t["entry_ts"].isoformat() if pd.notna(t["entry_ts"]) else None,
+            "exit_ts": t["exit_ts"].isoformat() if pd.notna(t["exit_ts"]) else None,
+            "direction": int(t["direction"]) if pd.notna(t["direction"]) else None,
+            "net_pnl": float(t["net_pnl"]) if pd.notna(t["net_pnl"]) else None,
+        }
+        if tier == "subscriber":
+            row["entry_price"] = float(t["entry_price"]) if pd.notna(t["entry_price"]) else None
+            row["exit_price"] = float(t["exit_price"]) if pd.notna(t["exit_price"]) else None
+            row["or_range"] = float(t["or_range"]) if pd.notna(t["or_range"]) else None
+        rows.append(row)
+    return {"trades": rows, "count": len(rows), "tier": tier,
             "disclaimer": DISCLAIMER}
+
+
+@app.get("/trades/history")
+def trades_history(since: str = Query(..., description="ISO-8601 date, e.g. 2026-06-01"),
+                    tier: str = Depends(get_tier)):
+    """Historical trades since a date. Powers the public 30-day widget +
+    subscriber archive page."""
+    try:
+        since_ts = pd.Timestamp(since)
+        if since_ts.tz is None:
+            since_ts = since_ts.tz_localize("UTC")
+    except Exception:
+        raise HTTPException(status_code=400, detail="invalid 'since' date")
+    df = _load_forward_log()
+    if df.empty:
+        return {"trades": [], "since": since_ts.isoformat(), "tier": tier}
+    df = df[df["took_trade"] == True].copy()
+    df = df[df["entry_ts"] >= since_ts].sort_values("entry_ts")
+    trades = []
+    for _, t in df.iterrows():
+        row = {
+            "session": t["session"],
+            "entry_ts": t["entry_ts"].isoformat() if pd.notna(t["entry_ts"]) else None,
+            "direction": int(t["direction"]) if pd.notna(t["direction"]) else None,
+            "net_pnl": float(t["net_pnl"]) if pd.notna(t["net_pnl"]) else None,
+        }
+        if tier == "subscriber":
+            row["entry_price"] = float(t["entry_price"]) if pd.notna(t["entry_price"]) else None
+            row["exit_price"] = float(t["exit_price"]) if pd.notna(t["exit_price"]) else None
+        trades.append(row)
+    # Aggregate summary for both tiers
+    net = df["net_pnl"].astype(float) if len(df) else pd.Series(dtype=float)
+    return {
+        "since": since_ts.isoformat(),
+        "count": len(trades),
+        "wins": int((net > 0).sum()),
+        "losses": int((net <= 0).sum()),
+        "net_pnl_usd": round(float(net.sum()), 2) if len(net) else 0.0,
+        "win_rate_pct": round(float((net > 0).mean() * 100), 1) if len(net) else 0.0,
+        "trades": trades,
+        "tier": tier,
+        "disclaimer": DISCLAIMER,
+    }
+
+
+@app.post("/subscribers/upsert")
+def subscribers_upsert(payload: dict, authorization: str | None = Header(default=None)):
+    """Called by the website side after Stripe events. Stub for MVP —
+    real implementation writes to a subscriber-state file for future
+    JWT verification to consult. Requires an admin bearer.
+    """
+    admin = os.environ.get("GOLDTRADER_ADMIN_TOKEN")
+    if not admin or not authorization or not authorization.lower().startswith("bearer "):
+        raise HTTPException(status_code=401, detail="admin bearer required")
+    if authorization.split(" ", 1)[1].strip() != admin:
+        raise HTTPException(status_code=401, detail="bad admin token")
+    # For now just log — persist properly once schema is agreed with website side
+    (ROOT / "data" / "subscribers.jsonl").parent.mkdir(parents=True, exist_ok=True)
+    with open(ROOT / "data" / "subscribers.jsonl", "a", encoding="utf-8") as f:
+        f.write(json.dumps({"ts": pd.Timestamp.now(tz="UTC").isoformat(),
+                             **payload}, default=str) + "\n")
+    return {"ok": True, "note": "stub — real state store coming with JWT verification"}
 
 
 @app.get("/disclaimer")
@@ -200,9 +340,13 @@ def disclaimer():
 def root():
     return {
         "name": "Gold Day Trader API",
-        "version": "0.1.0",
+        "version": "0.2.0",
         "endpoints": [
             "/health", "/stats/live", "/stats/historical",
-            "/alerts/recent", "/alerts/stream", "/disclaimer",
+            "/alerts/recent", "/alerts/stream",
+            "/trades/recent", "/trades/history",
+            "/subscribers/upsert",
+            "/disclaimer",
         ],
+        "auth": "Bearer JWT for subscribers; free tier for unauthenticated",
     }
