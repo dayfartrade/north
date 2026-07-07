@@ -64,6 +64,38 @@ def _signed_money(x: float) -> str:
 # PLAN — the flagship alert, sent right after OR closes
 # ---------------------------------------------------------------------------
 
+def _pre_fill_checklist(payload: dict) -> list[str]:
+    """Traffic-light glance-check at the TOP of PLAN. Subscribers decide in 3
+    seconds whether to scroll to the levels or ignore this session.
+
+    Rules (only shows what adds signal):
+      • Trend:   ✅ if UP or DOWN,  ⚠️ if FLAT (SKIP)
+      • News:    ✅ if no sd_windows,  ⚠️ if any
+      • Funding: ⚠️ ONLY if the funding line mentions 'extreme' or 'crowded' — else omit
+      • COT:     ⚠️ ONLY if the cot line mentions 'crowded' — else omit
+    """
+    items = []
+    trend = (payload.get("trend") or "").upper()
+    if trend in ("UP", "DOWN"):
+        items.append(f"✅ Trend {trend} → {payload.get('dir_hint', '')}")
+    else:
+        items.append(f"⚠️ Trend FLAT → SKIP recommended")
+
+    if payload.get("sd_windows"):
+        items.append(f"⚠️ News window: {len(payload['sd_windows'])} stand-down block(s)")
+    else:
+        items.append("✅ News clear through watch window")
+
+    funding = (payload.get("funding_line") or "")
+    if "extreme" in funding.lower() or "crowded" in funding.lower():
+        items.append("⚠️ Funding regime is stretched — see context below")
+    cot = (payload.get("cot_line") or "")
+    if "crowded" in cot.lower():
+        items.append("⚠️ COT positioning stretched — see context below")
+
+    return items
+
+
 def plan_public(payload: dict) -> str:
     """Build the polished PLAN alert.
 
@@ -86,8 +118,15 @@ def plan_public(payload: dict) -> str:
     short_stop_delta = payload["short_stop"] - payload["short_entry"]
     short_target_delta = payload["short_target"] - payload["short_entry"]
 
+    checklist = _pre_fill_checklist(payload)
     lines = [
         f"📊 *{sess} ORB PLAN* {e}  ·  _{payload['version']}_",
+        RULE,
+        "🧾 *Pre-fill check*",
+    ]
+    for item in checklist:
+        lines.append(f"   {item}")
+    lines += [
         RULE,
         f"🕒 OR window: {_fmt_et(payload['or_open_ts'])} → {_fmt_et(payload['or_close_ts'])}",
         "",
