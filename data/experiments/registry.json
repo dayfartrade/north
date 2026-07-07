@@ -1,0 +1,141 @@
+{
+  "schema_version": 1,
+  "notes": "One row per trial ever tested. sr_per_period is the observed per-trade Sharpe on the trial's evaluation sample. When >=2 rows have sr_per_period recorded, V[SR_n] is computed from them; otherwise the LdP default 0.5 is used and a warning printed.",
+  "trials": [
+    {
+      "id": "backfill_2026_07_07_v7",
+      "registered_utc": "2026-07-07T20:00:00Z",
+      "layer": "session_config",
+      "verdict": "shipped",
+      "sr_per_period": null,
+      "n_observations": null,
+      "notes": "Backfilled from 2026-07-07 DSR audit \u2014 per-variant SR not recorded at test time. Counts toward N; does not contribute to measured V[SR_n]."
+    },
+    {
+      "id": "backfill_2026_07_07_v7.1",
+      "registered_utc": "2026-07-07T20:00:00Z",
+      "layer": "session_config",
+      "verdict": "shipped",
+      "sr_per_period": null,
+      "n_observations": null,
+      "notes": "Backfilled from 2026-07-07 DSR audit \u2014 per-variant SR not recorded at test time. Counts toward N; does not contribute to measured V[SR_n]."
+    },
+    {
+      "id": "backfill_2026_07_07_v7.2.1",
+      "registered_utc": "2026-07-07T20:00:00Z",
+      "layer": "session_config",
+      "verdict": "shipped",
+      "sr_per_period": null,
+      "n_observations": null,
+      "notes": "Backfilled from 2026-07-07 DSR audit \u2014 per-variant SR not recorded at test time. Counts toward N; does not contribute to measured V[SR_n]."
+    },
+    {
+      "id": "backfill_2026_07_07_rejected_01",
+      "registered_utc": "2026-07-07T20:00:00Z",
+      "layer": "session_config",
+      "verdict": "rejected",
+      "sr_per_period": null,
+      "n_observations": null,
+      "notes": "Backfilled from 2026-07-07 sweep \u2014 12 hypotheses tested and rejected without per-variant SR recording. Contributes to Bonferroni N, not V[SR_n]."
+    },
+    {
+      "id": "backfill_2026_07_07_rejected_02",
+      "registered_utc": "2026-07-07T20:00:00Z",
+      "layer": "session_config",
+      "verdict": "rejected",
+      "sr_per_period": null,
+      "n_observations": null,
+      "notes": "Backfilled from 2026-07-07 sweep \u2014 12 hypotheses tested and rejected without per-variant SR recording. Contributes to Bonferroni N, not V[SR_n]."
+    },
+    {
+      "id": "backfill_2026_07_07_rejected_03",
+      "registered_utc": "2026-07-07T20:00:00Z",
+      "layer": "session_config",
+      "verdict": "rejected",
+      "sr_per_period": null,
+      "n_observations": null,
+      "notes": "Backfilled from 2026-07-07 sweep \u2014 12 hypotheses tested and rejected without per-variant SR recording. Contributes to Bonferroni N, not V[SR_n]."
+    },
+    {
+      "id": "backfill_2026_07_07_rejected_04",
+      "registered_utc": "2026-07-07T20:00:00Z",
+      "layer": "session_config",
+      "verdict": "rejected",
+      "sr_per_period": null,
+      "n_observations": null,
+      "notes": "Backfilled from 2026-07-07 sweep \u2014 12 hypotheses tested and rejected without per-variant SR recording. Contributes to Bonferroni N, not V[SR_n]."
+    },
+    {
+      "id": "backfill_2026_07_07_rejected_05",
+      "registered_utc": "2026-07-07T20:00:00Z",
+      "layer": "session_config",
+      "verdict": "rejected",
+      "sr_per_period": null,
+      "n_observations": null,
+      "notes": "Backfilled from 2026-07-07 sweep \u2014 12 hypotheses tested and rejected without per-variant SR recording. Contributes to Bonferroni N, not V[SR_n]."
+    },
+    {
+      "id": "backfill_2026_07_07_rejected_06",
+      "registered_utc": "2026-07-07T20:00:00Z",
+      "layer": "session_config",
+      "verdict": "rejected",
+      "sr_per_period": null,
+      "n_observations": null,
+      "notes": "Backfilled from 2026-07-07 sweep \u2014 12 hypotheses tested and rejected without per-variant SR recording. Contributes to Bonferroni N, not V[SR_n]."
+    },
+    {
+      "id": "backfill_2026_07_07_rejected_07",
+      "registered_utc": "2026-07-07T20:00:00Z",
+      "layer": "session_config",
+      "verdict": "rejected",
+      "sr_per_period": null,
+      "n_observations": null,
+      "notes": "Backfilled from 2026-07-07 sweep \u2014 12 hypotheses tested and rejected without per-variant SR recording. Contributes to Bonferroni N, not V[SR_n]."
+    },
+    {
+      "id": "backfill_2026_07_07_rejected_08",
+      "registered_utc": "2026-07-07T20:00:00Z",
+      "layer": "session_config",
+      "verdict": "rejected",
+      "sr_per_period": null,
+      "n_observations": null,
+      "notes": "Backfilled from 2026-07-07 sweep \u2014 12 hypotheses tested and rejected without per-variant SR recording. Contributes to Bonferroni N, not V[SR_n]."
+    },
+    {
+      "id": "backfill_2026_07_07_rejected_09",
+      "registered_utc": "2026-07-07T20:00:00Z",
+      "layer": "session_config",
+      "verdict": "rejected",
+      "sr_per_period": null,
+      "n_observations": null,
+      "notes": "Backfilled from 2026-07-07 sweep \u2014 12 hypotheses tested and rejected without per-variant SR recording. Contributes to Bonferroni N, not V[SR_n]."
+    },
+    {
+      "id": "backfill_2026_07_07_rejected_10",
+      "registered_utc": "2026-07-07T20:00:00Z",
+      "layer": "session_config",
+      "verdict": "rejected",
+      "sr_per_period": null,
+      "n_observations": null,
+      "notes": "Backfilled from 2026-07-07 sweep \u2014 12 hypotheses tested and rejected without per-variant SR recording. Contributes to Bonferroni N, not V[SR_n]."
+    },
+    {
+      "id": "backfill_2026_07_07_rejected_11",
+      "registered_utc": "2026-07-07T20:00:00Z",
+      "layer": "session_config",
+      "verdict": "rejected",
+      "sr_per_period": null,
+      "n_observations": null,
+      "notes": "Backfilled from 2026-07-07 sweep \u2014 12 hypotheses tested and rejected without per-variant SR recording. Contributes to Bonferroni N, not V[SR_n]."
+    },
+    {
+      "id": "backfill_2026_07_07_rejected_12",
+      "registered_utc": "2026-07-07T20:00:00Z",
+      "layer": "session_config",
+      "verdict": "rejected",
+      "sr_per_period": null,
+      "n_observations": null,
+      "notes": "Backfilled from 2026-07-07 sweep \u2014 12 hypotheses tested and rejected without per-variant SR recording. Contributes to Bonferroni N, not V[SR_n]."
+    }
+  ]
+}
