@@ -29,6 +29,11 @@ from stand_down import (stand_down_for_or_window, stand_down_for_entry,
 from mers_v3_peb import compute_atr
 from telegram_bot import send
 from alert_formatter import fmt_et
+from alert_format_v2 import (plan_public as fmt_plan_public,
+                              preview as fmt_preview,
+                              pre as fmt_pre,
+                              stand_down as fmt_stand_down,
+                              filtered as fmt_filtered)
 from health import market_likely_open
 
 OR_BARS = 6       # 30-min opening range on 5m
@@ -40,10 +45,6 @@ BASIS_DIVERGE_PCT = 0.5  # flag if |basis| > this %
 MAX_BAR_LAG_MIN = 15     # max age of latest 5m bar vs or_close_ts to trust OR levels
 PLAN_WINDOW_BEFORE = 10  # min before or_close still allowed to fire (asymmetric)
 PLAN_WINDOW_AFTER = 35   # min after or_close — wide enough for 14:30 backstop tick
-
-DISCLAIMER = ("\n_Not financial advice. Futures trading involves substantial risk "
-              "of loss. Past results do not guarantee future performance. "
-              "Your capital, your decision._")
 
 ROOT = Path(__file__).resolve().parent.parent
 STATE_FILE = ROOT / "data" / "dispatch_state.json"
@@ -315,15 +316,21 @@ def dispatch_orb_alerts():
                 sd_windows = _upcoming_standdown(open_ts, watch_end, cal)
                 sd_line = ("   ⛔ Don't enter during: " + " · ".join(sd_windows) + "\n"
                            if sd_windows else "")
-                cfg_line = ("   geom: LON filter OR<2×ATR + fixed $13 stop, 1.5R target\n"
-                            if cfg.get("use_or_filter") else
-                            "   geom: stop=OR-range, target=1.5×OR\n")
-                msg = (f"⏰ *{sess_name} session in ~30min* {session_emoji(sess_name)}\n"
-                       f"   Open {fmt_et(open_ts)}  ·  OR builds {OR_BARS*5}min after\n"
-                       f"   Pre-session trend: *{trend}* (slope {cur_slope:+.2f})  ·  ATR ${cur_atr:.2f}\n"
-                       f"{cfg_line}{sd_line}"
-                       f"{_funding_context()}{_basis_context()}"
-                       f"   Plan alert posts when OR closes.")
+                geom_summary = ("LON filter OR<2×ATR + fixed $13 stop, 1.5R target"
+                                if cfg.get("use_or_filter") else
+                                "stop=OR-range, target=1.5×OR")
+                msg = fmt_preview({
+                    "session": sess_name,
+                    "open_ts": open_ts,
+                    "or_bars_min": OR_BARS * 5,
+                    "trend": trend,
+                    "slope": cur_slope,
+                    "atr": cur_atr,
+                    "geom_summary": geom_summary,
+                    "sd_windows": sd_windows,
+                    "funding_line": _funding_context().strip(),
+                    "basis_line": _basis_context().strip(),
+                })
                 _safe_send(msg, sent, k, actions, "orb_preview", sess_name, open_ts, audience="public")
 
         # ---- PRE alert: ~15 min before OR closes
@@ -332,10 +339,13 @@ def dispatch_orb_alerts():
             if k not in sent:
                 cur_slope = float(trend_slope.iloc[-1]) if len(trend_slope) else float("nan")
                 trend = "UP" if cur_slope > 0 else "DOWN" if cur_slope < 0 else "FLAT"
-                msg = (f"🕐 *{sess_name} ORB forming* {session_emoji(sess_name)}\n"
-                       f"   Opening range builds: {fmt_et(open_ts)} -> {fmt_et(or_close_ts)}\n"
-                       f"   Current 1h trend: *{trend}* (slope {cur_slope:+.2f})\n"
-                       f"   Will alert with levels once OR closes.")
+                msg = fmt_pre({
+                    "session": sess_name,
+                    "open_ts": open_ts,
+                    "or_close_ts": or_close_ts,
+                    "trend": trend,
+                    "slope": cur_slope,
+                })
                 _safe_send(msg, sent, k, actions, "orb_pre", sess_name, open_ts, audience="public")
 
         # ---- PLAN alert: OR just closed. Asymmetric window: small grace
@@ -362,9 +372,7 @@ def dispatch_orb_alerts():
                             news_reason = f"{ev['event']}@{ev_ts.strftime('%H:%M')}UTC"
                             break
                 if news_overlap:
-                    msg = (f"⏸ *{sess_name} ORB STAND-DOWN* {session_emoji(sess_name)}\n"
-                           f"   Opening range overlaps news: {news_reason}\n"
-                           f"   Skipping this session — OR levels unreliable on event bars.")
+                    msg = fmt_stand_down({"session": sess_name, "news_reason": news_reason})
                     _safe_send(msg, sent, k, actions, "orb_standdown", sess_name, open_ts, audience="public")
                     continue
 
@@ -410,10 +418,12 @@ def dispatch_orb_alerts():
                 if cfg.get("use_or_filter", False):
                     or_max = cfg.get("or_vs_atr_max", 2.0) * cur_atr
                     if or_range > or_max:
-                        msg = (f"⏸ *{sess_name} ORB FILTERED* {session_emoji(sess_name)}\n"
-                               f"   OR range ${or_range:.2f} > {cfg['or_vs_atr_max']}x ATR "
-                               f"(${or_max:.2f})\n"
-                               f"   Skipping — high-vol open historically loses on this session.")
+                        msg = fmt_filtered({
+                            "session": sess_name,
+                            "or_range": or_range,
+                            "or_atr_mult": cfg["or_vs_atr_max"],
+                            "atr_limit": or_max,
+                        })
                         _safe_send(msg, sent, k, actions, "orb_filtered", sess_name, open_ts, audience="public")
                         continue
 
@@ -471,24 +481,37 @@ def dispatch_orb_alerts():
                 # Compute upcoming entry stand-down windows during watch
                 watch_end = or_close_ts + pd.Timedelta(minutes=5 * WATCH)
                 sd_windows = _upcoming_standdown(or_close_ts, watch_end, cal)
-                sd_block = ("   ⛔ Don't enter during: " + " · ".join(sd_windows) + "\n"
-                            if sd_windows else "")
 
                 # PUBLIC version: levels, direction, stand-down, market context.
                 # No sizing block — subscribers have different equity.
-                public_msg = (f"📊 *{sess_name} ORB PLAN* {session_emoji(sess_name)}  ·  v7\n"
-                       f"   OR window: {fmt_et(open_ts)} → {fmt_et(or_close_ts)}\n"
-                       f"   H *${or_high:,.2f}*  ·  L *${or_low:,.2f}*  ·  range ${or_range:.2f}\n"
-                       f"   Stop {geom_tag}  ·  target ${target_dist:.2f} ({rr_ratio:.1f}R)\n\n"
-                       f"   ↗️ LONG  entry *${or_high:,.2f}*  ·  stop ${stop_long:,.2f}  ·  tgt ${target_long:,.2f}\n"
-                       f"   ↘️ SHORT entry *${or_low:,.2f}*  ·  stop ${stop_short:,.2f}  ·  tgt ${target_short:,.2f}\n\n"
-                       f"   Trend: *{dir_hint}*\n"
-                       f"   Cancel both stops if no breakout in {WATCH*5}min.\n"
-                       f"   Time-exit if still open after {HOLD*5}min.\n"
-                       f"   📐 Size to your own risk: risk-per-trade ≈ stop-distance × $100/oz × contracts (GC), or × $10/oz × contracts (MGC).\n"
-                       f"{sd_block}\n"
-                       f"{fund_block}{basis_block}{cot_block}{vol_block}"
-                       f"{DISCLAIMER}")
+                from strategy_version import STRATEGY_VERSION
+                public_msg = fmt_plan_public({
+                    "session": sess_name,
+                    "version": STRATEGY_VERSION,
+                    "or_open_ts": open_ts,
+                    "or_close_ts": or_close_ts,
+                    "or_high": or_high,
+                    "or_low": or_low,
+                    "or_range": or_range,
+                    "long_entry": or_high,
+                    "long_stop": stop_long,
+                    "long_target": target_long,
+                    "short_entry": or_low,
+                    "short_stop": stop_short,
+                    "short_target": target_short,
+                    "stop_dist": stop_dist,
+                    "target_dist": target_dist,
+                    "rr_ratio": rr_ratio,
+                    "trend": trend,
+                    "dir_hint": dir_hint,
+                    "watch_end_ts": watch_end,
+                    "hold_hours": HOLD * 5 / 60.0,
+                    "funding_line": fund_block.strip(),
+                    "basis_line": basis_block.strip(),
+                    "cot_line": cot_block.strip(),
+                    "vol_line": vol_block.strip(),
+                    "sd_windows": sd_windows,
+                })
                 _safe_send(public_msg, sent, k, actions, "orb_plan", sess_name,
                             open_ts, audience="public")
                 # PLAN dispatched — reset any lag-defer escalation counter for this window
