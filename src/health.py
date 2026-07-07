@@ -54,8 +54,23 @@ def save_health(state: dict):
     HEALTH_FILE.parent.mkdir(parents=True, exist_ok=True)
     tmp = HEALTH_FILE.with_suffix(HEALTH_FILE.suffix + ".tmp")
     tmp.write_text(json.dumps(state, indent=2, default=str))
-    import os
-    os.replace(tmp, HEALTH_FILE)
+    _atomic_replace_retry(tmp, HEALTH_FILE)
+
+
+def _atomic_replace_retry(tmp: Path, target: Path, attempts: int = 5, delay: float = 0.02):
+    """Windows os.replace race guard — retries when the target is briefly
+    open by another process (e.g. API /health reader)."""
+    import os, time
+    last_err = None
+    for _ in range(attempts):
+        try:
+            os.replace(tmp, target)
+            return
+        except PermissionError as e:
+            last_err = e
+            time.sleep(delay)
+            delay *= 2
+    raise last_err
 
 
 def daily_heartbeat_due() -> bool:

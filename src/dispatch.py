@@ -67,8 +67,24 @@ def save_state(state: dict):
     STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
     tmp = STATE_FILE.with_suffix(STATE_FILE.suffix + ".tmp")
     tmp.write_text(json.dumps(state, indent=2, default=str))
-    import os
-    os.replace(tmp, STATE_FILE)
+    _atomic_replace_retry(tmp, STATE_FILE)
+
+
+def _atomic_replace_retry(tmp: Path, target: Path, attempts: int = 5, delay: float = 0.02):
+    """os.replace with retry — Windows raises PermissionError if another process
+    (e.g. the API's read) has the target file open during the swap.
+    Retries with brief backoff; POSIX succeeds on first try."""
+    import os, time
+    last_err = None
+    for _ in range(attempts):
+        try:
+            os.replace(tmp, target)
+            return
+        except PermissionError as e:
+            last_err = e
+            time.sleep(delay)
+            delay *= 2
+    raise last_err
 
 
 def key(ev_ts: pd.Timestamp, ev_type: str, alert: str) -> str:
