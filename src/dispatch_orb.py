@@ -49,6 +49,7 @@ ROOT = Path(__file__).resolve().parent.parent
 STATE_FILE = ROOT / "data" / "dispatch_state.json"
 VALIDATION_STATE_FILE = ROOT / "data" / "validation_state.json"
 VALIDATION_STALE_DAYS = 14  # if last run older than this, warn (but don't kill-switch)
+ALERTS_STREAM = ROOT / "data" / "alerts_stream.jsonl"
 
 
 def load_state() -> dict:
@@ -443,6 +444,36 @@ def dispatch_orb_alerts():
                 # PLAN dispatched — reset any lag-defer escalation counter for this window
                 from health import clear_orb_lag_defers
                 clear_orb_lag_defers(sess_name, or_close_ts)
+                # Structured emit for API layer (data/alerts_stream.jsonl).
+                # One JSONL row per PLAN; single-write append is atomic for < PIPE_BUF.
+                try:
+                    watch_end = or_close_ts + pd.Timedelta(minutes=WATCH * 5)
+                    row = {
+                        "ts_sent_utc": pd.Timestamp.now(tz='UTC').isoformat(),
+                        "kind": "orb_plan",
+                        "session": sess_name,
+                        "or_open_utc": open_ts.isoformat(),
+                        "or_close_utc": or_close_ts.isoformat(),
+                        "or_high": float(or_high),
+                        "or_low": float(or_low),
+                        "or_range": float(or_range),
+                        "stop_dist": float(stop_dist),
+                        "target_dist": float(target_dist),
+                        "rr_ratio": float(rr_ratio),
+                        "long":  {"entry": float(or_high), "stop": float(stop_long),
+                                  "target": float(target_long)},
+                        "short": {"entry": float(or_low),  "stop": float(stop_short),
+                                  "target": float(target_short)},
+                        "trend": ("UP" if cur_slope > 0 else "DOWN" if cur_slope < 0 else "FLAT"),
+                        "trend_slope": float(cur_slope),
+                        "watch_expires_utc": watch_end.isoformat(),
+                        "max_hold_min": HOLD * 5,
+                    }
+                    ALERTS_STREAM.parent.mkdir(parents=True, exist_ok=True)
+                    with open(ALERTS_STREAM, "a", encoding="utf-8") as f:
+                        f.write(json.dumps(row, default=str) + "\n")
+                except Exception as e:
+                    _log(f"[orb] alerts_stream emit failed: {type(e).__name__}: {e}")
                 # PRIVATE sizing follow-up (account-specific; never broadcast)
                 try:
                     send(f"📐 *{sess_name} sizing* (for your config)\n{sizing_block}",
