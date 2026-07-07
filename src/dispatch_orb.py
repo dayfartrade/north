@@ -117,6 +117,37 @@ def _cot_context(direction_hint: str = "") -> str:
         return ""
 
 
+def _volume_context(or_bars: pd.DataFrame, prior_bars: pd.DataFrame) -> tuple[str, dict]:
+    """Box 6 (v7.2, audit-only): OR-window volume vs prior 20-bar avg.
+
+    Returns (text_block, audit_dict). Filter NOT enforced — informational context
+    only until n>=100 live trades validate a threshold. Backtest research on
+    2026-07-07 (n=52) shows: ratio >= 1.2 -> 77% win OOS (vs 65% baseline);
+    ratio < 0.8 -> lower confidence. Not gated because CIs still overlap.
+    """
+    try:
+        or_vol = float(or_bars["volume"].mean()) if len(or_bars) else 0.0
+        prior_vol = float(prior_bars["volume"].mean()) if len(prior_bars) else 0.0
+        if prior_vol <= 0:
+            return "", {"error": "no_prior_volume"}
+        ratio = or_vol / prior_vol
+        if ratio >= 1.5:
+            tag = "🔊 high (research: 80% OOS win when ratio >= 1.2)"
+        elif ratio >= 1.0:
+            tag = "🔊 normal"
+        elif ratio >= 0.7:
+            tag = "🔉 low"
+        else:
+            tag = "🔈 very low (research: lower confidence when ratio < 0.8)"
+        text = f"   📊 OR volume {ratio:.2f}x prior · {tag}\n"
+        return text, {"or_window_vol": or_vol, "prior_20bar_vol": prior_vol,
+                       "ratio": round(ratio, 3),
+                       "as_of_utc": pd.Timestamp.now(tz='UTC').isoformat()}
+    except Exception as e:
+        _log(f"[orb] volume ctx exception: {type(e).__name__}: {e}")
+        return "", {"error": type(e).__name__}
+
+
 def _basis_context() -> str:
     """Box 4: basis sanity warning. Empty when basis is within threshold;
     logs to dispatch.log on failure so silent Box-4 unmonitoring is visible."""
@@ -413,10 +444,15 @@ def dispatch_orb_alerts():
                 )
                 sizing_block = format_for_alert(sz)
 
-                # ----- Box 3, 4, 5 context blocks (all soft signals)
+                # ----- Box 3, 4, 5, 6 context blocks (all soft signals)
                 fund_block = _funding_context()
                 basis_block = _basis_context()
                 cot_block = _cot_context()
+                # Box 6 (v7.2 informational): OR-window volume ratio
+                # 20 bars prior to OR open, 6 bars of OR window
+                prior_slice = bars5.iloc[max(0, or_close_idx-25):or_close_idx-5]
+                or_slice = bars5.iloc[or_close_idx-5:or_close_idx+1]
+                vol_block, vol_audit = _volume_context(or_slice, prior_slice)
 
                 # Compute upcoming entry stand-down windows during watch
                 watch_end = or_close_ts + pd.Timedelta(minutes=5 * WATCH)
@@ -437,7 +473,7 @@ def dispatch_orb_alerts():
                        f"   Time-exit if still open after {HOLD*5}min.\n"
                        f"   📐 Size to your own risk: risk-per-trade ≈ stop-distance × $100/oz × contracts (GC), or × $10/oz × contracts (MGC).\n"
                        f"{sd_block}\n"
-                       f"{fund_block}{basis_block}{cot_block}"
+                       f"{fund_block}{basis_block}{cot_block}{vol_block}"
                        f"{DISCLAIMER}")
                 _safe_send(public_msg, sent, k, actions, "orb_plan", sess_name,
                             open_ts, audience="public")
@@ -490,6 +526,7 @@ def dispatch_orb_alerts():
                             }
                     except Exception as e:
                         audit["cot"] = {"error": type(e).__name__, "as_of_utc": now_iso}
+                    audit["volume"] = vol_audit
 
                     row = {
                         "ts_sent_utc": now_iso,
