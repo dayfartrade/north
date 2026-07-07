@@ -37,7 +37,9 @@ from stand_down import stand_down_for_entry, _load_calendar
 
 SESSION_CONFIG = {
     "ASIA": {
-        "use_or_filter": False,
+        # v7.1: dead-zone gate — 2.0 <= OR/ATR <= 2.5 hit 36% win, -$119/trade
+        "use_or_filter": True,
+        "or_atr_deadzone": (2.0, 2.5),
         "stop_mode": "or_range",     # "or_range" | "fixed"
         "fixed_stop_price": None,
         "target_mode": "or_range",   # "or_range" | "stop_x_tp"
@@ -50,7 +52,9 @@ SESSION_CONFIG = {
         "target_mode": "stop_x_tp",
     },
     "NY": {
-        "use_or_filter": False,
+        # v7.1: low-OR/ATR gate — OR/ATR < 2.5 hit 30% win, -$1006/trade
+        "use_or_filter": True,
+        "or_vs_atr_min": 2.5,
         "stop_mode": "or_range",
         "fixed_stop_price": None,
         "target_mode": "or_range",
@@ -89,14 +93,24 @@ def run_orb_v7(bars: pd.DataFrame, session_time: time, label: str,
         if not (np.isfinite(slope) and np.isfinite(cur_atr) and cur_atr > 0):
             continue
 
-        # OR vs ATR filter
+        # OR vs ATR filter (v7.1 per-session gates)
         if cfg.get("use_or_filter", False):
-            if or_range > cfg.get("or_vs_atr_max", 2.0) * cur_atr:
+            r = or_range / cur_atr
+            skip = None
+            if "or_vs_atr_max" in cfg and or_range > cfg["or_vs_atr_max"] * cur_atr:
+                skip = "or_too_wide_vs_atr"
+            elif "or_vs_atr_min" in cfg and r < cfg["or_vs_atr_min"]:
+                skip = "or_too_narrow_vs_atr"  # v7.1: NY low-conviction dead zone
+            elif "or_atr_deadzone" in cfg:
+                dz_lo, dz_hi = cfg["or_atr_deadzone"]
+                if dz_lo <= r <= dz_hi:
+                    skip = "or_atr_deadzone"   # v7.1: ASIA whipsaw zone
+            if skip:
                 rows.append({
                     "session": label, "session_open_ts": s_ts,
                     "or_high": or_high, "or_low": or_low, "or_range": or_range,
                     "trend_slope": slope, "atr": cur_atr,
-                    "took_trade": False, "skip_reason": "or_too_wide_vs_atr",
+                    "took_trade": False, "skip_reason": skip,
                 })
                 continue
 
