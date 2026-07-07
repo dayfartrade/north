@@ -89,15 +89,16 @@ def record_heartbeat():
 def maybe_send_heartbeat(force: bool = False):
     """Once per day, send a system-alive ping with key health stats."""
     from telegram_bot import send
+    from alert_format_v2 import heartbeat as fmt_heartbeat
     if not force and not daily_heartbeat_due():
         return False
     bf = bar_freshness()
     open_ = market_likely_open()
-    msg = (f"💓 *heartbeat* {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}\n"
-           f"  GC last bar: {bf['last_bar_utc'][:16]} "
-           f"({bf['age_hours']:.1f}h old)  "
-           f"{'⚠️ STALE' if bf['stale'] else '✅'}\n"
-           f"  Market: {'OPEN' if open_ else 'CLOSED (weekend gap)'}")
+    msg = fmt_heartbeat({
+        "now_utc": datetime.now(timezone.utc),
+        "bar_freshness": bf,
+        "market_open": open_,
+    })
     r = send(msg, audience="private")
     if r.get("ok"):
         record_heartbeat()
@@ -180,10 +181,8 @@ def check_and_record_dispatch_tick():
     gap_min = (now - prev_ts).total_seconds() / 60
     if gap_min > GAP_ALERT_MINUTES and market_likely_open(now):
         try:
-            send(f"⚠️ *dispatch gap detected*\n"
-                 f"   Previous tick: {prev_ts.strftime('%Y-%m-%d %H:%M UTC')}\n"
-                 f"   Gap: {gap_min:.0f} min (normal cadence is 30 min)\n"
-                 f"   Scheduler skipped or was offline. Resumed now.",
+            from alert_format_v2 import dispatch_gap as fmt_dispatch_gap
+            send(fmt_dispatch_gap({"prev_ts": prev_ts, "gap_min": gap_min}),
                  audience="private")
         except Exception:
             pass

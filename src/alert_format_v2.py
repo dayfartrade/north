@@ -222,3 +222,66 @@ def filtered(payload: dict) -> str:
         "",
         "_Skipping — high-vol opens historically lose on this session._",
     ])
+
+
+# ---------------------------------------------------------------------------
+# PRIVATE / operator alerts (owner-only, diagnostic-detail welcome)
+# ---------------------------------------------------------------------------
+
+def validation_suppressed(payload: dict) -> str:
+    return "\n".join([
+        "🛑 *ORB DISPATCH SUPPRESSED*",
+        RULE,
+        f"Reason: {payload['reason']}",
+        "",
+        "_Fix, then run:_",
+        "`python -m src.weekly_validation --persist`",
+    ])
+
+
+def data_lag_persisting(payload: dict) -> str:
+    return "\n".join([
+        "🚨 *ORB PLAN data-lag persisting*",
+        RULE,
+        f"Session:    *{payload['session']}*  {_emoji(payload['session'])}",
+        f"Window:     {pd.Timestamp(payload['or_close_ts']).strftime('%Y-%m-%d %H:%M UTC')}",
+        f"Bar age:    {payload['lag_min']:.0f} min  (limit {payload['limit_min']})",
+        "",
+        "_yfinance is stalling. PLAN suppressed until fresh bars arrive._",
+        "_Check the feed._",
+    ])
+
+
+def sizing_followup(payload: dict) -> str:
+    sess = payload["session"]
+    return "\n".join([
+        f"📐 *{sess} sizing* {_emoji(sess)}  ·  _your config_",
+        RULE,
+        payload["sizing_block"].rstrip(),
+    ])
+
+
+def heartbeat(payload: dict) -> str:
+    bf = payload["bar_freshness"]
+    stale = "⚠️ STALE" if bf["stale"] else "✅ fresh"
+    market = "🟢 OPEN" if payload["market_open"] else "🔴 CLOSED (weekend gap)"
+    ts_str = pd.Timestamp(payload["now_utc"]).strftime("%Y-%m-%d %H:%M UTC")
+    return "\n".join([
+        "💓 *system heartbeat*",
+        RULE,
+        f"Time:      {ts_str}",
+        f"GC bar:    {bf['last_bar_utc'][:16]}  ({bf['age_hours']:.1f}h old · {stale})",
+        f"Market:    {market}",
+    ])
+
+
+def dispatch_gap(payload: dict) -> str:
+    prev_str = pd.Timestamp(payload["prev_ts"]).strftime("%Y-%m-%d %H:%M UTC")
+    return "\n".join([
+        "⚠️ *dispatch gap detected*",
+        RULE,
+        f"Previous tick:  {prev_str}",
+        f"Gap:            {payload['gap_min']:.0f} min  (normal cadence 30 min)",
+        "",
+        "_Scheduler skipped or was offline. Resumed now._",
+    ])

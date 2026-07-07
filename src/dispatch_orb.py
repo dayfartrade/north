@@ -33,7 +33,10 @@ from alert_format_v2 import (plan_public as fmt_plan_public,
                               preview as fmt_preview,
                               pre as fmt_pre,
                               stand_down as fmt_stand_down,
-                              filtered as fmt_filtered)
+                              filtered as fmt_filtered,
+                              validation_suppressed as fmt_validation_suppressed,
+                              data_lag_persisting as fmt_data_lag_persisting,
+                              sizing_followup as fmt_sizing_followup)
 from health import market_likely_open
 
 OR_BARS = 6       # 30-min opening range on 5m
@@ -277,9 +280,7 @@ def dispatch_orb_alerts():
         day_key = f"validation_killswitch|{pd.Timestamp.now(tz='UTC').date().isoformat()}"
         if day_key not in sent:
             try:
-                send(f"🛑 *ORB dispatch suppressed*\n   {reason}\n   Run "
-                     f"`python -m src.weekly_validation --persist` after fixing.",
-                     audience="private")
+                send(fmt_validation_suppressed({"reason": reason}), audience="private")
             except Exception:
                 pass
             sent.add(day_key)
@@ -396,12 +397,12 @@ def dispatch_orb_alerts():
                         from health import record_orb_lag_defer
                         if record_orb_lag_defer(sess_name, or_close_ts, lag_min):
                             from telegram_bot import send as _tg_send
-                            _tg_send(
-                                f"🚨 *ORB PLAN data-lag persisting*\n"
-                                f"   Session: {sess_name}  Window: {or_close_ts.strftime('%Y-%m-%d %H:%M UTC')}\n"
-                                f"   Latest bar age: {lag_min:.0f} min (limit {MAX_BAR_LAG_MIN})\n"
-                                f"   yfinance is stalling — PLAN suppressed. Check feed.",
-                                audience="private")
+                            _tg_send(fmt_data_lag_persisting({
+                                "session": sess_name,
+                                "or_close_ts": or_close_ts,
+                                "lag_min": lag_min,
+                                "limit_min": MAX_BAR_LAG_MIN,
+                            }), audience="private")
                         continue
                     or_close_idx = bars5.index.get_loc(latest_bar_ts)
                 or_start_idx = max(0, or_close_idx - OR_BARS + 1)
@@ -632,7 +633,7 @@ def dispatch_orb_alerts():
                     _log(f"[orb] alerts_stream emit failed: {type(e).__name__}: {e}")
                 # PRIVATE sizing follow-up (account-specific; never broadcast)
                 try:
-                    send(f"📐 *{sess_name} sizing* (for your config)\n{sizing_block}",
+                    send(fmt_sizing_followup({"session": sess_name, "sizing_block": sizing_block}),
                          audience="private")
                 except Exception as e:
                     _log(f"[orb] private sizing send failed: {type(e).__name__}: {e}")
