@@ -136,6 +136,15 @@
       "sr_per_period": null,
       "n_observations": null,
       "notes": "Backfilled from 2026-07-07 sweep \u2014 12 hypotheses tested and rejected without per-variant SR recording. Contributes to Bonferroni N, not V[SR_n]."
+    },
+    {
+      "id": "janus_q4_trailing_stop",
+      "registered_utc": "2026-07-07T19:12:29.028746Z",
+      "layer": "strategy_engine",
+      "verdict": "rejected",
+      "sr_per_period": null,
+      "n_observations": null,
+      "notes": "REJECTED per pre-reg (docs/experiments/2026-07-07_janus_q4_trailing_stop.md). Matched-pair OOS mean lift -$145, permutation p=0.6543, all 4 gates fail. Trailing schedule cut winner tails."
     }
   ]
 }
