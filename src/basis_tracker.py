@@ -51,16 +51,25 @@ def current_basis() -> dict:
 
 
 def log_basis():
-    """Append current basis to log."""
+    """Append current basis to log.
+
+    Row is built in-memory then written with a single write() syscall so a
+    process crash mid-write can't leave a partial row (< PIPE_BUF is atomic).
+    """
     snap = current_basis()
     if "error" in snap:
         return snap
     df = pd.DataFrame([snap])
-    if BASIS_LOG.exists():
-        df.to_csv(BASIS_LOG, mode="a", header=False, index=False)
+    BASIS_LOG.parent.mkdir(parents=True, exist_ok=True)
+    exists = BASIS_LOG.exists()
+    if exists:
+        line = df.to_csv(index=False, header=False)
     else:
-        BASIS_LOG.parent.mkdir(parents=True, exist_ok=True)
-        df.to_csv(BASIS_LOG, index=False)
+        line = df.to_csv(index=False)
+    # Single-write append; small rows are atomic on POSIX and effectively on NTFS
+    with open(BASIS_LOG, "a", encoding="utf-8", newline="") as f:
+        f.write(line)
+        f.flush()
     return snap
 
 

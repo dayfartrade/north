@@ -55,14 +55,24 @@ def send(text: str, parse_mode: str = "Markdown", silent: bool = False,
 
     audience: "private" (default) or "public"
       - private routes to GOLDTRADER_TG_CHAT
-      - public routes to GOLDTRADER_TG_CHAT_PUBLIC if set, else falls back
-        to GOLDTRADER_TG_CHAT with no error (lets you ship before the
-        public channel is provisioned)
+      - public routes to GOLDTRADER_TG_CHAT_PUBLIC. When unset:
+          * if GOLDTRADER_STRICT_PUBLIC=1, refuses to send (returns error)
+          * otherwise falls back to private with a visible fallback banner
+            so the operator can't miss that the public channel isn't wired
     """
     c = _load_all()
     tok = c["GOLDTRADER_TG_TOKEN"]
     if audience == "public":
-        chat = c["GOLDTRADER_TG_CHAT_PUBLIC"] or c["GOLDTRADER_TG_CHAT"]
+        pub = c["GOLDTRADER_TG_CHAT_PUBLIC"]
+        if pub:
+            chat = pub
+        else:
+            if os.environ.get("GOLDTRADER_STRICT_PUBLIC") == "1":
+                return {"ok": False, "error": "public_channel_not_configured",
+                        "detail": "GOLDTRADER_TG_CHAT_PUBLIC unset and STRICT mode on"}
+            chat = c["GOLDTRADER_TG_CHAT"]
+            text = ("⚠️ *FALLBACK: public channel not configured — this alert "
+                    "would have gone to subscribers*\n\n" + text)
     else:
         chat = c["GOLDTRADER_TG_CHAT"]
     if not tok or not chat:

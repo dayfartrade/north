@@ -103,8 +103,8 @@ def size_for_vehicle(stop_dist_per_oz: float, vehicle: Vehicle,
 
     # Futures: risk per contract = stop_dist_per_oz * units_per_contract + RT cost
     risk_per_contract = stop_dist_per_oz * vehicle.units_per_contract
-    # RT cost from backtest.RT_COST_PER_OZ ($0.19/oz w/ $0.05 spread); MGC ~half-ish
-    rt_cost = 19 if vehicle.name == "GC" else 4  # $/contract RT (MGC scales lower)
+    # RT cost matches backtest.RT_COST_PER_OZ ($0.24/oz realistic); MGC scales lower
+    rt_cost = 24 if vehicle.name == "GC" else 4  # $/contract RT
     risk_per_contract += rt_cost
     n_contracts = max(0, math.floor(target / risk_per_contract))
     if n_contracts == 0 and target / risk_per_contract >= 0.5:

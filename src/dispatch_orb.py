@@ -47,6 +47,8 @@ DISCLAIMER = ("\n_Not financial advice. Futures trading involves substantial ris
 
 ROOT = Path(__file__).resolve().parent.parent
 STATE_FILE = ROOT / "data" / "dispatch_state.json"
+VALIDATION_STATE_FILE = ROOT / "data" / "validation_state.json"
+VALIDATION_STALE_DAYS = 14  # if last run older than this, warn (but don't kill-switch)
 
 
 def load_state() -> dict:
@@ -57,7 +59,10 @@ def load_state() -> dict:
 
 def save_state(state: dict):
     STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
-    STATE_FILE.write_text(json.dumps(state, indent=2, default=str))
+    tmp = STATE_FILE.with_suffix(STATE_FILE.suffix + ".tmp")
+    tmp.write_text(json.dumps(state, indent=2, default=str))
+    import os
+    os.replace(tmp, STATE_FILE)
 
 
 def session_emoji(name: str) -> str:
@@ -112,17 +117,20 @@ def _cot_context(direction_hint: str = "") -> str:
 
 
 def _basis_context() -> str:
-    """Box 4: basis sanity warning. Empty unless divergence exceeds threshold."""
+    """Box 4: basis sanity warning. Empty when basis is within threshold;
+    logs to dispatch.log on failure so silent Box-4 unmonitoring is visible."""
     try:
         from basis_tracker import current_basis
         b = current_basis()
         if "error" in b:
+            _log(f"[orb] basis unavailable: {b.get('error')}")
             return ""
         if abs(b["basis_pct"]) > BASIS_DIVERGE_PCT:
             return (f"   ⚠️ basis ${b['basis_dollars']:+.2f} ({b['basis_pct']:+.2f}%) "
                     f"— GC vs Bitget diverging\n")
         return ""
-    except Exception:
+    except Exception as e:
+        _log(f"[orb] basis ctx exception: {type(e).__name__}: {e}")
         return ""
 
 
@@ -188,12 +196,48 @@ def _safe_send(msg: str, sent: set, key: str, actions: list, action_tag: str,
         return False
 
 
+def _validation_gate() -> tuple[bool, str]:
+    """H3 kill-switch: check latest weekly_validation verdict.
+
+    Returns (allow_dispatch, reason). Bootstrap grace: if no validation file
+    exists yet (first week post-launch), allow but note it.
+    """
+    if not VALIDATION_STATE_FILE.exists():
+        return True, "no validation state yet (bootstrap grace)"
+    try:
+        v = json.loads(VALIDATION_STATE_FILE.read_text())
+    except Exception as e:
+        return True, f"validation file unreadable ({type(e).__name__}); allowing"
+    if v.get("verdict") == "NOT READY":
+        return False, (f"weekly validation verdict=NOT READY (n={v.get('n_trades')}, "
+                       f"tag={v.get('size_tag')}, last_run={v.get('last_run_utc','?')})")
+    return True, "validation OK"
+
+
 def dispatch_orb_alerts():
     state = load_state()
     sent = set(state.get("sent", []))
     actions = []
 
     if not market_likely_open():
+        return actions
+
+    # H3 kill-switch: don't dispatch if edge has been marked NOT READY
+    allow, reason = _validation_gate()
+    if not allow:
+        _log(f"[orb] DISPATCH SUPPRESSED: {reason}")
+        # Alert once per calendar day
+        day_key = f"validation_killswitch|{pd.Timestamp.now(tz='UTC').date().isoformat()}"
+        if day_key not in sent:
+            try:
+                send(f"🛑 *ORB dispatch suppressed*\n   {reason}\n   Run "
+                     f"`python -m src.weekly_validation --persist` after fixing.",
+                     audience="private")
+            except Exception:
+                pass
+            sent.add(day_key)
+            state["sent"] = sorted(sent)
+            save_state(state)
         return actions
 
     bars5 = gc_load("5m").sort_index()
@@ -293,6 +337,17 @@ def dispatch_orb_alerts():
                         _log(f"[orb] {sess_name} PLAN DEFERRED: latest bar "
                              f"{latest_bar_ts} is {lag_min:.0f}min before "
                              f"or_close_ts {or_close_ts} (lag > {MAX_BAR_LAG_MIN}min)")
+                        # Escalate on 2nd+ consecutive defer for this session/window
+                        # (root cause of NFP 2026-07-03 3.5-day silent outage)
+                        from health import record_orb_lag_defer
+                        if record_orb_lag_defer(sess_name, or_close_ts, lag_min):
+                            from telegram_bot import send as _tg_send
+                            _tg_send(
+                                f"🚨 *ORB PLAN data-lag persisting*\n"
+                                f"   Session: {sess_name}  Window: {or_close_ts.strftime('%Y-%m-%d %H:%M UTC')}\n"
+                                f"   Latest bar age: {lag_min:.0f} min (limit {MAX_BAR_LAG_MIN})\n"
+                                f"   yfinance is stalling — PLAN suppressed. Check feed.",
+                                audience="private")
                         continue
                     or_close_idx = bars5.index.get_loc(latest_bar_ts)
                 or_start_idx = max(0, or_close_idx - OR_BARS + 1)
@@ -385,6 +440,9 @@ def dispatch_orb_alerts():
                        f"{DISCLAIMER}")
                 _safe_send(public_msg, sent, k, actions, "orb_plan", sess_name,
                             open_ts, audience="public")
+                # PLAN dispatched — reset any lag-defer escalation counter for this window
+                from health import clear_orb_lag_defers
+                clear_orb_lag_defers(sess_name, or_close_ts)
                 # PRIVATE sizing follow-up (account-specific; never broadcast)
                 try:
                     send(f"📐 *{sess_name} sizing* (for your config)\n{sizing_block}",

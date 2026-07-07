@@ -20,6 +20,7 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parent.parent
 STATE_FILE = ROOT / "data" / "dispatch_state.json"
 SCRIPT = ROOT / "scripts" / "validate_v7_phase7.py"
+VERDICT_FILE = ROOT / "data" / "validation_state.json"
 
 WEEKLY_HOUR_UTC = 22
 WEEKLY_WEEKDAY = 6  # Sunday (Mon=0)
@@ -64,6 +65,36 @@ def _extract_verdict(output: str) -> str:
         return output[-800:]  # fallback: tail
 
 
+def _persist_verdict(output: str) -> None:
+    """Extract OVERALL verdict + sample-size tag and write to validation_state.json.
+
+    dispatch_orb reads this on every tick as a kill-switch (H3).
+    """
+    is_ready = "OVERALL: DEPLOY-READY" in output
+    n = None
+    size_tag = None
+    for ln in output.splitlines():
+        if "Sample size:" in ln:
+            parts = ln.split()
+            for p in parts:
+                if p.isdigit():
+                    n = int(p); break
+            for tag in ("STRONG", "USABLE", "WEAK", "INSUFFICIENT"):
+                if tag in ln:
+                    size_tag = tag; break
+    payload = {
+        "last_run_utc": pd.Timestamp.now(tz='UTC').isoformat(),
+        "verdict": "DEPLOY-READY" if is_ready else "NOT READY",
+        "n_trades": n,
+        "size_tag": size_tag,
+    }
+    VERDICT_FILE.parent.mkdir(parents=True, exist_ok=True)
+    tmp = VERDICT_FILE.with_suffix(VERDICT_FILE.suffix + ".tmp")
+    tmp.write_text(json.dumps(payload, indent=2))
+    import os
+    os.replace(tmp, VERDICT_FILE)
+
+
 def maybe_publish_weekly_validation() -> bool:
     """Run + publish once per ISO week. Returns True if sent."""
     from telegram_bot import send
@@ -76,6 +107,7 @@ def maybe_publish_weekly_validation() -> bool:
     if key in state.get("sent", []):
         return False
     output = _run_validation()
+    _persist_verdict(output)
     verdict = _extract_verdict(output)
     msg = (f"🔎 *Weekly v7 validation — {now.strftime('%Y-%m-%d')} UTC*\n\n"
            f"```\n{verdict}\n```")
@@ -89,6 +121,11 @@ if __name__ == "__main__":
     if "--dry" in sys.argv:
         out = _run_validation()
         print(_extract_verdict(out))
+    elif "--persist" in sys.argv:
+        out = _run_validation()
+        _persist_verdict(out)
+        print(_extract_verdict(out))
+        print(f"\nWrote {VERDICT_FILE}")
     else:
         sent = maybe_publish_weekly_validation()
         print(f"weekly_validation sent={sent} at {pd.Timestamp.now(tz='UTC').isoformat(timespec='minutes')}")

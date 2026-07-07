@@ -65,7 +65,10 @@ def load_state() -> dict:
 
 def save_state(state: dict):
     STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
-    STATE_FILE.write_text(json.dumps(state, indent=2, default=str))
+    tmp = STATE_FILE.with_suffix(STATE_FILE.suffix + ".tmp")
+    tmp.write_text(json.dumps(state, indent=2, default=str))
+    import os
+    os.replace(tmp, STATE_FILE)
 
 
 def key(ev_ts: pd.Timestamp, ev_type: str, alert: str) -> str:

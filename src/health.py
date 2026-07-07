@@ -52,7 +52,10 @@ def load_health() -> dict:
 
 def save_health(state: dict):
     HEALTH_FILE.parent.mkdir(parents=True, exist_ok=True)
-    HEALTH_FILE.write_text(json.dumps(state, indent=2, default=str))
+    tmp = HEALTH_FILE.with_suffix(HEALTH_FILE.suffix + ".tmp")
+    tmp.write_text(json.dumps(state, indent=2, default=str))
+    import os
+    os.replace(tmp, HEALTH_FILE)
 
 
 def daily_heartbeat_due() -> bool:
@@ -90,6 +93,49 @@ def maybe_send_heartbeat(force: bool = False):
 # ---- Dispatch-tick gap detection (watchdog) ----
 
 GAP_ALERT_MINUTES = 90  # alert if previous tick was this many minutes ago
+
+
+def record_orb_lag_defer(session: str, or_close_ts, lag_min: float) -> bool:
+    """Track consecutive PLAN defers due to bar lag. Returns True if this is
+    the 2nd+ consecutive defer for the same (session, or_close_ts) — caller
+    should send a private escalation alert.
+
+    Idempotent per (session, or_close_ts): once alerted, further defers on the
+    same session/window won't re-alert.
+    """
+    h = load_health()
+    defers = h.setdefault("orb_lag_defers", {})
+    k = f"{session}|{pd.Timestamp(or_close_ts).isoformat()}"
+    rec = defers.get(k, {"count": 0, "alerted": False,
+                          "first_utc": pd.Timestamp.now(tz='UTC').isoformat()})
+    rec["count"] += 1
+    rec["last_lag_min"] = float(lag_min)
+    rec["last_utc"] = pd.Timestamp.now(tz='UTC').isoformat()
+    defers[k] = rec
+    # Purge stale entries (older than 6h) so state doesn't grow
+    cutoff = pd.Timestamp.now(tz='UTC') - timedelta(hours=6)
+    for kk in list(defers.keys()):
+        try:
+            first = pd.Timestamp(defers[kk]["first_utc"])
+            if first < cutoff:
+                defers.pop(kk, None)
+        except Exception:
+            pass
+    should_alert = rec["count"] >= 2 and not rec["alerted"]
+    if should_alert:
+        rec["alerted"] = True
+    save_health(h)
+    return should_alert
+
+
+def clear_orb_lag_defers(session: str, or_close_ts):
+    """Call on successful PLAN dispatch to reset defer counter for that window."""
+    h = load_health()
+    defers = h.get("orb_lag_defers", {})
+    k = f"{session}|{pd.Timestamp(or_close_ts).isoformat()}"
+    if k in defers:
+        defers.pop(k, None)
+        save_health(h)
 
 
 def check_and_record_dispatch_tick():

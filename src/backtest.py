@@ -1,10 +1,10 @@
 """Minimal cost-aware backtester for event-conditioned GC trades.
 
-Model assumptions for GC futures:
+Model assumptions for GC futures (realistic — see audit 2026-07-07):
   contract_size : 100 troy oz
   tick_size     : 0.10 USD/oz  ($10 P&L per tick)
-  spread_cost   : 1 tick = $0.10 per oz at entry
-  slippage      : 0.5 tick each side = $0.10 per oz round-trip
+  spread_cost   : 1 tick RT = $0.10 per oz round-trip (bid-ask on entry)
+  slippage      : 1 tick RT = $0.10 per oz round-trip (stop/limit fill drift)
   commission    : $4 round-trip = $0.04 per oz round-trip
   Total RT cost : $0.24 per oz = $24 per contract
 
@@ -26,10 +26,10 @@ OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 # Cost model -----------------------------------------------------------------
 CONTRACT_SIZE = 100  # oz per GC contract
-# User-specified spread: $0.05/oz per side → $0.10/oz RT
-# Plus 0.05 slippage RT + $0.04/oz commission (assumes $4 RT per contract) = $0.19/oz RT
-RT_COST_PER_OZ = 0.19
-RT_COST_PER_CONTRACT = RT_COST_PER_OZ * CONTRACT_SIZE  # = $19
+# Realistic RT: 1-tick spread ($0.10) + 1-tick slippage ($0.10) + commission ($0.04)
+# = $0.24/oz RT = $24/contract. Prior value of $0.19 was optimistic (audit 2026-07-07).
+RT_COST_PER_OZ = 0.24
+RT_COST_PER_CONTRACT = RT_COST_PER_OZ * CONTRACT_SIZE  # = $24
 
 
 @dataclass
