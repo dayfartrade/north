@@ -35,10 +35,7 @@ ALERTS_STREAM = ROOT / "data" / "alerts_stream.jsonl"
 LAUNCH_UTC = pd.Timestamp("2026-07-01T00:00:00Z")
 PUBLIC_TRADE_MIN_AGE_HOURS = 24  # public sees resolved trades only, >24h old
 
-DISCLAIMER = (
-    "Not financial advice. Futures trading involves substantial risk of loss. "
-    "Past results do not guarantee future performance. Your capital, your decision."
-)
+from alert_format_v2 import DISCLAIMER_PLAIN as DISCLAIMER
 
 log = logging.getLogger("goldtrader.api")
 

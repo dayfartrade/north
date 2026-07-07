@@ -26,7 +26,11 @@ RULE = "━━━━━━━━━━━━━━━━━━━━━━━━
 
 SESSION_EMOJI = {"LON": "🇬🇧", "NY": "🇺🇸", "ASIA": "🇯🇵"}
 
-DISCLAIMER = "_Not financial advice. Educational only. Futures trading involves substantial risk of loss._"
+DISCLAIMER_PLAIN = (
+    "Not financial advice. Futures trading involves substantial risk of loss. "
+    "Past results do not guarantee future performance. Your capital, your decision."
+)
+DISCLAIMER = f"_{DISCLAIMER_PLAIN}_"  # Telegram-italicized form
 
 
 def _emoji(sess: str) -> str:
