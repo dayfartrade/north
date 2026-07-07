@@ -246,6 +246,114 @@ def _safe_send(msg: str, sent: set, key: str, actions: list, action_tag: str,
         return False
 
 
+POSTMORTEM_LOOKBACK_HOURS = 6
+POSTMORTEM_MIN_AGE_MIN = 10  # let the tracker settle for 10 min after exit
+
+
+def _publish_postmortems(sent: set, actions: list) -> None:
+    """Scan the ORB forward log for closed trades that haven't yet had a
+    post-mortem posted. Fires at most one per (session, entry_ts) key.
+
+    Public post-mortem is R-framed (no per-account P&L). Silent if no
+    eligible trades — safe to call every dispatch tick.
+    """
+    tracker_log = ROOT / "data" / "tracker" / "orb_forward_log.csv"
+    if not tracker_log.exists():
+        return
+    try:
+        import csv
+        rows = []
+        with open(tracker_log, "r", encoding="utf-8") as f:
+            reader = csv.DictReader(f)
+            for r in reader:
+                rows.append(r)
+    except Exception as e:
+        _log(f"[orb] postmortem read failed: {type(e).__name__}: {e}")
+        return
+    if not rows:
+        return
+
+    now = pd.Timestamp.now(tz="UTC")
+    cutoff_recent = now - pd.Timedelta(hours=POSTMORTEM_LOOKBACK_HOURS)
+    cutoff_settle = now - pd.Timedelta(minutes=POSTMORTEM_MIN_AGE_MIN)
+
+    from alert_format_v2 import trade_postmortem as fmt_postmortem
+
+    for r in rows:
+        if r.get("took_trade", "").strip().lower() not in ("true", "1"):
+            continue
+        exit_ts_str = (r.get("exit_ts") or "").strip()
+        entry_ts_str = (r.get("entry_ts") or "").strip()
+        if not exit_ts_str or not entry_ts_str:
+            continue
+        try:
+            exit_ts = pd.Timestamp(exit_ts_str)
+            entry_ts = pd.Timestamp(entry_ts_str)
+            if exit_ts.tz is None:
+                exit_ts = exit_ts.tz_localize("UTC")
+            if entry_ts.tz is None:
+                entry_ts = entry_ts.tz_localize("UTC")
+        except Exception:
+            continue
+        # Window: exit older than 10min (settle), newer than 6h (don't backfill ancient)
+        if exit_ts > cutoff_settle or exit_ts < cutoff_recent:
+            continue
+
+        sess_name = r.get("session", "")
+        key = f"postmortem|{sess_name}|{entry_ts.isoformat()}"
+        if key in sent:
+            continue
+
+        try:
+            entry_price = float(r["entry_price"])
+            exit_price = float(r["exit_price"])
+            stop_price = float(r["stop_price"])
+            target_price = float(r["target_price"])
+            direction = int(float(r["direction"]))
+        except Exception as e:
+            _log(f"[orb] postmortem skip {key}: bad field ({type(e).__name__})")
+            continue
+
+        # R-multiple: signed distance from entry to exit / stop-distance
+        stop_dist = abs(entry_price - stop_price)
+        if stop_dist <= 0:
+            continue
+        if direction > 0:
+            r_mult = (exit_price - entry_price) / stop_dist
+        else:
+            r_mult = (entry_price - exit_price) / stop_dist
+
+        mae_r = None; mfe_r = None
+        try:
+            mae_d = float(r.get("mae_price_distance") or "nan")
+            mfe_d = float(r.get("mfe_price_distance") or "nan")
+            if pd.notna(mae_d):
+                mae_r = -abs(mae_d) / stop_dist  # MAE is loss-side, negative
+            if pd.notna(mfe_d):
+                mfe_r = abs(mfe_d) / stop_dist  # MFE is gain-side, positive
+        except Exception:
+            pass
+
+        try:
+            from strategy_version import STRATEGY_VERSION
+            version = STRATEGY_VERSION
+        except Exception:
+            version = "v7"
+
+        payload = {
+            "session": sess_name, "version": version,
+            "direction": direction,
+            "entry_price": entry_price, "exit_price": exit_price,
+            "stop_price": stop_price, "target_price": target_price,
+            "entry_ts": entry_ts, "exit_ts": exit_ts,
+            "r_multiple": r_mult,
+            "mae_r": mae_r, "mfe_r": mfe_r,
+        }
+        msg = fmt_postmortem(payload)
+        _safe_send(msg, sent, key, actions, "orb_postmortem", sess_name,
+                    entry_ts, audience="public")
+
+
 def _validation_gate() -> tuple[bool, str]:
     """H3 kill-switch: check latest weekly_validation verdict.
 
@@ -637,6 +745,13 @@ def dispatch_orb_alerts():
                          audience="private")
                 except Exception as e:
                     _log(f"[orb] private sizing send failed: {type(e).__name__}: {e}")
+
+    # Post-mortem scanner: publish recap for any recently-closed trades
+    # (silent when no eligible trades — safe every tick)
+    try:
+        _publish_postmortems(sent, actions)
+    except Exception as e:
+        _log(f"[orb] postmortem scanner exception: {type(e).__name__}: {e}")
 
     state["sent"] = sorted(sent)
     save_state(state)

@@ -279,6 +279,60 @@ def heartbeat(payload: dict) -> str:
     ])
 
 
+def _direction_arrow(direction: int) -> str:
+    return "LONG 🟢" if direction > 0 else "SHORT 🔴" if direction < 0 else "?"
+
+
+def _exit_reason(exit_price: float, stop_price: float, target_price: float,
+                 direction: int) -> tuple[str, str]:
+    """Return (short_tag, verbose_line). Matches on approximate equality
+    since fills sometimes round through the level."""
+    tol = 0.01  # 1 cent tolerance for a level match
+    if abs(exit_price - target_price) < tol:
+        return "target hit ✅", "target"
+    if abs(exit_price - stop_price) < tol:
+        return "stopped out ❌", "stop"
+    # Neither level exact — most likely a time exit (or partial that filled off-level)
+    return "time exit ⏰", "time"
+
+
+def trade_postmortem(payload: dict) -> str:
+    """Trust-building trade recap. Fires ~15-45 min after exit (natural
+    latency of the 30-min dispatch tick). R-framed so subscribers can
+    apply to their own sizing.
+
+    Required payload keys:
+      session, version, direction, entry_price, exit_price, stop_price,
+      target_price, entry_ts, exit_ts, r_multiple, mae_r, mfe_r
+    """
+    sess = payload["session"]
+    e = _emoji(sess)
+    dir_str = _direction_arrow(int(payload["direction"]))
+    exit_tag, _ = _exit_reason(
+        float(payload["exit_price"]),
+        float(payload["stop_price"]),
+        float(payload["target_price"]),
+        int(payload["direction"]),
+    )
+    duration_min = int((pd.Timestamp(payload["exit_ts"]) -
+                        pd.Timestamp(payload["entry_ts"])).total_seconds() / 60)
+    r = float(payload["r_multiple"])
+    r_sign = "📈" if r > 0 else "📉" if r < 0 else "⏸"
+    lines = [
+        f"📊 *{sess} ORB · TRADE RECAP* {e}  ·  _{payload['version']}_",
+        RULE,
+        f"Setup:     *{dir_str}* @ {_money(payload['entry_price'])}",
+        f"Exit:       {_money(payload['exit_price'])}   ({exit_tag})",
+        f"Duration:   {duration_min} min",
+        f"Result:    *{r:+.1f}R*  {r_sign}",
+    ]
+    mae = payload.get("mae_r")
+    mfe = payload.get("mfe_r")
+    if mae is not None and mfe is not None:
+        lines += [RULE, f"📏 MAE was {float(mae):+.1f}R,  MFE was {float(mfe):+.1f}R"]
+    return "\n".join(lines)
+
+
 def dispatch_gap(payload: dict) -> str:
     prev_str = pd.Timestamp(payload["prev_ts"]).strftime("%Y-%m-%d %H:%M UTC")
     return "\n".join([
