@@ -338,15 +338,33 @@ def disclaimer():
 
 @app.get("/")
 def root():
+    """Self-describing API index. The website side consumes this at boot to
+    auto-render an 'API status' table and pick up v0.x endpoint additions
+    without a redeploy."""
     return {
         "name": "Gold Day Trader API",
-        "version": "0.2.0",
-        "endpoints": [
-            "/health", "/stats/live", "/stats/historical",
-            "/alerts/recent", "/alerts/stream",
-            "/trades/recent", "/trades/history",
-            "/subscribers/upsert",
-            "/disclaimer",
+        "version": "0.2.1",
+        "auth": "Bearer JWT for subscribers; unauthenticated calls default to 'free' tier",
+        "tier_thresholds": {
+            "INSUFFICIENT": {"n": "< 20", "meaning": "no claim"},
+            "WEAK":         {"n": "20 to 99", "meaning": "directional only"},
+            "USABLE":       {"n": "100 to 249", "meaning": "statistical"},
+            "STRONG":       {"n": ">= 250", "meaning": "high confidence"},
+        },
+        "routes": [
+            {"path": "/health",              "method": "GET",  "tier": "free",       "summary": "Bot liveness, last dispatch, last bar age"},
+            {"path": "/stats/live",          "method": "GET",  "tier": "free",       "summary": "Live P&L since v7 launch — honest numbers, no cherry-pick"},
+            {"path": "/stats/historical",    "method": "GET",  "tier": "free",       "summary": "Latest Phase-7 verdict (WEAK/USABLE/STRONG) + backtest CI"},
+            {"path": "/alerts/recent",       "method": "GET",  "tier": "free/sub",   "summary": "Last N PLAN alerts. Free tier: levels redacted for <24h old"},
+            {"path": "/alerts/stream",       "method": "GET",  "tier": "free/sub",   "summary": "Cursor-based polling. Same redaction rules as /alerts/recent"},
+            {"path": "/trades/recent",       "method": "GET",  "tier": "free/sub",   "summary": "Closed-trade blotter. Subscribers get entry/exit prices"},
+            {"path": "/trades/history",      "method": "GET",  "tier": "free/sub",   "summary": "Trades since <date>. Powers 30-day widget + subscriber archive"},
+            {"path": "/subscribers/upsert",  "method": "POST", "tier": "admin",      "summary": "Stripe->API sync callback (admin bearer)"},
+            {"path": "/disclaimer",          "method": "GET",  "tier": "free",       "summary": "Static risk-disclosure text"},
         ],
-        "auth": "Bearer JWT for subscribers; free tier for unauthenticated",
+        "notes": {
+            "audit_block": "Alert rows carry `audit` sub-blocks (funding, basis, cot, stand_down_windows) — each with its own `as_of_utc` so the site can render freshness honestly.",
+            "cors": "Configure via env GOLDTRADER_CORS_ORIGINS (comma-separated).",
+            "outage_disclosure": "2026-07-03 dispatch missed ~10h (yfinance stall). Fix commits: da3dec9 (silent-defer bug) and a363282 (v7.1 accuracy).",
+        },
     }

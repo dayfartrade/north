@@ -446,10 +446,53 @@ def dispatch_orb_alerts():
                 clear_orb_lag_defers(sess_name, or_close_ts)
                 # Structured emit for API layer (data/alerts_stream.jsonl).
                 # One JSONL row per PLAN; single-write append is atomic for < PIPE_BUF.
+                # Each audit sub-block carries its own as_of_utc so the website
+                # can render honest freshness (COT is weekly, funding is 8-hourly).
                 try:
                     watch_end = or_close_ts + pd.Timedelta(minutes=WATCH * 5)
+                    now_iso = pd.Timestamp.now(tz='UTC').isoformat()
+                    # Build audit sub-blocks (each with its own as_of_utc)
+                    audit = {"stand_down_windows": list(sd_windows) if sd_windows else []}
+                    try:
+                        from funding_filter import get_current_regime
+                        r = get_current_regime()
+                        audit["funding"] = {
+                            "annualized_pct": round(r["current_rate"] * 1095 * 100, 3),
+                            "regime": ("extreme_long" if r["extreme"] and r["regime_tilt"] < 0
+                                       else "extreme_short" if r["extreme"] and r["regime_tilt"] > 0
+                                       else "neutral"),
+                            "abs_percentile": round(r.get("abs_percentile", 0), 3),
+                            "as_of_utc": r.get("as_of_utc") or now_iso,
+                        }
+                    except Exception as e:
+                        audit["funding"] = {"error": type(e).__name__, "as_of_utc": now_iso}
+                    try:
+                        from basis_tracker import current_basis
+                        b = current_basis()
+                        if "error" not in b:
+                            audit["basis"] = {
+                                "dollars": round(float(b["basis_dollars"]), 2),
+                                "pct": round(float(b["basis_pct"]), 4),
+                                "as_of_utc": pd.Timestamp(b["comex_gc_ts"]).isoformat(),
+                            }
+                        else:
+                            audit["basis"] = {"error": b["error"], "as_of_utc": now_iso}
+                    except Exception as e:
+                        audit["basis"] = {"error": type(e).__name__, "as_of_utc": now_iso}
+                    try:
+                        from data_cot import latest_snapshot
+                        cot = latest_snapshot()
+                        if cot:
+                            audit["cot"] = {
+                                "mm_net_long": int(cot["mm_net_long"]),
+                                "pct_52w": round(float(cot["pct_52w"]), 3),
+                                "as_of_utc": pd.Timestamp(cot["report_date"]).isoformat(),
+                            }
+                    except Exception as e:
+                        audit["cot"] = {"error": type(e).__name__, "as_of_utc": now_iso}
+
                     row = {
-                        "ts_sent_utc": pd.Timestamp.now(tz='UTC').isoformat(),
+                        "ts_sent_utc": now_iso,
                         "kind": "orb_plan",
                         "session": sess_name,
                         "or_open_utc": open_ts.isoformat(),
@@ -468,6 +511,7 @@ def dispatch_orb_alerts():
                         "trend_slope": float(cur_slope),
                         "watch_expires_utc": watch_end.isoformat(),
                         "max_hold_min": HOLD * 5,
+                        "audit": audit,
                     }
                     ALERTS_STREAM.parent.mkdir(parents=True, exist_ok=True)
                     with open(ALERTS_STREAM, "a", encoding="utf-8") as f:
