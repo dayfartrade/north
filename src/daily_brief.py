@@ -32,9 +32,7 @@ BRIEF_HOUR_UTC = 22  # UTC — fires once between 22:00 and 23:00 UTC
 TREND_N = 50
 ET = pytz.timezone("America/New_York")
 
-DISCLAIMER = ("\n_Not financial advice. Futures trading involves substantial risk "
-              "of loss. Past results do not guarantee future performance. "
-              "Your capital, your decision._")
+from alert_format_v2 import RULE, DISCLAIMER
 
 
 def _load_state() -> dict:
@@ -60,7 +58,11 @@ def _yesterday_summary() -> str:
     if sub.empty:
         return f"   No trades fired on {yest}."
     n = len(sub); wins = int((sub["net_pnl"] > 0).sum())
-    return (f"   {yest}: n={n}, win={wins}/{n}, net=${sub['net_pnl'].sum():+,.0f}")
+    total = float(sub["net_pnl"].sum())
+    win_pct = wins / n * 100 if n else 0
+    return (f"   Date:   {yest}\n"
+            f"   Trades: {n}   Wins: {wins}/{n}  ({win_pct:.0f}%)\n"
+            f"   Net:    ${total:+,.0f}")
 
 
 def _todays_events() -> str:
@@ -81,7 +83,7 @@ def _todays_events() -> str:
     for _, ev in upc.iterrows():
         ts = pd.Timestamp(ev["ts_utc"])
         ts_et = ts.tz_convert(ET).strftime("%H:%M %Z")
-        lines.append(f"   📰 {ev['event']}  ·  {ts.strftime('%H:%M')} UTC ({ts_et})  ·  ±15m stand-down")
+        lines.append(f"   📰 *{ev['event']}*  ·  {ts.strftime('%H:%M')} UTC  ({ts_et})  ·  _±15m stand-down_")
     return "\n".join(lines)
 
 
@@ -93,7 +95,7 @@ def _session_clock() -> str:
         open_utc = pd.Timestamp.combine(today, sess_t).tz_localize("UTC")
         open_et = open_utc.tz_convert(ET).strftime("%H:%M %Z")
         flag = {"LON": "🇬🇧", "NY": "🇺🇸", "ASIA": "🇯🇵"}[sess_name]
-        lines.append(f"   {flag} {sess_name:5s} open  {sess_t.strftime('%H:%M')} UTC  ({open_et})")
+        lines.append(f"   {flag} *{sess_name}*   {sess_t.strftime('%H:%M')} UTC   ({open_et})")
     return "\n".join(lines)
 
 
@@ -108,23 +110,28 @@ def _market_snapshot() -> str:
         slope = ema.diff(5)
         last = float(bars["close"].iloc[-1])
         a = float(atr.iloc[-1]); s = float(slope.iloc[-1])
-        trend = "UP" if s > 0 else "DOWN" if s < 0 else "FLAT"
-        out.append(f"   📊 COMEX GC: ${last:,.2f}  ·  ATR(20)/1h ${a:.2f}  ·  EMA{TREND_N} slope {s:+.2f} ({trend})")
+        trend = "UP 📈" if s > 0 else "DOWN 📉" if s < 0 else "FLAT ⏸"
+        out.append(f"   COMEX GC     *${last:,.2f}*")
+        out.append(f"   ATR(20)/1h    ${a:.2f}")
+        out.append(f"   EMA{TREND_N} slope   {s:+.2f}   → {trend}")
     except Exception as e:
         out.append(f"   COMEX snapshot unavailable ({type(e).__name__})")
     try:
         from basis_tracker import current_basis
         b = current_basis()
         if "error" not in b:
-            out.append(f"   🔵 Bitget XAUUSDT: ${b['bitget_xauusdt']:,.2f}  ·  basis ${b['basis_dollars']:+.2f} ({b['basis_pct']:+.3f}%)")
+            out.append(f"   Bitget XAU    ${b['bitget_xauusdt']:,.2f}")
+            basis_d = b['basis_dollars']
+            basis_str = f"{'+' if basis_d >= 0 else '-'}${abs(basis_d):.2f}"
+            out.append(f"   Basis         {basis_str}   ({b['basis_pct']:+.3f}%)")
     except Exception:
         pass
     try:
         from funding_filter import get_current_regime
         r = get_current_regime()
         ann = r["current_rate"] * 1095
-        tag = "EXTREME" if r["extreme"] else "neutral"
-        out.append(f"   💱 Funding: {ann:+.2%} ann  ·  P{int(r['abs_percentile']*100)}  ·  {tag}")
+        tag = "EXTREME ⚠️" if r["extreme"] else "neutral"
+        out.append(f"   Funding       {ann:+.2%} ann   ·   P{int(r['abs_percentile']*100)}   ·   {tag}")
     except Exception:
         pass
     return "\n".join(out)
@@ -133,19 +140,36 @@ def _market_snapshot() -> str:
 def build_public_brief() -> str:
     """Public daily brief — broadcast to subscribers (no account-specific data)."""
     now = pd.Timestamp.now(tz="UTC")
-    return (
-        f"☀️ *Daily Brief — {now.strftime('%Y-%m-%d')} UTC*\n"
-        f"\n*Today — top events (next 24h):*\n{_todays_events()}\n"
-        f"\n*Today — session schedule:*\n{_session_clock()}\n"
-        f"\n*Market snapshot:*\n{_market_snapshot()}\n"
-        f"\n_v7 hybrid live  ·  stand-down enabled  ·  4-box audit gate_"
-        f"{DISCLAIMER}"
-    )
+    try:
+        from strategy_version import STRATEGY_VERSION
+        version = STRATEGY_VERSION
+    except Exception:
+        version = "v7"
+    return "\n".join([
+        f"☀️ *DAILY BRIEF* · _{now.strftime('%Y-%m-%d')} UTC_",
+        RULE,
+        "📅 *Today's top events (next 24h)*",
+        _todays_events(),
+        RULE,
+        "🕒 *Session schedule*",
+        _session_clock(),
+        RULE,
+        "📊 *Market snapshot*",
+        _market_snapshot(),
+        RULE,
+        f"_{version} live  ·  stand-down enabled  ·  4-box audit gate_",
+        "",
+        DISCLAIMER,
+    ])
 
 
 def build_private_brief() -> str:
     """Private addendum — yesterday's P&L (account-specific, owner only)."""
-    return (f"📒 *Yesterday's results (private)*\n{_yesterday_summary()}")
+    return "\n".join([
+        "📒 *YESTERDAY'S RESULTS* · _private_",
+        RULE,
+        _yesterday_summary(),
+    ])
 
 
 # Back-compat alias for any older caller (also used by `--dry` flag)
