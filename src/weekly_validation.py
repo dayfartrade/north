@@ -109,7 +109,9 @@ def maybe_publish_weekly_validation() -> bool:
     output = _run_validation()
     _persist_verdict(output)
     verdict = _extract_verdict(output)
-    msg = (f"🔎 *Weekly v7 validation — {now.strftime('%Y-%m-%d')} UTC*\n\n"
+    from alert_format_v2 import RULE
+    msg = (f"🔎 *WEEKLY v7 VALIDATION*  ·  _{now.strftime('%Y-%m-%d')} UTC_\n"
+           f"{RULE}\n"
            f"```\n{verdict}\n```")
     send(msg, audience="private")
     state.setdefault("sent", []).append(key)
