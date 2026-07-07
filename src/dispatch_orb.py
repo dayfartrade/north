@@ -33,7 +33,7 @@ from health import market_likely_open
 
 OR_BARS = 6       # 30-min opening range on 5m
 WATCH = 12        # 60-min breakout window
-HOLD = 24         # 2-hour time exit
+HOLD = 36         # v7.2.1: 3-hour time exit (was 2h; same win rate, +$32/trade)
 TP_MULT = TP_MULT_DEFAULT
 REQUIRE_TREND = True
 BASIS_DIVERGE_PCT = 0.5  # flag if |basis| > this %

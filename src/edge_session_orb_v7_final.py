@@ -70,10 +70,13 @@ TP_MULT_DEFAULT = 1.5
 
 
 def run_orb_v7(bars: pd.DataFrame, session_time: time, label: str,
-                or_bars: int = 6, watch_bars: int = 12, max_hold: int = 24,
+                or_bars: int = 6, watch_bars: int = 12, max_hold: int = 36,
                 tp_mult: float = TP_MULT_DEFAULT, require_trend: bool = True,
                 config: dict | None = None,
                 apply_stand_down: bool = True) -> pd.DataFrame:
+    # v7.2.1: max_hold 24 -> 36 bars (120min -> 180min). Same win rate, +$32/trade.
+    # Winners peak at median 87min (MFE analysis 2026-07-07); extended hold catches
+    # more of the tail without hurting accuracy.
     cfg = (config or SESSION_CONFIG.get(label, SESSION_CONFIG["NY"]))
     bars = bars.sort_index()
     if bars.index.tz is None:
