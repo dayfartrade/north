@@ -542,10 +542,18 @@ def dispatch_orb_alerts():
                         audit["cot"] = {"error": type(e).__name__, "as_of_utc": now_iso}
                     audit["volume"] = vol_audit
 
+                    # Strategy-version stamp (installed 2026-07-07 per Janus Q3A)
+                    try:
+                        from strategy_version import strategy_stamp
+                        stamp = strategy_stamp()
+                    except Exception:
+                        stamp = {"strategy_version": "unknown", "filter_config_hash": "unknown"}
+
                     row = {
                         "ts_sent_utc": now_iso,
                         "kind": "orb_plan",
                         "session": sess_name,
+                        **stamp,
                         "or_open_utc": open_ts.isoformat(),
                         "or_close_utc": or_close_ts.isoformat(),
                         "or_high": float(or_high),
@@ -567,6 +575,36 @@ def dispatch_orb_alerts():
                     ALERTS_STREAM.parent.mkdir(parents=True, exist_ok=True)
                     with open(ALERTS_STREAM, "a", encoding="utf-8") as f:
                         f.write(json.dumps(row, default=str) + "\n")
+
+                    # Shadow log: evaluate REGISTERED candidate filters against the
+                    # same features and log would-have-skipped decisions. Zero live
+                    # impact; used for post-hoc analysis at n>=100 shadow decisions.
+                    try:
+                        from shadow_log import record_shadow
+                        features = {
+                            "or_range": float(or_range),
+                            "or_atr_ratio": float(or_range / cur_atr) if cur_atr else None,
+                            "or_win_vol_ratio": (vol_audit.get("ratio")
+                                                  if isinstance(vol_audit, dict) else None),
+                            "trend_slope": float(cur_slope),
+                            "funding_pct": (audit.get("funding", {}).get("annualized_pct")
+                                            if isinstance(audit.get("funding"), dict) else None),
+                            "basis_pct": (audit.get("basis", {}).get("pct")
+                                          if isinstance(audit.get("basis"), dict) else None),
+                            "cot_pct_52w": (audit.get("cot", {}).get("pct_52w")
+                                            if isinstance(audit.get("cot"), dict) else None),
+                        }
+                        plan_context = {
+                            "session": sess_name,
+                            "or_open_utc": open_ts.isoformat(),
+                            "or_close_utc": or_close_ts.isoformat(),
+                            "or_high": float(or_high),
+                            "or_low": float(or_low),
+                            **stamp,
+                        }
+                        record_shadow(plan_context, features)
+                    except Exception as e:
+                        _log(f"[orb] shadow_log emit failed: {type(e).__name__}: {e}")
                 except Exception as e:
                     _log(f"[orb] alerts_stream emit failed: {type(e).__name__}: {e}")
                 # PRIVATE sizing follow-up (account-specific; never broadcast)

@@ -1,6 +1,7 @@
 # Secrets — NEVER commit
 .telegram
 .env
+.github-token
 *.pem
 *.key
 
@@ -38,3 +39,6 @@ desktop.ini
 
 # Ad-hoc state snapshots (rollback backups)
 data/dispatch_state.baseline_*.json
+
+# Research PDFs (large, licensed content — not for repo)
+research material/
