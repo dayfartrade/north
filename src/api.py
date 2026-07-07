@@ -214,7 +214,7 @@ console = APIRouter(prefix="/v1/console", tags=["console"])
 
 @console.get("/health")
 def console_health(_: None = None):
-    require_console_dep = None  # placeholder for readability
+    """Full ops health incl. Janus Q5 frequency-first divergence check."""
     h = _safe_load_json(HEALTH_FILE)
     last_disp = h.get("last_dispatch_utc")
     stale_min = None
@@ -228,6 +228,12 @@ def console_health(_: None = None):
             online = stale_min < 90
         except Exception:
             pass
+
+    # Frequency-first divergence check (Janus Q5, 2026-07-07)
+    # "If actual live trade rate < 0.5x expected, filter is over-aggressive
+    #  OR regime doesn't match. Check FREQUENCY before WR at small n."
+    freq_check = _frequency_check()
+
     return {
         "bot_online": online,
         "server_time_utc": pd.Timestamp.now(tz="UTC").isoformat(),
@@ -235,6 +241,52 @@ def console_health(_: None = None):
         "last_dispatch_age_min": round(stale_min, 1) if stale_min is not None else None,
         "last_heartbeat_date": h.get("last_heartbeat_utc_date"),
         "orb_lag_defers": h.get("orb_lag_defers", {}),
+        "frequency_check": freq_check,
+    }
+
+
+def _frequency_check() -> dict:
+    """Compare live trade rate vs backtest expected rate. Janus's frequency-first
+    rule: at small n, frequency divergence is more diagnostic than win-rate
+    divergence."""
+    # Backtest expected: v7.2.1 produced 52 trades over 79 days = 0.658/day
+    # (source: Phase 7 window 2026-04-13 -> 2026-07-01)
+    EXPECTED_TRADES_PER_DAY = 52 / 79
+    LAUNCH_UTC = pd.Timestamp("2026-07-01T00:00:00Z")
+
+    df = _load_forward_log()
+    if df.empty:
+        return {"expected_per_day": round(EXPECTED_TRADES_PER_DAY, 3),
+                "actual_per_day": None, "ratio": None,
+                "verdict": "no_data"}
+
+    since_launch = df[df["open_ts"] >= LAUNCH_UTC].copy()
+    live_trades = since_launch[since_launch["took_trade"] == True]
+    now_utc = pd.Timestamp.now(tz="UTC")
+    days_since_launch = max(1, (now_utc - LAUNCH_UTC).total_seconds() / 86400)
+    actual_per_day = len(live_trades) / days_since_launch
+
+    ratio = actual_per_day / EXPECTED_TRADES_PER_DAY if EXPECTED_TRADES_PER_DAY > 0 else None
+
+    if ratio is None or len(live_trades) < 5:
+        verdict = "sample_too_small"  # per Janus: n>=20 minimum before comparing WR; freq lens sooner
+    elif ratio < 0.5:
+        verdict = "under_frequency"   # filter over-aggressive OR regime mismatch
+    elif ratio > 2.0:
+        verdict = "over_frequency"    # filter under-active OR regime-atypical opportunity
+    else:
+        verdict = "in_range"
+
+    return {
+        "expected_per_day": round(EXPECTED_TRADES_PER_DAY, 3),
+        "actual_per_day": round(actual_per_day, 3),
+        "ratio": round(ratio, 3) if ratio is not None else None,
+        "live_trade_count": int(len(live_trades)),
+        "days_since_launch": round(days_since_launch, 1),
+        "verdict": verdict,
+        "note": ("Janus Q5: frequency divergence is more diagnostic than WR "
+                 "divergence at small n. If under_frequency, investigate filter "
+                 "or regime before adjusting the strategy."),
     }
 
 
