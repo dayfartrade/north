@@ -180,6 +180,35 @@ Config synced (src/edge_session_orb_v7_final.py): ASIA and NY both use or_vs_atr
 3. Start Phase 8.1 design sketch
 4. Do NOT touch live (kill switch stays on)
 
+## PHASES 8.1-8.5 COMPLETED (15:30 UTC)
+
+**Phase 8.1** — `src/strategy_engine.py` sketch + 12 passing tests. Types (RegimeContext, SessionConfig, OrContext, Decision, Direction). Two filters implemented (or_atr, trend). Path-Y-matching SESSION_CONFIGS_V8_INITIAL.
+
+**Phase 8.2** — filter_news_stand_down + filter_vol_ratio added. `src/regime_context.py` builder (real yield, DXY, TNX, GC daily). Golden fixtures: 27 fixtures pinned from orb_forward_log; 40 tests passing.
+
+**Phase 8.3** — Backtest engine + dispatcher ported to `strategy_engine.evaluate_session`. Divergence class ELIMINATED — both trees share the same filter code path.
+
+**Phase 8.4** — DSR re-audit reproduces Path Y exactly: n=25, 52% win, +$424/trade, CI [-$112,+$954] → NOT READY. Holdout 80% win +$1,434 → PASS. Drift 2.7 SE → FAIL. Port verified correct; strategy still fails at honest metrics.
+
+**Phase 8.5** — filter_prior_day_range + filter_gap_after_down_day added as shadow-only (thresholds None until n≥100 shadow evidence). Registered filter chain: or_atr, trend, news, vol_ratio, prior_day_range, gap_after_down_day.
+
+## SYSTEM STATE (session end)
+
+- Kill switch: ON
+- Shadow tracker: armed, first entry expected 2026-07-14 07:00 UTC LON
+- v8 strategy_engine: single source of truth, 40 tests passing
+- DSR verdict: NOT READY (unchanged, honest baseline)
+- SPRT (rebased): CONTINUE (log-LR +2.33 < +2.94 halt boundary)
+- 14 commits pushed today
+
+**Next-session handoff (revised):**
+1. Check shadow log for first LON entry at 07:00 UTC
+2. Build outcome-resolution script (post-hoc PnL for shadow entries) — biggest missing piece
+3. Wait for shadow n≥30 before considering re-audit (~30 days)
+4. Continue kill switch on
+5. Optional: wire halt_monitor into dispatch (deferred; would provide automatic verdict gating)
+6. Optional: apply session-aware daemon fix (deferred; cleans up wasted ticks)
+
 ## HALT DECISION PENDING FROM USER
 
 **Impact if HALT accepted:**

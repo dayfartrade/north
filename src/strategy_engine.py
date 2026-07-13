@@ -230,15 +230,51 @@ def filter_vol_ratio(cfg: SessionConfig, ctx: OrContext, regime: RegimeContext) 
     return None
 
 
+def filter_prior_day_range(cfg: SessionConfig, ctx: OrContext, regime: RegimeContext) -> Optional[str]:
+    """Skip PLAN if prior-day GC range exceeded threshold (whipsaw filter).
+
+    Shadow candidate registered 2026-07-13 in shadow_candidates_batch.md.
+    Ships as v8 filter only after n>=100 shadow evidence.
+    Ratio for eventual ship gate is per SessionConfig.max_prior_day_range.
+    """
+    threshold = getattr(cfg, "max_prior_day_range", None)
+    if threshold is None:
+        return None
+    if regime.prior_day_range is None:
+        return None
+    if regime.prior_day_range > threshold:
+        return f"prior_day_range {regime.prior_day_range:.1f} > max {threshold}"
+    return None
+
+
+def filter_gap_after_down_day(cfg: SessionConfig, ctx: OrContext, regime: RegimeContext) -> Optional[str]:
+    """Skip LONG PLAN if prior day closed sharply lower (dead-cat bounce filter).
+
+    Shadow candidate registered 2026-07-13 in shadow_candidates_batch.md.
+    Applies only to LONG direction bias (checked via slope sign).
+    """
+    threshold = getattr(cfg, "gap_after_down_day_threshold", None)
+    if threshold is None:
+        return None
+    if regime.prior_day_close_change is None:
+        return None
+    # Only relevant when we'd take LONG (slope > 0)
+    if ctx.slope_at_close <= 0:
+        return None
+    if regime.prior_day_close_change <= threshold:
+        return f"prior_day_close_change {regime.prior_day_close_change:.1f} <= {threshold}"
+    return None
+
+
 REGISTERED_FILTERS: tuple[FilterFn, ...] = (
     filter_or_atr,
     filter_trend,
     filter_news_stand_down,
     filter_vol_ratio,
-    # Phase 8.2 candidates (add pre-registered):
-    # filter_london_fix (entry-level, not session-level — handled in dispatch layer)
-    # filter_prior_day_range (from shadow batch)
-    # filter_gap_after_down_day (from shadow batch)
+    filter_prior_day_range,
+    filter_gap_after_down_day,
+    # London fix filter is entry-level (per breakout), not session-level;
+    # handled in dispatch/backtest execution layer.
 )
 
 
