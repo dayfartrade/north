@@ -130,7 +130,6 @@ def main():
     if bf["stale"] and market_likely_open():
         print(f"[dispatch] STALE bars ({bf['age_hours']:.1f}h old) during market hours — "
               f"only heartbeat will be sent.")
-        from telegram_bot import send
         send(f"⚠️ *stale data warning*: latest GC bar is "
              f"{bf['age_hours']:.1f}h old (UTC {bf['last_bar_utc'][:16]}). "
              f"Suppressing trade plan alerts until refreshed.")
