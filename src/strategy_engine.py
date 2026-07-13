@@ -1,0 +1,293 @@
+"""v8 strategy engine — single source of truth for filter and decision logic.
+
+**Status: SKETCH (Phase 8.1). No production callers yet.**
+
+Design principles (see docs/experiments/2026-07-13_v8_scope.md):
+  P1 One module owns all filter logic; backtest + live + shadow import from here.
+  P2 Filters are pure functions, unit-testable in isolation.
+  P3 RegimeContext is a first-class input to every decision.
+  P4 Dispatcher is a thin runner; strategy semantics live here.
+  P5 Every decision is logged before any side effect.
+  P6 One version per registry entry; ship = new VERSION constant.
+
+This file will REPLACE:
+  - edge_session_orb_v7_final.py (backtest strategy)
+  - Most of dispatch_orb.py (dispatch's strategy calls)
+  - The shadow candidate logic in shadow_log.py
+
+Not touched yet — Phase 8.3 does the port.
+"""
+from __future__ import annotations
+
+from dataclasses import dataclass, field
+from datetime import datetime, time
+from enum import Enum
+from typing import Callable, Optional
+
+import pandas as pd
+
+
+VERSION = "v8.0.0-sketch"
+"""Bump this on every strategy behavior change. Registry entries link to it."""
+
+
+# ---------------------------------------------------------------------------
+# Regime context (P3)
+# ---------------------------------------------------------------------------
+
+@dataclass(frozen=True)
+class RegimeContext:
+    """Snapshot of macro/market state at decision time.
+
+    Populated by the caller BEFORE calling any filter or decision function.
+    All fields optional — filters handle None gracefully (skip conditioning
+    on that variable). Never mutated after construction.
+    """
+    as_of_utc: pd.Timestamp
+
+    # Macro (daily FRED-style, updated at market close)
+    real_yield_10y: Optional[float] = None      # 10y TIPS, %
+    dxy: Optional[float] = None                 # Trade-weighted USD index
+    tnx: Optional[float] = None                 # 10y Treasury yield, %
+
+    # Positioning (weekly)
+    cot_mm_net_long: Optional[float] = None     # Managed money net long, contracts
+    cot_pct_52w: Optional[float] = None         # Percentile of 52w range
+
+    # Prior-session context
+    prior_day_range: Optional[float] = None     # Prior UTC-day GC range, pts
+    prior_day_close_change: Optional[float] = None  # Δ vs 2 days ago
+
+    # Bar-level context at decision time
+    or_atr_ratio: Optional[float] = None
+    or_win_vol_ratio: Optional[float] = None
+    trend_slope: Optional[float] = None
+
+    # Crypto/perpetual side channels
+    funding_annualized_pct: Optional[float] = None
+    basis_pct: Optional[float] = None
+
+
+# ---------------------------------------------------------------------------
+# Decision protocol (P5)
+# ---------------------------------------------------------------------------
+
+class Direction(Enum):
+    LONG = 1
+    SHORT = -1
+    FLAT = 0
+
+
+@dataclass(frozen=True)
+class SessionConfig:
+    """Per-session strategy config. Immutable after ship."""
+    name: str                    # "LON" | "NY" | "ASIA"
+    or_bars: int = 6             # 30-min OR on 5m bars
+    watch_bars: int = 12         # 60-min breakout window
+    max_hold_bars: int = 36      # 3-hour max hold (v7.2 extended)
+
+    # OR/ATR gate (per-session semantics — Phase 8.3 decides ranges)
+    or_atr_max: Optional[float] = None   # skip if or_range > or_atr_max * ATR
+    or_atr_min: Optional[float] = None   # skip if or_range < or_atr_min * ATR
+    or_atr_deadzone: Optional[tuple[float, float]] = None  # skip if in range
+
+    # Trend gate
+    require_trend: bool = True    # skip if slope == 0 (FLAT)
+
+    # Geometry
+    stop_mode: str = "or_range"   # "or_range" | "fixed"
+    fixed_stop_dollars: Optional[float] = None
+    target_mode: str = "or_range" # "or_range" | "stop_x_tp"
+    tp_mult: float = 1.5
+
+    # Session UTC open time (DST-aware, computed per-date by caller)
+    utc_open_local: time = time(0, 0)
+
+
+@dataclass(frozen=True)
+class Decision:
+    """The output of `evaluate_session()`. Log this BEFORE any side effect."""
+    ts_recorded_utc: pd.Timestamp
+    version: str
+    session: str
+    or_open_utc: pd.Timestamp
+    or_close_utc: pd.Timestamp
+    or_high: float
+    or_low: float
+    or_range: float
+    atr: float
+
+    would_take: bool
+    would_skip_reasons: tuple[str, ...] = ()  # empty if would_take
+
+    direction: Direction = Direction.FLAT
+    entry_price: Optional[float] = None
+    target_price: Optional[float] = None
+    stop_price: Optional[float] = None
+
+    # Retained for audit + regression testing
+    regime: Optional[RegimeContext] = None
+    session_config_hash: str = ""
+
+
+# ---------------------------------------------------------------------------
+# Filter registry (P1, P2)
+# ---------------------------------------------------------------------------
+
+FilterFn = Callable[[SessionConfig, "OrContext", RegimeContext], Optional[str]]
+"""A filter is a pure function returning None (pass) or a string reason (skip).
+
+Registered filters are applied in a fixed order by evaluate_session().
+Adding a filter = one new function + one registry entry. That's it.
+"""
+
+
+@dataclass(frozen=True)
+class OrContext:
+    """The OR bars + ATR + slope, packaged for filters."""
+    session_open_utc: pd.Timestamp
+    or_close_utc: pd.Timestamp
+    or_high: float
+    or_low: float
+    or_range: float
+    atr_at_close: float
+    slope_at_close: float
+    or_bars_df: pd.DataFrame  # for filters that need bar-level detail
+
+
+def filter_or_atr(cfg: SessionConfig, ctx: OrContext, regime: RegimeContext) -> Optional[str]:
+    """Per-session OR/ATR gates. Explicit — no cross-session default fallback.
+
+    This replaces v7's dispatch_orb.py:528 (which fell through to default 2.0
+    for NY/ASIA — the source of today's divergence bug).
+    """
+    ratio = ctx.or_range / ctx.atr_at_close if ctx.atr_at_close > 0 else 0
+
+    if cfg.or_atr_max is not None and ratio > cfg.or_atr_max:
+        return f"OR/ATR {ratio:.2f} > max {cfg.or_atr_max}"
+
+    if cfg.or_atr_min is not None and ratio < cfg.or_atr_min:
+        return f"OR/ATR {ratio:.2f} < min {cfg.or_atr_min}"
+
+    if cfg.or_atr_deadzone is not None:
+        lo, hi = cfg.or_atr_deadzone
+        if lo <= ratio <= hi:
+            return f"OR/ATR {ratio:.2f} in dead zone [{lo}, {hi}]"
+
+    return None
+
+
+def filter_trend(cfg: SessionConfig, ctx: OrContext, regime: RegimeContext) -> Optional[str]:
+    """Skip on flat trend if config requires trend."""
+    if cfg.require_trend and ctx.slope_at_close == 0:
+        return "trend flat"
+    return None
+
+
+# TODO Phase 8.2: news stand-down, london-fix, volume ratio, etc.
+
+REGISTERED_FILTERS: tuple[FilterFn, ...] = (
+    filter_or_atr,
+    filter_trend,
+    # add more here — order matters, log all reasons that fire
+)
+
+
+# ---------------------------------------------------------------------------
+# Main entry point (P1, P4)
+# ---------------------------------------------------------------------------
+
+def evaluate_session(cfg: SessionConfig, ctx: OrContext, regime: RegimeContext) -> Decision:
+    """Compute the strategy's decision for one session's OR.
+
+    Called by:
+      - Backtest engine (v8 replacement for edge_session_orb_v7_final.run_orb_v7)
+      - Dispatcher (v8 replacement for dispatch_orb.dispatch_orb_alerts's inner loop)
+      - Shadow tracker (v8 replacement for scripts/shadow_orb_tracker.py)
+
+    All three call the SAME code. Divergence impossible.
+    """
+    reasons = tuple(r for f in REGISTERED_FILTERS if (r := f(cfg, ctx, regime)) is not None)
+
+    # Direction from slope
+    if ctx.slope_at_close > 0:
+        direction = Direction.LONG
+    elif ctx.slope_at_close < 0:
+        direction = Direction.SHORT
+    else:
+        direction = Direction.FLAT
+
+    # Geometry — only relevant if we'd take
+    if not reasons:
+        if cfg.stop_mode == "fixed":
+            stop_dist = cfg.fixed_stop_dollars or 0.0
+        else:
+            stop_dist = ctx.or_range
+        if cfg.target_mode == "stop_x_tp":
+            target_dist = cfg.tp_mult * stop_dist
+        else:
+            target_dist = cfg.tp_mult * ctx.or_range
+
+        if direction == Direction.LONG:
+            entry = ctx.or_high
+            target = entry + target_dist
+            stop = entry - stop_dist
+        elif direction == Direction.SHORT:
+            entry = ctx.or_low
+            target = entry - target_dist
+            stop = entry + stop_dist
+        else:
+            entry = target = stop = None
+    else:
+        entry = target = stop = None
+
+    return Decision(
+        ts_recorded_utc=pd.Timestamp.now(tz="UTC"),
+        version=VERSION,
+        session=cfg.name,
+        or_open_utc=ctx.session_open_utc,
+        or_close_utc=ctx.or_close_utc,
+        or_high=ctx.or_high,
+        or_low=ctx.or_low,
+        or_range=ctx.or_range,
+        atr=ctx.atr_at_close,
+        would_take=(not reasons and direction != Direction.FLAT),
+        would_skip_reasons=reasons,
+        direction=direction,
+        entry_price=entry,
+        target_price=target,
+        stop_price=stop,
+        regime=regime,
+        session_config_hash="TODO-hash-cfg-here",
+    )
+
+
+# ---------------------------------------------------------------------------
+# Session configs — Phase 8.3 ports these from v7 with explicit intent
+# ---------------------------------------------------------------------------
+
+# Path Y config (matches current live behavior). Ships when Phase 8.3 completes.
+SESSION_CONFIGS_V8_INITIAL = {
+    "LON": SessionConfig(
+        name="LON",
+        or_atr_max=2.0,
+        stop_mode="fixed",
+        fixed_stop_dollars=13.0,
+        target_mode="stop_x_tp",
+        tp_mult=1.5,
+    ),
+    "NY": SessionConfig(
+        name="NY",
+        or_atr_max=2.0,  # Path Y: matches live's actual behavior (no min gate)
+        stop_mode="or_range",
+        target_mode="or_range",
+        tp_mult=1.5,
+    ),
+    "ASIA": SessionConfig(
+        name="ASIA",
+        or_atr_max=2.0,  # Path Y: matches live (no deadzone)
+        stop_mode="or_range",
+        target_mode="or_range",
+        tp_mult=1.5,
+    ),
+}
