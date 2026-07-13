@@ -156,8 +156,13 @@ def compute_shadow_equity(pnls: list[float], halt_at_dd: float) -> dict:
 
 
 def load_live_pnls() -> list[float]:
+    """Load taken-trade P&Ls since launch. Dedupes on (entry_ts, entry_price,
+    exit_price) — the tracker occasionally logs the same trade under multiple
+    sessions (known bug in session-attribution; benign except for SPRT counts).
+    """
     if not FWD.exists():
         return []
+    seen: set = set()
     out: list[float] = []
     with open(FWD, newline="") as f:
         for row in csv.DictReader(f):
@@ -165,8 +170,13 @@ def load_live_pnls() -> list[float]:
                 continue
             try:
                 d = row["entry_ts"][:10]
-                if d >= LAUNCH_DATE:
-                    out.append(float(row["net_pnl"]))
+                if d < LAUNCH_DATE:
+                    continue
+                key = (row["entry_ts"], row["entry_price"], row["exit_price"])
+                if key in seen:
+                    continue
+                seen.add(key)
+                out.append(float(row["net_pnl"]))
             except (ValueError, KeyError):
                 continue
     return out
