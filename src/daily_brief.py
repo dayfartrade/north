@@ -172,6 +172,52 @@ def build_private_brief() -> str:
     ])
 
 
+def build_shadow_equity_brief() -> str | None:
+    """Shadow-equity digest (private, owner only). Returns None if no data.
+
+    Fires alongside daily brief at 22:00 UTC. Summarizes what strategy
+    WOULD have decided since kill switch fired 2026-07-13 14:30 UTC.
+    """
+    try:
+        import sys as _sys
+        from pathlib import Path as _P
+        _sys.path.insert(0, str(_P(__file__).resolve().parent.parent / "scripts"))
+        from shadow_equity_dashboard import _load_rows, _summarize_session
+    except Exception:
+        return None
+    rows = _load_rows()
+    if not rows:
+        return None
+    total = _summarize_session(rows)
+    lines = [
+        "👤 *SHADOW-EQUITY DIGEST* · _private_",
+        RULE,
+        f"Total decisions since kill switch: {total['n_decisions']}",
+        f"Would-take: {total['n_took']}  Skip: {total['n_decisions'] - total['n_took']}",
+    ]
+    if total["n_took"] > 0:
+        lines.append(f"Wins: {total['n_wins']}/{total['n_took']} "
+                    f"({100 * total['win_rate']:.0f}%)")
+        lines.append(f"Shadow P&L: ${total['total_pnl']:+,.0f} "
+                    f"(mean ${total['mean_pnl']:+,.0f}/trade)")
+    else:
+        lines.append("_no take-decisions yet_")
+
+    # Per-session breakdown
+    sessions = sorted(set(r["session"] for r in rows))
+    if sessions and total["n_took"] > 0:
+        lines.append("")
+        lines.append("*Per session:*")
+        for sess in sessions:
+            sub = [r for r in rows if r["session"] == sess]
+            s = _summarize_session(sub)
+            if s["n_took"] > 0:
+                lines.append(f"  `{sess:5s}` n={s['n_took']:2d} "
+                            f"({100 * s['win_rate']:2.0f}%) "
+                            f"${s['total_pnl']:+,.0f}")
+    return "\n".join(lines)
+
+
 # Back-compat alias for any older caller (also used by `--dry` flag)
 def build_brief() -> str:
     return build_public_brief() + "\n\n" + build_private_brief()
@@ -190,6 +236,13 @@ def maybe_publish_daily_brief() -> bool:
     send(build_public_brief(), audience="public")
     try:
         send(build_private_brief(), audience="private")
+    except Exception:
+        pass
+    # Shadow-equity digest (private, non-fatal if it fails)
+    try:
+        _shadow = build_shadow_equity_brief()
+        if _shadow:
+            send(_shadow, audience="private")
     except Exception:
         pass
     state.setdefault("sent", []).append(key)
