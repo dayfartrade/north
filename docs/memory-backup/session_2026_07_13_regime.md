@@ -159,6 +159,27 @@ Config synced (src/edge_session_orb_v7_final.py): ASIA and NY both use or_vs_atr
 
 **Pending user decision on Y' vs alternatives.**
 
+## PATH Q + Z CHOSEN (15:15 UTC — user picked recommendation)
+
+**Q shipped:**
+- `scripts/shadow_orb_tracker.py` — records ORB decisions each 30-min tick to `data/shadow_equity_since_halt.jsonl`
+- Wired into `src/dispatch.py` after ORB block (safe, idempotent)
+- Kill switch stays on for live capital; shadow tracker fires unconditionally
+- First real shadow entry: tomorrow's LON at 07:00 UTC (today's NY window already closed)
+
+**Z scoped:** `docs/experiments/2026-07-13_v8_scope.md`
+- Rebuild rationale: single-source-of-truth for filters; class-of-bug elimination
+- 6 design principles (single source of truth, testable filters, first-class regime context, thin dispatcher, decision logging, one-strategy-per-registry)
+- Migration path: Phases 8.1-8.5 (~1 week + variable filter-dev tail)
+- 07-30 launch **slips**; realistic new target 2026-08-15+
+- Recommended: v8 rebuild + Path Q shadow tracker in parallel
+
+**Next-session handoff:**
+1. First LON tick at 07:00 UTC will populate shadow log (test the tracker)
+2. Backfill outcome resolution (post-hoc PnL determination) needs a second script — not yet built
+3. Start Phase 8.1 design sketch
+4. Do NOT touch live (kill switch stays on)
+
 ## HALT DECISION PENDING FROM USER
 
 **Impact if HALT accepted:**

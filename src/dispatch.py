@@ -254,6 +254,19 @@ def main():
     except Exception as e:
         print(f"[dispatch] ORB sub-dispatch failed: {e}")
 
+    # Shadow tracker (Path Q): record what strategy would have decided.
+    # Idempotent, side-effect-only writes to data/shadow_equity_since_halt.jsonl.
+    # Safe regardless of kill-switch state; useful data during halted period.
+    try:
+        import sys as _sys
+        _sys.path.insert(0, str(ROOT / "scripts"))
+        from shadow_orb_tracker import track_shadow_decisions
+        _n_shadow = track_shadow_decisions()
+        if _n_shadow:
+            print(f"[dispatch] shadow_tracker recorded {_n_shadow} decision(s)")
+    except Exception as e:
+        print(f"[dispatch] shadow_tracker failed: {type(e).__name__}: {e}")
+
     # Daily brief — 1 fixed publication per UTC day at 22:00
     try:
         from daily_brief import maybe_publish_daily_brief
