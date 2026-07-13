@@ -523,18 +523,45 @@ def dispatch_orb_alerts():
                 cur_slope = float(trend_slope.iloc[or_close_idx])
                 cur_atr = float(atr.iloc[or_close_idx])
 
-                # ----- Box 1: per-session OR-vs-ATR filter (LON only per SESSION_CONFIG)
-                if cfg.get("use_or_filter", False):
-                    or_max = cfg.get("or_vs_atr_max", 2.0) * cur_atr
-                    if or_range > or_max:
-                        msg = fmt_filtered({
-                            "session": sess_name,
-                            "or_range": or_range,
-                            "or_atr_mult": cfg["or_vs_atr_max"],
-                            "atr_limit": or_max,
-                        })
-                        _safe_send(msg, sent, k, actions, "orb_filtered", sess_name, open_ts, audience="public")
-                        continue
+                # ----- Box 1: v8 strategy_engine take/skip decision
+                # (single source of truth; matches backtest per Phase 8.3 port)
+                try:
+                    from strategy_engine import (
+                        OrContext as _V8OrCtx, RegimeContext as _V8Regime,
+                        SessionConfig as _V8Cfg, evaluate_session as _v8_eval,
+                    )
+                    _v8_cfg = _V8Cfg(
+                        name=sess_name,
+                        or_atr_max=cfg.get("or_vs_atr_max"),
+                        or_atr_min=cfg.get("or_vs_atr_min"),
+                        or_atr_deadzone=cfg.get("or_atr_deadzone"),
+                        stop_mode=cfg.get("stop_mode", "or_range"),
+                        fixed_stop_dollars=cfg.get("fixed_stop_price"),
+                        target_mode=cfg.get("target_mode", "or_range"),
+                        tp_mult=cfg.get("tp_mult", 1.5),
+                    )
+                    _v8_orctx = _V8OrCtx(
+                        session_open_utc=open_ts,
+                        or_close_utc=or_close_ts,
+                        or_high=float(or_high), or_low=float(or_low), or_range=float(or_range),
+                        atr_at_close=float(cur_atr), slope_at_close=float(cur_slope),
+                        or_bars_df=bars5.iloc[or_start_idx: or_close_idx + 1],
+                    )
+                    _v8_decision = _v8_eval(_v8_cfg, _v8_orctx, _V8Regime(as_of_utc=or_close_ts))
+                except Exception as _e:
+                    _log(f"[orb] v8 evaluate_session failed, falling through: {type(_e).__name__}: {_e}")
+                    _v8_decision = None
+
+                if _v8_decision is not None and not _v8_decision.would_take:
+                    reason = _v8_decision.would_skip_reasons[0] if _v8_decision.would_skip_reasons else "unknown"
+                    msg = fmt_filtered({
+                        "session": sess_name,
+                        "or_range": or_range,
+                        "or_atr_mult": cfg.get("or_vs_atr_max") or cfg.get("or_vs_atr_min") or 2.0,
+                        "atr_limit": (cfg.get("or_vs_atr_max") or 2.0) * cur_atr,
+                    })
+                    _safe_send(msg, sent, k, actions, "orb_filtered", sess_name, open_ts, audience="public")
+                    continue
 
                 # ----- Geometry per session config
                 if cfg.get("stop_mode") == "fixed":
