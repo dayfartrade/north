@@ -267,6 +267,17 @@ def main():
     except Exception as e:
         print(f"[dispatch] shadow_tracker failed: {type(e).__name__}: {e}")
 
+    # Shadow outcome resolver (Path Q): scan bars post-entry to resolve
+    # target/stop/timeout for pending shadow entries. Idempotent, writes
+    # updated JSONL via atomic tmp+rename.
+    try:
+        from shadow_outcome_resolver import resolve_outcomes
+        _n_resolved, _n_pending = resolve_outcomes()
+        if _n_resolved:
+            print(f"[dispatch] shadow_resolver resolved {_n_resolved} (pending {_n_pending})")
+    except Exception as e:
+        print(f"[dispatch] shadow_resolver failed: {type(e).__name__}: {e}")
+
     # Daily brief — 1 fixed publication per UTC day at 22:00
     try:
         from daily_brief import maybe_publish_daily_brief
