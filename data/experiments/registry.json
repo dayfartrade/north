@@ -154,6 +154,69 @@
       "sr_per_period": 0.4205047502775455,
       "n_observations": 50,
       "notes": "3-feature logistic (session, or_atr_ratio, trend_slope_abs). Purged 5-fold, embargo=1%, threshold=0.5. kept_win=68.0% mean=$+773 keep_frac=96.15% DSR=0.0000 PSR=0.9944"
+    },
+    {
+      "id": "slope_gt_8_shadow",
+      "registered_utc": "2026-07-13T10:15:00Z",
+      "layer": "session_config",
+      "verdict": "shadow",
+      "sr_per_period": null,
+      "n_observations": 24,
+      "notes": "SHADOW: skip LONG if trend_slope>8. From 07-13 post-mortem. In-sample lift +$8,145 skipping 5 losses/0 wins on n=24 forward log; in-sample-of-in-sample overfit risk noted. Bonferroni-N incremented."
+    },
+    {
+      "id": "real_yield_gt_2_2_shadow",
+      "registered_utc": "2026-07-13T10:15:00Z",
+      "layer": "session_config",
+      "verdict": "rejected_pre_apply",
+      "sr_per_period": null,
+      "n_observations": 24,
+      "notes": "REJECTED before apply (2026-07-13 11:00 UTC): OOS regime test on 20+ years fails. High-ry regimes historically produce HIGHER fwd gold returns (+2.28% 20d fwd at ry>=2.2 vs +0.81% at ry<2.2). 3 of 4 launch LONG losses lost on days GC closed UP 1-1.6% — failure mode is INTRADAY MICROSTRUCTURE (breakout failure while daily trend is intact), not macro-directional bet. Filter would suppress correct-direction days. Contributes to Bonferroni-N. New research direction: intraday-chop filters."
+    },
+    {
+      "id": "prior_day_range_gt_80_shadow",
+      "registered_utc": "2026-07-13T10:15:00Z",
+      "layer": "session_config",
+      "verdict": "shadow_pending_apply",
+      "sr_per_period": null,
+      "n_observations": 24,
+      "notes": "SHADOW (design; apply post-CPI): skip PLAN if prior-day GC range>80 pt. Whipsaw filter from 07-13 post-mortem. Weaker candidate (skips 3 winners for 6 losses). Fails 3-months-ago test."
+    },
+    {
+      "id": "gap_after_down_day_shadow",
+      "registered_utc": "2026-07-13T10:15:00Z",
+      "layer": "session_config",
+      "verdict": "shadow_pending_apply",
+      "sr_per_period": null,
+      "n_observations": 24,
+      "notes": "SHADOW (design; apply post-CPI): skip LONG if prior-day close change<=-30 pt. Dead-cat bounce filter. Weakest candidate (n=2 skips, high overfit). Fails 3-months-ago test."
+    },
+    {
+      "id": "sprt_v72_1_launch",
+      "registered_utc": "2026-07-13T11:00:00Z",
+      "layer": "operational_halt",
+      "verdict": "pre_registered",
+      "sr_per_period": null,
+      "n_observations": 10,
+      "notes": "SPRT pre-reg: H0=p_win=0.57 (backtest), H1=p_win=0.35 (broken), alpha=beta=0.05. Boundaries +/-2.944. Sample window = live trades since 2026-07-01 launch. Frozen: no re-run without new pre-reg. Reading at pre-reg time: log-LR=+3.229 crosses HALT boundary. See docs/experiments/2026-07-13_sprt_prereg.md."
+    },
+    {
+      "id": "sprt_v72_1_reentry_prereg",
+      "registered_utc": "2026-07-13T11:05:00Z",
+      "layer": "operational_halt",
+      "verdict": "pre_registered",
+      "sr_per_period": null,
+      "n_observations": null,
+      "notes": "Re-entry conditions for sprt_v72_1_launch halt. Path A (shadow-recovery): shadow +>=$27,390 AND >=5 consecutive would-take at >=60% win. Path B (regime): real_yield<2.0 for 30 consecutive days AND shadow>=0; first 5 trades at 50% size. Path C (new strategy): v7.3+ passes DSR AND new SPRT pre-reg. Hard stop: retire if none fire by 2026-10-13. See docs/experiments/2026-07-13_reentry_conditions_prereg.md."
+    },
+    {
+      "id": "bootstrap_reference_max_dd_2026_07_13",
+      "registered_utc": "2026-07-13T11:00:00Z",
+      "layer": "operational_halt",
+      "verdict": "shipped",
+      "sr_per_period": null,
+      "n_observations": 14,
+      "notes": "Bootstrapped p95 max DD from pre-launch 14-trade null with M=10000 draws. n=10 horizon = $13,695 (used as REFERENCE_MAX_DD in halt_monitor.py, replacing $20k placeholder). n=72 horizon = $42,498. Refresh at n=30, 50, 100 live samples."
     }
   ]
 }

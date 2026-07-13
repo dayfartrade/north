@@ -46,6 +46,15 @@ CANDIDATES = {
         "preregistered_at": "docs/experiments/2026-07-07_vol_ratio_shadow.md",
         "status": "shadow",
     },
+    "slope_gt_8": {
+        "description": "Skip if 15m trend_slope > 8 (top-buying tell — apply LONG-only at analysis time; from 07-13 post-mortem)",
+        "feature": "trend_slope",
+        "operator": "gt",
+        "threshold": 8.0,
+        "registered_utc": "2026-07-13T10:00:00Z",
+        "preregistered_at": "docs/experiments/2026-07-13_slope_gt_8_shadow.md",
+        "status": "shadow",
+    },
 }
 
 

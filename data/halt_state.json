@@ -1,0 +1,36 @@
+{
+  "ts_utc": "2026-07-13T10:56:13.304920+00:00",
+  "verdict": "HALT",
+  "n_trades_since_launch": 10,
+  "final_equity": -12095.0634765625,
+  "realized_max_dd": -12548.087890625,
+  "current_dd": -12095.0634765625,
+  "reference_max_dd_used": 13695.0,
+  "capital_used": 100000.0,
+  "ratio": 0.9162532231197518,
+  "capital_pct": 0.12548087890625,
+  "reason": "SPRT log-LR=3.231 >= 2.944 (pre-reg params p0=0.57 p1=0.35)",
+  "shadow_amber_halt": {
+    "halted_at_trade": null,
+    "counterfactual_equity": -12095.0634765625,
+    "actual_final_equity": -12095.0634765625,
+    "delta_vs_actual": 0.0
+  },
+  "shadow_hard_halt": {
+    "halted_at_trade": null,
+    "counterfactual_equity": -12095.0634765625,
+    "actual_final_equity": -12095.0634765625,
+    "delta_vs_actual": 0.0
+  },
+  "sprt": {
+    "n": 10,
+    "wins": 1,
+    "win_rate": 0.1,
+    "log_lr": 3.2309811814735343,
+    "boundary_A_halt": 2.9444389791664403,
+    "boundary_B_safe": -2.9444389791664403,
+    "verdict": "SPRT_HALT",
+    "p0_hypothesis": 0.57,
+    "p1_hypothesis": 0.35
+  }
+}
