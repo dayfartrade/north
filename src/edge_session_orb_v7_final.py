@@ -106,26 +106,55 @@ def run_orb_v7(bars: pd.DataFrame, session_time: time, label: str,
         if not (np.isfinite(slope) and np.isfinite(cur_atr) and cur_atr > 0):
             continue
 
-        # OR vs ATR filter (v7.1 per-session gates)
-        if cfg.get("use_or_filter", False):
-            r = or_range / cur_atr
-            skip = None
-            if "or_vs_atr_max" in cfg and or_range > cfg["or_vs_atr_max"] * cur_atr:
-                skip = "or_too_wide_vs_atr"
-            elif "or_vs_atr_min" in cfg and r < cfg["or_vs_atr_min"]:
-                skip = "or_too_narrow_vs_atr"  # v7.1: NY low-conviction dead zone
-            elif "or_atr_deadzone" in cfg:
-                dz_lo, dz_hi = cfg["or_atr_deadzone"]
-                if dz_lo <= r <= dz_hi:
-                    skip = "or_atr_deadzone"   # v7.1: ASIA whipsaw zone
-            if skip:
-                rows.append({
-                    "session": label, "session_open_ts": s_ts,
-                    "or_high": or_high, "or_low": or_low, "or_range": or_range,
-                    "trend_slope": slope, "atr": cur_atr,
-                    "took_trade": False, "skip_reason": skip,
-                })
-                continue
+        # Phase 8.3 port: delegate filter decision to strategy_engine
+        # (single source of truth; backtest + live + shadow all use this).
+        try:
+            from strategy_engine import (
+                OrContext, RegimeContext, SessionConfig, evaluate_session,
+            )
+            v8_cfg = SessionConfig(
+                name=label,
+                or_atr_max=cfg.get("or_vs_atr_max"),
+                or_atr_min=cfg.get("or_vs_atr_min"),
+                or_atr_deadzone=cfg.get("or_atr_deadzone"),
+                require_trend=require_trend,
+                stop_mode=cfg.get("stop_mode", "or_range"),
+                fixed_stop_dollars=cfg.get("fixed_stop_price"),
+                target_mode=cfg.get("target_mode", "or_range"),
+                tp_mult=cfg.get("tp_mult", tp_mult),
+            )
+            or_ctx = OrContext(
+                session_open_utc=s_ts,
+                or_close_utc=bars.index[s_idx + or_bars - 1],
+                or_high=or_high, or_low=or_low, or_range=or_range,
+                atr_at_close=cur_atr, slope_at_close=slope,
+                or_bars_df=or_window,
+            )
+            regime = RegimeContext(as_of_utc=bars.index[s_idx + or_bars - 1])
+            decision = evaluate_session(v8_cfg, or_ctx, regime)
+        except Exception:
+            # Fall back to legacy inline filter if strategy_engine unavailable
+            decision = None
+
+        if decision is not None and not decision.would_take:
+            # Map first would-skip reason back to legacy skip_reason vocabulary
+            reason = decision.would_skip_reasons[0] if decision.would_skip_reasons else "unknown"
+            legacy_skip = "or_too_wide_vs_atr"
+            if "min" in reason:
+                legacy_skip = "or_too_narrow_vs_atr"
+            elif "dead zone" in reason:
+                legacy_skip = "or_atr_deadzone"
+            elif "trend" in reason:
+                legacy_skip = "trend_flat"
+            elif "news" in reason:
+                legacy_skip = "news_stand_down"
+            rows.append({
+                "session": label, "session_open_ts": s_ts,
+                "or_high": or_high, "or_low": or_low, "or_range": or_range,
+                "trend_slope": slope, "atr": cur_atr,
+                "took_trade": False, "skip_reason": legacy_skip,
+            })
+            continue
 
         # Watch for breakout
         entry_dir = 0; entry_idx = None; entry_price = None

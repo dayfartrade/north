@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "generated_utc": "2026-07-13T15:18:12.312743+00:00",
+    "generated_utc": "2026-07-13T15:25:39.425879+00:00",
     "generator": "tests/generate_golden_fixtures.py",
     "strategy_version": "v8.0.0-sketch",
     "session_config": "SESSION_CONFIGS_V8_INITIAL (Path Y-matching)",
