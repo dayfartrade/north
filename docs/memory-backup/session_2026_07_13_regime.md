@@ -112,6 +112,33 @@ if or_range > or_max: skip
 
 **Do NOT ship any strategy change without deciding this first.** All other filter work is downstream of this.
 
+## REFINED FINDING (14:55 UTC)
+
+Ran `scripts/filter_divergence_replay.py`. Confirmed by git blame:
+- Commit `a363282` (2026-07-07 v7.1) added per-session filters to `edge_session_orb_v7_final.py` (backtest) ONLY. `dispatch_orb.py` (live) was NEVER touched.
+- Live has been running v7.0-era filter (commit `5facd9d`, 2026-06-30) since v7 launch.
+- **v7.1 was never actually deployed to live.** The +75% mean/trade claim is a backtest-only artifact.
+
+**In-sample replay of 24 forward trades:**
+- LIVE (v7.0 default): kept 6, 67% win, +$3,291
+- BACKTEST (v7.1 intended): kept 11, 55% win, +$301
+- LIVE looks BETTER than intended v7.1 on this sample. But small n + regime confound + possible ATR revision noise.
+
+**Today's NY test:** OR 21.90, ATR 5.32, ratio 4.12. Live SKIPPED (correct: 21.90 > 10.64 default max). v7.1 intended would have PASSED (4.12 > 2.5 min) → likely added another loss in hostile regime.
+
+**Kill switch:** validation_state.json set to "NOT READY" at 14:30 UTC. Live ORB dispatch suppressed until user decides.
+
+**Three decision paths (see docs/experiments/2026-07-13_v7_2_2_filter_sync_proposal.md):**
+- X: Sync live to backtest (implement v7.1 filters in live). Risk: worse on today's test.
+- Y (recommended): Sync backtest to live (accept v7.0 as reality). Re-DSR-audit.
+- Z: Halt + rebuild for v8. Cleanest but slips 07-30 launch.
+
+**Recommended next session sequence:**
+1. Re-run backtest with LIVE filter (Path Y) → new DSR audit
+2. Update SPRT pre-reg with corrected H0
+3. Re-evaluate halt verdict
+4. If still HALT: v8 investigation. If SAFE: reset kill switch, resume.
+
 ## HALT DECISION PENDING FROM USER
 
 **Impact if HALT accepted:**

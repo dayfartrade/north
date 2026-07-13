@@ -1,6 +1,7 @@
 {
-  "last_run_utc": "2026-07-07T16:06:49.794291+00:00",
-  "verdict": "DEPLOY-READY",
+  "last_run_utc": "2026-07-13T14:30:00.000000+00:00",
+  "verdict": "NOT READY",
   "n_trades": 52,
-  "size_tag": "WEAK"
+  "size_tag": "WEAK",
+  "reason": "MANUAL KILL: live/backtest strategy divergence discovered 2026-07-13 14:20 UTC. dispatch_orb.py:528 applies LON's or_vs_atr_max filter as default to NY and ASIA, but backtest applies per-session or_vs_atr_min (NY) and or_atr_deadzone (ASIA). Live is a different strategy than backtest. DSR audit invalid, SPRT hypothesis mismatched. Hold live entries until divergence resolved. See docs/experiments/2026-07-13_sprt_prereg.md and memory session_2026_07_13_regime.md."
 }
