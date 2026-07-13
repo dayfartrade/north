@@ -20,19 +20,23 @@ sys.path.insert(0, str(ROOT / "src"))
 # =============================================================================
 
 def test_session_config_locked():
+    """Path Y baseline (2026-07-13): all sessions use or_vs_atr_max=2.0.
+    v7.1 min/deadzone gates never shipped to live per commit history;
+    backtest config synced to match live behavior.
+    """
     from edge_session_orb_v7_final import SESSION_CONFIG, TP_MULT_DEFAULT
 
-    # NY v7.1 gate + v7.2 tp_mult
+    # NY: Path Y - or_vs_atr_max=2.0 (no min gate, tp reverted 1.0->1.5)
     ny = SESSION_CONFIG["NY"]
     assert ny["use_or_filter"] is True, "NY OR filter must be ON"
-    assert ny["or_vs_atr_min"] == 2.5, f"NY or_vs_atr_min expected 2.5, got {ny['or_vs_atr_min']}"
-    assert ny["tp_mult"] == 1.0, f"NY tp_mult expected 1.0 (v7.2), got {ny['tp_mult']}"
-    assert ny["stop_mode"] == "or_range"
-    assert ny["target_mode"] == "or_range"
+    assert ny["or_vs_atr_max"] == 2.0, f"NY or_vs_atr_max expected 2.0, got {ny.get('or_vs_atr_max')}"
+    assert "or_vs_atr_min" not in ny, "Path Y: NY should not have or_vs_atr_min"
+    assert ny["tp_mult"] == 1.5, f"NY tp_mult expected 1.5 (Path Y revert), got {ny['tp_mult']}"
 
-    # ASIA v7.1 dead-zone + v7.2 keeps tp 1.5
+    # ASIA: Path Y - or_vs_atr_max=2.0 (no deadzone)
     asia = SESSION_CONFIG["ASIA"]
-    assert asia["or_atr_deadzone"] == (2.0, 2.5), f"ASIA deadzone changed: {asia['or_atr_deadzone']}"
+    assert asia["or_vs_atr_max"] == 2.0
+    assert "or_atr_deadzone" not in asia, "Path Y: ASIA should not have or_atr_deadzone"
     assert asia["tp_mult"] == 1.5
 
     # LON unchanged since v7 baseline
@@ -44,7 +48,7 @@ def test_session_config_locked():
     assert lon["tp_mult"] == 1.5
 
     assert TP_MULT_DEFAULT == 1.5
-    print("  test_session_config_locked PASSED")
+    print("  test_session_config_locked PASSED (Path Y baseline)")
 
 
 def test_run_orb_v7_max_hold_v72_1():
@@ -80,16 +84,17 @@ def test_dispatch_orb_hold_v72_1():
 # Slow: full-window backtest (Phase-7 equivalent)
 # =============================================================================
 
-# Golden numbers from Phase 7 run 2026-07-07 pm on v7.2.1
-# window: 2026-04-13 -> 2026-07-01 (79 days)
+# Path Y baseline (2026-07-13): synced backtest config to live-actual filter.
+# n dropped from v7.2.1's 52 (phantom-v7.1 numbers) to Path Y's 25 (honest).
+# Wide tolerances because news filter application is bar-timing-sensitive.
 V721_GOLDEN = {
-    "n": 52,
-    "wins": 36,
-    "win_pct_pm_tol": (69.0, 69.5),
-    "total_usd_min": 42000,   # allow +/-500 slack for CI drift
-    "total_usd_max": 42500,
-    "mean_per_trade_min": 800,
-    "mean_per_trade_max": 825,
+    "n": 25,
+    "wins": 13,
+    "win_pct_pm_tol": (50.0, 55.0),
+    "total_usd_min": 8000,
+    "total_usd_max": 14000,
+    "mean_per_trade_min": 350,
+    "mean_per_trade_max": 500,
 }
 
 

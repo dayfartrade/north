@@ -67,6 +67,14 @@ class RegimeContext:
     funding_annualized_pct: Optional[float] = None
     basis_pct: Optional[float] = None
 
+    # Crabel Ch 28 features (2026-07-13 shadow candidates)
+    # Range class of prior day: "NR7","NR4","NR","CONTROL","WS","WS4","WS7"
+    prior_day_range_class: Optional[str] = None
+    # 3-day directional pattern: "---" through "+++"; direction of prev-2 close,
+    # prev-1 close, today open compared pairwise (see docs/experiments/
+    # 2026-07-13_crabel_findings.md)
+    three_day_pattern: Optional[str] = None
+
 
 # ---------------------------------------------------------------------------
 # Decision protocol (P5)
@@ -247,6 +255,50 @@ def filter_prior_day_range(cfg: SessionConfig, ctx: OrContext, regime: RegimeCon
     return None
 
 
+def filter_prior_day_nr7_lon(cfg: SessionConfig, ctx: OrContext, regime: RegimeContext) -> Optional[str]:
+    """Crabel Ch 28 canonical: LON only when prior day was narrowest of last 7.
+    Pre-registered 2026-07-13T16:00 as v8 shadow candidate. No-op until
+    cfg.require_prior_nr7=True flipped.
+    """
+    if not getattr(cfg, "require_prior_nr7", False):
+        return None
+    if cfg.name != "LON":
+        return None  # LON-only per pre-reg
+    if regime.prior_day_range_class is None:
+        return None
+    if regime.prior_day_range_class != "NR7":
+        return f"prior_day_range_class={regime.prior_day_range_class} != NR7 (Crabel LON gate)"
+    return None
+
+
+def filter_lon_short_only(cfg: SessionConfig, ctx: OrContext, regime: RegimeContext) -> Optional[str]:
+    """Task 7 finding: 7 of 8 LON backtest trades were SHORT. Skip LONG entries.
+    Pre-registered 2026-07-13T16:00. No-op until cfg.lon_short_only=True.
+    """
+    if not getattr(cfg, "lon_short_only", False):
+        return None
+    if cfg.name != "LON":
+        return None
+    if ctx.slope_at_close > 0:  # LONG bias
+        return f"lon_short_only: slope {ctx.slope_at_close:.2f} > 0"
+    return None
+
+
+def filter_crabel_3day_pattern(cfg: SessionConfig, ctx: OrContext, regime: RegimeContext) -> Optional[str]:
+    """Crabel Ch 28: allowlist the high-probability 3-day patterns for gold ORB.
+    Pre-registered 2026-07-13T16:00. No-op until cfg.crabel_3day_whitelist set.
+    Suggested whitelist per findings doc: {"+--", "-++", "+-+", "++-", "--+"}.
+    """
+    whitelist = getattr(cfg, "crabel_3day_whitelist", None)
+    if not whitelist:
+        return None
+    if regime.three_day_pattern is None:
+        return None
+    if regime.three_day_pattern not in whitelist:
+        return f"3day_pattern {regime.three_day_pattern} not in Crabel whitelist"
+    return None
+
+
 def filter_gap_after_down_day(cfg: SessionConfig, ctx: OrContext, regime: RegimeContext) -> Optional[str]:
     """Skip LONG PLAN if prior day closed sharply lower (dead-cat bounce filter).
 
@@ -273,8 +325,14 @@ REGISTERED_FILTERS: tuple[FilterFn, ...] = (
     filter_vol_ratio,
     filter_prior_day_range,
     filter_gap_after_down_day,
+    # Crabel Ch 28 candidates (all no-op until SessionConfig flag flipped):
+    filter_prior_day_nr7_lon,
+    filter_lon_short_only,
+    filter_crabel_3day_pattern,
     # London fix filter is entry-level (per breakout), not session-level;
     # handled in dispatch/backtest execution layer.
+    # Break-even-stop-at-60min (Crabel Ch 2) is execution-level,
+    # requires trajectory tracker; deferred.
 )
 
 
