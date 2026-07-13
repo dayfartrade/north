@@ -1,5 +1,8 @@
 - [🌅 Next gm agenda (READ FIRST)](next_gm_agenda.md) — 2026-07-08 ~00:35 UTC handoff: overnight checks, 5-item queue, N=17 registry, what NOT to do
 - [🔵 Current state](current_state.md) — 2026-07-07 ~13:45 UTC snapshot: audit fixes shipped, v7.2.1 live
+- [🚨 Hosting blocker](hosting_blocker.md) — 07-08 12h outage from Interactive-only Task Scheduler. Band-aided (S4U + WakeToRun). VPS still owed before launch.
+- [🎯 Quant framework (gold)](quant_framework_gold.md) — External quant advice 07-13: 2× DD halt, WGC-6 Bonferroni, IB Gateway + Hetzner + systemd + healthchecks.io
+- [Session 2026-07-13 regime](session_2026_07_13_regime.md) — 100% ry>=2.2 tail regime; real_yield_gt_2_2 REJECTED by 20yr OOS; losses are intraday microstructure not macro
 - [Session 2026-07-07/08 sprint](session_2026_07_07_polish.md) — 13 commits: shadow analyzer + registry (N=17), universal TG polish, post-mortem, checklist, meta-labeling REJECT
 - [Project goal & status](project_goal.md) — profitable GC day-trader; PRODUCT shipping by 2026-07-01
 - [Launch plan & timeline](launch_plan.md) — 12-day plan; code-freeze 2026-06-27
@@ -18,8 +21,10 @@
 - [User profile](user_profile.md) — gold-trading background, will share priors when ready
 - [Collab feedback](feedback_collab.md) — sanity-check vs drift, 100% effort before testing, no docs files
 - [Pace: accelerate](feedback_pace.md) — when ready to ship, ship; don't propose "wait and see"; compress schedules, prefer action over description
+- [Session cadence: execute + continue](feedback_session_cadence.md) — after enumerated tasks, keep going until legit calendar block; quality>speed but never idle
 - [gm greeting](feedback_gm_greeting.md) — "gm" trigger: open as Knox + agenda dump (rename/color commands don't exist in CLI)
 - [Memory caution](feedback_memory_use.md) — verify memory against code before applying
 - [Telegram reference](ref_telegram.md) — bot @GOLDDAYTARDER_bot, creds in .telegram
 - [GitHub reference](ref_github.md) — repo far-reach/golddaytrador, push token in .github-token (arbabfar retired)
 - [Data sources reference](ref_data_sources.md) — yfinance limits, FRED CSV endpoints
+- [Research material library](ref_research_material.md) — C:\golddaytrador\research material: AFML, DSR paper, Kaufman, Davey, Crabel ORB
