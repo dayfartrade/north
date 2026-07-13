@@ -7,10 +7,16 @@ Run: `pytest tests/test_strategy_engine.py -v`
 """
 from __future__ import annotations
 
+import sys
+from pathlib import Path
+
 import pandas as pd
 import pytest
 
-from src.strategy_engine import (
+# Match production import path: strategy_engine runs with src/ on sys.path
+sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
+
+from strategy_engine import (  # noqa: E402
     Decision,
     Direction,
     OrContext,
@@ -34,9 +40,11 @@ def _regime(**overrides) -> RegimeContext:
 
 
 def _or_ctx(or_high=4100.0, or_low=4090.0, atr=5.0, slope=1.0) -> OrContext:
+    # Uses LON open (07:00 UTC) to avoid London-fix window firing on the
+    # NY session's OR close (14:00 UTC = 15:00 LT DST).
     return OrContext(
-        session_open_utc=pd.Timestamp("2026-07-13 13:30", tz="UTC"),
-        or_close_utc=pd.Timestamp("2026-07-13 14:00", tz="UTC"),
+        session_open_utc=pd.Timestamp("2026-07-13 07:00", tz="UTC"),
+        or_close_utc=pd.Timestamp("2026-07-13 07:30", tz="UTC"),
         or_high=or_high,
         or_low=or_low,
         or_range=or_high - or_low,
@@ -141,24 +149,64 @@ class TestEvaluateSession:
 # ---------------------------------------------------------------------------
 
 class TestGoldenFiles:
-    """Replays specific historical trades from orb_forward_log.csv through
-    the v8 strategy_engine and asserts the decision matches what was
-    recorded at trade time (or a documented behavior change).
+    """Replays historical trade fixtures through v8 strategy_engine.
 
-    Each entry pins one trade's decision. If any v8 change flips this
-    without a matching documented rationale, the test fails.
-
-    Phase 8.2 will populate golden_trades.json fixtures.
+    Fixtures are loaded from tests/fixtures/golden_trades.json (generated
+    by tests/generate_golden_fixtures.py). Any code change that flips
+    a fixture decision must EITHER:
+      (a) regenerate the fixtures with a documented rationale (registry entry), or
+      (b) fix the code so behavior matches the pinned decision.
     """
 
-    @pytest.mark.xfail(reason="Phase 8.2 populates fixtures")
-    def test_2026_07_13_ny_skip_or_atr(self):
-        """Today's NY: OR 21.90, ATR 5.32, ratio 4.12. Path Y config skips (>2.0 max)."""
-        cfg = SESSION_CONFIGS_V8_INITIAL["NY"]
-        ctx = _or_ctx(or_high=4071.80, or_low=4049.90, atr=5.32, slope=-11.94)
-        decision = evaluate_session(cfg, ctx, _regime())
-        assert not decision.would_take
-        assert any("> max 2.0" in r for r in decision.would_skip_reasons)
+    @staticmethod
+    def _fixtures():
+        import json
+        fp = Path(__file__).parent / "fixtures/golden_trades.json"
+        if not fp.exists():
+            return []
+        return json.loads(fp.read_text()).get("trades", [])
+
+    def test_fixtures_loaded(self):
+        fx = self._fixtures()
+        assert len(fx) > 0, "run tests/generate_golden_fixtures.py to populate"
+
+    @pytest.mark.parametrize("i", range(30))  # covers up to 30 fixtures
+    def test_fixture_decision_pinned(self, i):
+        fx = self._fixtures()
+        if i >= len(fx):
+            pytest.skip(f"only {len(fx)} fixtures")
+        trade = fx[i]
+        cfg = SESSION_CONFIGS_V8_INITIAL[trade["session"]]
+        inp = trade["inputs"]
+        # Use the fixture's actual timestamp so time-of-day filters (news, fix)
+        # evaluate against the same context as generation.
+        entry_ts = pd.Timestamp(trade["entry_ts"])
+        if entry_ts.tz is None:
+            entry_ts = entry_ts.tz_localize("UTC")
+        or_close_ts = entry_ts
+        session_open_ts = entry_ts - pd.Timedelta(minutes=30)
+        ctx = OrContext(
+            session_open_utc=session_open_ts,
+            or_close_utc=or_close_ts,
+            or_high=inp["or_high"],
+            or_low=inp["or_low"],
+            or_range=inp["or_high"] - inp["or_low"],
+            atr_at_close=inp["atr"],
+            slope_at_close=inp["slope"],
+            or_bars_df=pd.DataFrame(),
+        )
+        decision = evaluate_session(cfg, ctx, _regime(as_of_utc=or_close_ts))
+        expected = trade["v8_decision"]
+        assert decision.would_take == expected["would_take"], (
+            f"fixture #{i} ({trade['entry_ts']}): would_take flipped "
+            f"(got {decision.would_take}, expected {expected['would_take']}; "
+            f"reasons={list(decision.would_skip_reasons)})"
+        )
+        # OR/ATR reason presence (bar-level, stable)
+        expected_or_atr = [r for r in expected["would_skip_reasons"] if "OR/ATR" in r]
+        actual_or_atr = [r for r in decision.would_skip_reasons if "OR/ATR" in r]
+        assert expected_or_atr == actual_or_atr, f"fixture #{i}: OR/ATR reason changed"
+        assert decision.direction.name == expected["direction"], f"fixture #{i}: direction flipped"
 
 
 # ---------------------------------------------------------------------------

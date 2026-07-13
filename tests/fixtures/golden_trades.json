@@ -1,0 +1,709 @@
+{
+  "_meta": {
+    "generated_utc": "2026-07-13T15:18:12.312743+00:00",
+    "generator": "tests/generate_golden_fixtures.py",
+    "strategy_version": "v8.0.0-sketch",
+    "session_config": "SESSION_CONFIGS_V8_INITIAL (Path Y-matching)",
+    "n_fixtures": 27
+  },
+  "trades": [
+    {
+      "entry_ts": "2026-06-21 23:30:00+00:00",
+      "session": "ASIA",
+      "actual": {
+        "direction": "SHORT",
+        "net_pnl": 1646.0146484375
+      },
+      "v8_decision": {
+        "would_take": true,
+        "would_skip_reasons": [],
+        "direction": "SHORT",
+        "entry_price": 4170.39990234375,
+        "target_price": 4153.749755859375,
+        "stop_price": 4181.5
+      },
+      "inputs": {
+        "or_high": 4181.5,
+        "or_low": 4170.39990234375,
+        "or_range": 11.10009765625,
+        "atr": 6.794970703125,
+        "slope": -20.63500442360146,
+        "or_atr_ratio": 1.6335754988825892
+      }
+    },
+    {
+      "entry_ts": "2026-06-22 07:35:00+00:00",
+      "session": "LON",
+      "actual": {
+        "direction": "SHORT",
+        "net_pnl": -4699.029296875
+      },
+      "v8_decision": {
+        "would_take": false,
+        "would_skip_reasons": [
+          "OR/ATR 3.63 > max 2.0"
+        ],
+        "direction": "SHORT",
+        "entry_price": null,
+        "target_price": null,
+        "stop_price": null
+      },
+      "inputs": {
+        "or_high": 4219.7001953125,
+        "or_low": 4172.89990234375,
+        "or_range": 46.80029296875,
+        "atr": 12.9050048828125,
+        "slope": -10.68479781536189,
+        "or_atr_ratio": 3.6265226858674695
+      }
+    },
+    {
+      "entry_ts": "2026-06-23 07:40:00+00:00",
+      "session": "LON",
+      "actual": {
+        "direction": "SHORT",
+        "net_pnl": -739.01953125
+      },
+      "v8_decision": {
+        "would_take": false,
+        "would_skip_reasons": [
+          "OR/ATR 2.19 > max 2.0"
+        ],
+        "direction": "SHORT",
+        "entry_price": null,
+        "target_price": null,
+        "stop_price": null
+      },
+      "inputs": {
+        "or_high": 4142.7001953125,
+        "or_low": 4127.5,
+        "or_range": 15.2001953125,
+        "atr": 6.9250244140625,
+        "slope": -16.58915818643345,
+        "or_atr_ratio": 2.1949663140007543
+      }
+    },
+    {
+      "entry_ts": "2026-06-23 23:30:00+00:00",
+      "session": "ASIA",
+      "actual": {
+        "direction": "SHORT",
+        "net_pnl": 1331.0
+      },
+      "v8_decision": {
+        "would_take": false,
+        "would_skip_reasons": [
+          "OR/ATR 2.00 > max 2.0"
+        ],
+        "direction": "SHORT",
+        "entry_price": null,
+        "target_price": null,
+        "stop_price": null
+      },
+      "inputs": {
+        "or_high": 4120.89990234375,
+        "or_low": 4111.89990234375,
+        "or_range": 9.0,
+        "atr": 4.494970703125,
+        "slope": -11.402879550783837,
+        "or_atr_ratio": 2.0022377440064307
+      }
+    },
+    {
+      "entry_ts": "2026-06-24 07:30:00+00:00",
+      "session": "LON",
+      "actual": {
+        "direction": "SHORT",
+        "net_pnl": 1150.970703125
+      },
+      "v8_decision": {
+        "would_take": true,
+        "would_skip_reasons": [],
+        "direction": "SHORT",
+        "entry_price": 4100.0,
+        "target_price": 4080.5,
+        "stop_price": 4113.0
+      },
+      "inputs": {
+        "or_high": 4107.7998046875,
+        "or_low": 4100.0,
+        "or_range": 7.7998046875,
+        "atr": 5.68497314453125,
+        "slope": -14.234085724364377,
+        "or_atr_ratio": 1.3720037877405182
+      }
+    },
+    {
+      "entry_ts": "2026-06-25 07:45:00+00:00",
+      "session": "LON",
+      "actual": {
+        "direction": "SHORT",
+        "net_pnl": -1719.0
+      },
+      "v8_decision": {
+        "would_take": false,
+        "would_skip_reasons": [
+          "OR/ATR 2.61 > max 2.0"
+        ],
+        "direction": "SHORT",
+        "entry_price": null,
+        "target_price": null,
+        "stop_price": null
+      },
+      "inputs": {
+        "or_high": 4005.5,
+        "or_low": 3988.5,
+        "or_range": 17.0,
+        "atr": 6.5249755859375,
+        "slope": -14.931896625786521,
+        "or_atr_ratio": 2.605373732989602
+      }
+    },
+    {
+      "entry_ts": "2026-06-25 14:00:00+00:00",
+      "session": "NY",
+      "actual": {
+        "direction": "SHORT",
+        "net_pnl": -2778.9853515625
+      },
+      "v8_decision": {
+        "would_take": false,
+        "would_skip_reasons": [
+          "OR/ATR 2.12 > max 2.0",
+          "news:lon_fix@15:00LT"
+        ],
+        "direction": "SHORT",
+        "entry_price": null,
+        "target_price": null,
+        "stop_price": null
+      },
+      "inputs": {
+        "or_high": 4044.199951171875,
+        "or_low": 4016.60009765625,
+        "or_range": 27.599853515625,
+        "atr": 13.0400146484375,
+        "slope": -9.447743373760659,
+        "or_atr_ratio": 2.116550806093773
+      }
+    },
+    {
+      "entry_ts": "2026-06-25 23:30:00+00:00",
+      "session": "ASIA",
+      "actual": {
+        "direction": "SHORT",
+        "net_pnl": 41.009765625
+      },
+      "v8_decision": {
+        "would_take": true,
+        "would_skip_reasons": [],
+        "direction": "SHORT",
+        "entry_price": 4036.5,
+        "target_price": 4022.7000732421875,
+        "stop_price": 4045.699951171875
+      },
+      "inputs": {
+        "or_high": 4045.699951171875,
+        "or_low": 4036.5,
+        "or_range": 9.199951171875,
+        "atr": 4.860009765625,
+        "slope": -2.804136625754836,
+        "or_atr_ratio": 1.8929902645353804
+      }
+    },
+    {
+      "entry_ts": "2026-06-26 08:00:00+00:00",
+      "session": "LON",
+      "actual": {
+        "direction": "SHORT",
+        "net_pnl": -1319.0
+      },
+      "v8_decision": {
+        "would_take": false,
+        "would_skip_reasons": [
+          "OR/ATR 2.28 > max 2.0"
+        ],
+        "direction": "SHORT",
+        "entry_price": null,
+        "target_price": null,
+        "stop_price": null
+      },
+      "inputs": {
+        "or_high": 4055.5,
+        "or_low": 4042.5,
+        "or_range": 13.0,
+        "atr": 5.7000244140625,
+        "slope": -3.1092636494613544,
+        "or_atr_ratio": 2.280691985797073
+      }
+    },
+    {
+      "entry_ts": "2026-06-26 14:00:00+00:00",
+      "session": "NY",
+      "actual": {
+        "direction": "LONG",
+        "net_pnl": 1360.98046875
+      },
+      "v8_decision": {
+        "would_take": false,
+        "would_skip_reasons": [
+          "OR/ATR 3.72 > max 2.0",
+          "news:lon_fix@15:00LT"
+        ],
+        "direction": "LONG",
+        "entry_price": null,
+        "target_price": null,
+        "stop_price": null
+      },
+      "inputs": {
+        "or_high": 4093.10009765625,
+        "or_low": 4059.39990234375,
+        "or_range": 33.7001953125,
+        "atr": 9.060009765625,
+        "slope": 5.5858659923696905,
+        "or_atr_ratio": 3.7196643474230524
+      }
+    },
+    {
+      "entry_ts": "2026-06-29 07:50:00+00:00",
+      "session": "LON",
+      "actual": {
+        "direction": "LONG",
+        "net_pnl": -1059.0146484375
+      },
+      "v8_decision": {
+        "would_take": false,
+        "would_skip_reasons": [
+          "OR/ATR 2.27 > max 2.0"
+        ],
+        "direction": "LONG",
+        "entry_price": null,
+        "target_price": null,
+        "stop_price": null
+      },
+      "inputs": {
+        "or_high": 4081.10009765625,
+        "or_low": 4070.699951171875,
+        "or_range": 10.400146484375,
+        "atr": 4.57999267578125,
+        "slope": 1.6741407425570287,
+        "or_atr_ratio": 2.270777972936595
+      }
+    },
+    {
+      "entry_ts": "2026-06-29 14:00:00+00:00",
+      "session": "NY",
+      "actual": {
+        "direction": "SHORT",
+        "net_pnl": 2471.0146484375
+      },
+      "v8_decision": {
+        "would_take": false,
+        "would_skip_reasons": [
+          "OR/ATR 2.65 > max 2.0",
+          "news:lon_fix@15:00LT"
+        ],
+        "direction": "SHORT",
+        "entry_price": null,
+        "target_price": null,
+        "stop_price": null
+      },
+      "inputs": {
+        "or_high": 4058.800048828125,
+        "or_low": 4042.199951171875,
+        "or_range": 16.60009765625,
+        "atr": 6.2550048828125,
+        "slope": -2.9471117197686,
+        "or_atr_ratio": 2.653890439296657
+      }
+    },
+    {
+      "entry_ts": "2026-06-29 23:40:00+00:00",
+      "session": "ASIA",
+      "actual": {
+        "direction": "SHORT",
+        "net_pnl": 1256.0
+      },
+      "v8_decision": {
+        "would_take": false,
+        "would_skip_reasons": [
+          "OR/ATR 2.42 > max 2.0"
+        ],
+        "direction": "SHORT",
+        "entry_price": null,
+        "target_price": null,
+        "stop_price": null
+      },
+      "inputs": {
+        "or_high": 4036.699951171875,
+        "or_low": 4028.199951171875,
+        "or_range": 8.5,
+        "atr": 3.5150146484375,
+        "slope": -5.550903108957755,
+        "or_atr_ratio": 2.418197603750651
+      }
+    },
+    {
+      "entry_ts": "2026-06-30 23:45:00+00:00",
+      "session": "ASIA",
+      "actual": {
+        "direction": "SHORT",
+        "net_pnl": 1556.0
+      },
+      "v8_decision": {
+        "would_take": false,
+        "would_skip_reasons": [
+          "OR/ATR 2.99 > max 2.0"
+        ],
+        "direction": "SHORT",
+        "entry_price": null,
+        "target_price": null,
+        "stop_price": null
+      },
+      "inputs": {
+        "or_high": 4031.800048828125,
+        "or_low": 4021.300048828125,
+        "or_range": 10.5,
+        "atr": 3.50997314453125,
+        "slope": -2.3857511593655545,
+        "or_atr_ratio": 2.991475879625926
+      }
+    },
+    {
+      "entry_ts": "2026-07-01 14:30:00+00:00",
+      "session": "NY",
+      "actual": {
+        "direction": "LONG",
+        "net_pnl": -3219.0
+      },
+      "v8_decision": {
+        "would_take": false,
+        "would_skip_reasons": [
+          "OR/ATR 5.56 > max 2.0",
+          "news:lon_fix@15:00LT"
+        ],
+        "direction": "LONG",
+        "entry_price": null,
+        "target_price": null,
+        "stop_price": null
+      },
+      "inputs": {
+        "or_high": 4122.60009765625,
+        "or_low": 4055.300048828125,
+        "or_range": 67.300048828125,
+        "atr": 12.1149658203125,
+        "slope": 7.227094374467015,
+        "or_atr_ratio": 5.555116690076558
+      }
+    },
+    {
+      "entry_ts": "2026-07-02 23:30:00+00:00",
+      "session": "ASIA",
+      "actual": {
+        "direction": "LONG",
+        "net_pnl": -599.029296875
+      },
+      "v8_decision": {
+        "would_take": false,
+        "would_skip_reasons": [
+          "OR/ATR 2.02 > max 2.0"
+        ],
+        "direction": "LONG",
+        "entry_price": null,
+        "target_price": null,
+        "stop_price": null
+      },
+      "inputs": {
+        "or_high": 4142.7001953125,
+        "or_low": 4136.89990234375,
+        "or_range": 5.80029296875,
+        "atr": 2.864990234375,
+        "slope": 11.779769674071758,
+        "or_atr_ratio": 2.0245419684703876
+      }
+    },
+    {
+      "entry_ts": "2026-07-05 22:30:00+00:00",
+      "session": "ASIA",
+      "actual": {
+        "direction": "LONG",
+        "net_pnl": -1554.029296875
+      },
+      "v8_decision": {
+        "would_take": false,
+        "would_skip_reasons": [
+          "OR/ATR 3.19 > max 2.0"
+        ],
+        "direction": "LONG",
+        "entry_price": null,
+        "target_price": null,
+        "stop_price": null
+      },
+      "inputs": {
+        "or_high": 4199.7001953125,
+        "or_low": 4184.39990234375,
+        "or_range": 15.30029296875,
+        "atr": 4.7900390625,
+        "slope": 19.111621437806207,
+        "or_atr_ratio": 3.194189602446483
+      }
+    },
+    {
+      "entry_ts": "2026-07-05 22:30:00+00:00",
+      "session": "NY",
+      "actual": {
+        "direction": "LONG",
+        "net_pnl": -1554.029296875
+      },
+      "v8_decision": {
+        "would_take": false,
+        "would_skip_reasons": [
+          "OR/ATR 3.19 > max 2.0"
+        ],
+        "direction": "LONG",
+        "entry_price": null,
+        "target_price": null,
+        "stop_price": null
+      },
+      "inputs": {
+        "or_high": 4199.7001953125,
+        "or_low": 4184.39990234375,
+        "or_range": 15.30029296875,
+        "atr": 4.7900390625,
+        "slope": 19.111621437806207,
+        "or_atr_ratio": 3.194189602446483
+      }
+    },
+    {
+      "entry_ts": "2026-07-05 22:30:00+00:00",
+      "session": "LON",
+      "actual": {
+        "direction": "LONG",
+        "net_pnl": -1554.029296875
+      },
+      "v8_decision": {
+        "would_take": false,
+        "would_skip_reasons": [
+          "OR/ATR 3.19 > max 2.0"
+        ],
+        "direction": "LONG",
+        "entry_price": null,
+        "target_price": null,
+        "stop_price": null
+      },
+      "inputs": {
+        "or_high": 4199.7001953125,
+        "or_low": 4184.39990234375,
+        "or_range": 15.30029296875,
+        "atr": 4.7900390625,
+        "slope": 19.111621437806207,
+        "or_atr_ratio": 3.194189602446483
+      }
+    },
+    {
+      "entry_ts": "2026-07-06 07:30:00+00:00",
+      "session": "LON",
+      "actual": {
+        "direction": "LONG",
+        "net_pnl": -2883.9609375
+      },
+      "v8_decision": {
+        "would_take": false,
+        "would_skip_reasons": [
+          "OR/ATR 2.16 > max 2.0"
+        ],
+        "direction": "LONG",
+        "entry_price": null,
+        "target_price": null,
+        "stop_price": null
+      },
+      "inputs": {
+        "or_high": 4187.2998046875,
+        "or_low": 4158.7001953125,
+        "or_range": 28.599609375,
+        "atr": 13.2649169921875,
+        "slope": 9.682141013669025,
+        "or_atr_ratio": 2.156033798918155
+      }
+    },
+    {
+      "entry_ts": "2026-07-07 23:45:00+00:00",
+      "session": "ASIA",
+      "actual": {
+        "direction": "SHORT",
+        "net_pnl": -1184.009765625
+      },
+      "v8_decision": {
+        "would_take": false,
+        "would_skip_reasons": [
+          "OR/ATR 2.70 > max 2.0"
+        ],
+        "direction": "SHORT",
+        "entry_price": null,
+        "target_price": null,
+        "stop_price": null
+      },
+      "inputs": {
+        "or_high": 4118.89990234375,
+        "or_low": 4107.2998046875,
+        "or_range": 11.60009765625,
+        "atr": 4.2900390625,
+        "slope": -5.369728468715948,
+        "or_atr_ratio": 2.70396084680173
+      }
+    },
+    {
+      "entry_ts": "2026-07-08 14:00:00+00:00",
+      "session": "NY",
+      "actual": {
+        "direction": "SHORT",
+        "net_pnl": 2091.0146484375
+      },
+      "v8_decision": {
+        "would_take": false,
+        "would_skip_reasons": [
+          "news:lon_fix@15:00LT"
+        ],
+        "direction": "SHORT",
+        "entry_price": null,
+        "target_price": null,
+        "stop_price": null
+      },
+      "inputs": {
+        "or_high": 4091.5,
+        "or_low": 4077.39990234375,
+        "or_range": 14.10009765625,
+        "atr": 7.97000732421875,
+        "slope": -11.518619393286826,
+        "or_atr_ratio": 1.7691448806331107
+      }
+    },
+    {
+      "entry_ts": "2026-07-08 23:40:00+00:00",
+      "session": "ASIA",
+      "actual": {
+        "direction": "SHORT",
+        "net_pnl": -413.990234375
+      },
+      "v8_decision": {
+        "would_take": true,
+        "would_skip_reasons": [],
+        "direction": "SHORT",
+        "entry_price": 4083.60009765625,
+        "target_price": 4077.750244140625,
+        "stop_price": 4087.5
+      },
+      "inputs": {
+        "or_high": 4087.5,
+        "or_low": 4083.60009765625,
+        "or_range": 3.89990234375,
+        "atr": 3.27999267578125,
+        "slope": -4.983211098773609,
+        "or_atr_ratio": 1.1889972720201565
+      }
+    },
+    {
+      "entry_ts": "2026-07-09 14:00:00+00:00",
+      "session": "NY",
+      "actual": {
+        "direction": "LONG",
+        "net_pnl": -1224.0
+      },
+      "v8_decision": {
+        "would_take": false,
+        "would_skip_reasons": [
+          "news:lon_fix@15:00LT"
+        ],
+        "direction": "LONG",
+        "entry_price": null,
+        "target_price": null,
+        "stop_price": null
+      },
+      "inputs": {
+        "or_high": 4139.60009765625,
+        "or_low": 4127.60009765625,
+        "or_range": 12.0,
+        "atr": 6.930029296875,
+        "slope": 3.124686140465201,
+        "or_atr_ratio": 1.7315944112113972
+      }
+    },
+    {
+      "entry_ts": "2026-07-12 22:40:00+00:00",
+      "session": "ASIA",
+      "actual": {
+        "direction": "SHORT",
+        "net_pnl": 526.0
+      },
+      "v8_decision": {
+        "would_take": false,
+        "would_skip_reasons": [
+          "OR/ATR 2.84 > max 2.0"
+        ],
+        "direction": "SHORT",
+        "entry_price": null,
+        "target_price": null,
+        "stop_price": null
+      },
+      "inputs": {
+        "or_high": 4102.2001953125,
+        "or_low": 4087.39990234375,
+        "or_range": 14.80029296875,
+        "atr": 5.2100341796875,
+        "slope": -1.8760220026379102,
+        "or_atr_ratio": 2.8407285745748654
+      }
+    },
+    {
+      "entry_ts": "2026-07-12 22:40:00+00:00",
+      "session": "LON",
+      "actual": {
+        "direction": "SHORT",
+        "net_pnl": 526.0
+      },
+      "v8_decision": {
+        "would_take": false,
+        "would_skip_reasons": [
+          "OR/ATR 2.84 > max 2.0"
+        ],
+        "direction": "SHORT",
+        "entry_price": null,
+        "target_price": null,
+        "stop_price": null
+      },
+      "inputs": {
+        "or_high": 4102.2001953125,
+        "or_low": 4087.39990234375,
+        "or_range": 14.80029296875,
+        "atr": 5.2100341796875,
+        "slope": -1.8760220026379102,
+        "or_atr_ratio": 2.8407285745748654
+      }
+    },
+    {
+      "entry_ts": "2026-07-12 22:40:00+00:00",
+      "session": "NY",
+      "actual": {
+        "direction": "SHORT",
+        "net_pnl": 526.0
+      },
+      "v8_decision": {
+        "would_take": false,
+        "would_skip_reasons": [
+          "OR/ATR 2.84 > max 2.0"
+        ],
+        "direction": "SHORT",
+        "entry_price": null,
+        "target_price": null,
+        "stop_price": null
+      },
+      "inputs": {
+        "or_high": 4102.2001953125,
+        "or_low": 4087.39990234375,
+        "or_range": 14.80029296875,
+        "atr": 5.2100341796875,
+        "slope": -1.8760220026379102,
+        "or_atr_ratio": 2.8407285745748654
+      }
+    }
+  ]
+}

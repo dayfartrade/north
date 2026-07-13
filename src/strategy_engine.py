@@ -184,12 +184,48 @@ def filter_trend(cfg: SessionConfig, ctx: OrContext, regime: RegimeContext) -> O
     return None
 
 
-# TODO Phase 8.2: news stand-down, london-fix, volume ratio, etc.
+def filter_news_stand_down(cfg: SessionConfig, ctx: OrContext, regime: RegimeContext) -> Optional[str]:
+    """Skip session if OR bars overlap MAJOR_NEWS release window.
+
+    Delegates to stand_down.stand_down_for_or_window, which already handles
+    the DST-aware calendar lookup + buffer semantics.
+
+    v7 parity: matches dispatch_orb.py:468 (Box 2 news gate).
+    """
+    try:
+        from stand_down import stand_down_for_or_window
+    except ImportError:
+        return None  # graceful in isolation tests
+    sd, reason = stand_down_for_or_window(ctx.session_open_utc)
+    return f"news:{reason}" if sd else None
+
+
+def filter_vol_ratio(cfg: SessionConfig, ctx: OrContext, regime: RegimeContext) -> Optional[str]:
+    """Skip PLAN if OR-window volume ratio below threshold (shadow candidate).
+
+    Currently in shadow (vol_ratio_ge_1_0). Ships as v8 filter only if
+    n>=100 shadow decisions confirm edge. Meanwhile, keeps returning None
+    if threshold unset in cfg.
+    """
+    threshold = getattr(cfg, "min_or_win_vol_ratio", None)
+    if threshold is None:
+        return None
+    if regime.or_win_vol_ratio is None:
+        return None  # data unavailable, don't apply
+    if regime.or_win_vol_ratio < threshold:
+        return f"or_win_vol_ratio {regime.or_win_vol_ratio:.2f} < {threshold}"
+    return None
+
 
 REGISTERED_FILTERS: tuple[FilterFn, ...] = (
     filter_or_atr,
     filter_trend,
-    # add more here — order matters, log all reasons that fire
+    filter_news_stand_down,
+    filter_vol_ratio,
+    # Phase 8.2 candidates (add pre-registered):
+    # filter_london_fix (entry-level, not session-level — handled in dispatch layer)
+    # filter_prior_day_range (from shadow batch)
+    # filter_gap_after_down_day (from shadow batch)
 )
 
 
