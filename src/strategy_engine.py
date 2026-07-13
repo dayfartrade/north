@@ -185,19 +185,32 @@ def filter_trend(cfg: SessionConfig, ctx: OrContext, regime: RegimeContext) -> O
 
 
 def filter_news_stand_down(cfg: SessionConfig, ctx: OrContext, regime: RegimeContext) -> Optional[str]:
-    """Skip session if OR bars overlap MAJOR_NEWS release window.
+    """Skip session if OR bars overlap a MAJOR_NEWS release window ONLY.
 
-    Delegates to stand_down.stand_down_for_or_window, which already handles
-    the DST-aware calendar lookup + buffer semantics.
+    London fix windows do NOT invalidate an OR — they're handled at entry
+    time (per v7 dispatch behavior). This filter is session-level.
 
-    v7 parity: matches dispatch_orb.py:468 (Box 2 news gate).
+    v7 parity: matches dispatch_orb.py:468 (Box 2 news gate). Fix
+    stand-down happens in the breakout-watch loop, not here.
     """
     try:
-        from stand_down import stand_down_for_or_window
+        from stand_down import _load_calendar, MAJOR_NEWS, NEWS_BUFFER_MINUTES
     except ImportError:
         return None  # graceful in isolation tests
-    sd, reason = stand_down_for_or_window(ctx.session_open_utc)
-    return f"news:{reason}" if sd else None
+
+    import pandas as pd
+    cal = _load_calendar()
+    if cal.empty:
+        return None
+    relevant = cal[cal["event"].isin(MAJOR_NEWS)]
+    buf = pd.Timedelta(minutes=NEWS_BUFFER_MINUTES)
+    for _, ev in relevant.iterrows():
+        ev_ts = pd.Timestamp(ev["ts_utc"])
+        if ev_ts.tz is None:
+            ev_ts = ev_ts.tz_localize("UTC")
+        if (ev_ts + buf >= ctx.session_open_utc) and (ev_ts - buf <= ctx.or_close_utc):
+            return f"news:{ev['event']}@{ev_ts.strftime('%H:%M')}"
+    return None
 
 
 def filter_vol_ratio(cfg: SessionConfig, ctx: OrContext, regime: RegimeContext) -> Optional[str]:

@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "generated_utc": "2026-07-13T15:25:39.425879+00:00",
+    "generated_utc": "2026-07-13T15:27:59.603637+00:00",
     "generator": "tests/generate_golden_fixtures.py",
     "strategy_version": "v8.0.0-sketch",
     "session_config": "SESSION_CONFIGS_V8_INITIAL (Path Y-matching)",
@@ -169,8 +169,7 @@
       "v8_decision": {
         "would_take": false,
         "would_skip_reasons": [
-          "OR/ATR 2.12 > max 2.0",
-          "news:lon_fix@15:00LT"
+          "OR/ATR 2.12 > max 2.0"
         ],
         "direction": "SHORT",
         "entry_price": null,
@@ -246,8 +245,7 @@
       "v8_decision": {
         "would_take": false,
         "would_skip_reasons": [
-          "OR/ATR 3.72 > max 2.0",
-          "news:lon_fix@15:00LT"
+          "OR/ATR 3.72 > max 2.0"
         ],
         "direction": "LONG",
         "entry_price": null,
@@ -299,8 +297,7 @@
       "v8_decision": {
         "would_take": false,
         "would_skip_reasons": [
-          "OR/ATR 2.65 > max 2.0",
-          "news:lon_fix@15:00LT"
+          "OR/ATR 2.65 > max 2.0"
         ],
         "direction": "SHORT",
         "entry_price": null,
@@ -378,8 +375,7 @@
       "v8_decision": {
         "would_take": false,
         "would_skip_reasons": [
-          "OR/ATR 5.56 > max 2.0",
-          "news:lon_fix@15:00LT"
+          "OR/ATR 5.56 > max 2.0"
         ],
         "direction": "LONG",
         "entry_price": null,
@@ -559,14 +555,12 @@
         "net_pnl": 2091.0146484375
       },
       "v8_decision": {
-        "would_take": false,
-        "would_skip_reasons": [
-          "news:lon_fix@15:00LT"
-        ],
+        "would_take": true,
+        "would_skip_reasons": [],
         "direction": "SHORT",
-        "entry_price": null,
-        "target_price": null,
-        "stop_price": null
+        "entry_price": 4077.39990234375,
+        "target_price": 4056.249755859375,
+        "stop_price": 4091.5
       },
       "inputs": {
         "or_high": 4091.5,
@@ -609,14 +603,12 @@
         "net_pnl": -1224.0
       },
       "v8_decision": {
-        "would_take": false,
-        "would_skip_reasons": [
-          "news:lon_fix@15:00LT"
-        ],
+        "would_take": true,
+        "would_skip_reasons": [],
         "direction": "LONG",
-        "entry_price": null,
-        "target_price": null,
-        "stop_price": null
+        "entry_price": 4139.60009765625,
+        "target_price": 4157.60009765625,
+        "stop_price": 4127.60009765625
       },
       "inputs": {
         "or_high": 4139.60009765625,
