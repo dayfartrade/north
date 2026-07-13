@@ -139,6 +139,26 @@ Ran `scripts/filter_divergence_replay.py`. Confirmed by git blame:
 3. Re-evaluate halt verdict
 4. If still HALT: v8 investigation. If SAFE: reset kill switch, resume.
 
+## PATH Y EXECUTED (15:00 UTC — user chose Path Y)
+
+Config synced (src/edge_session_orb_v7_final.py): ASIA and NY both use or_vs_atr_max=2.0 default (matches live). NY tp_mult reverted 1.0→1.5.
+
+**Honest DSR audit result:**
+- n=25 (down from phantom-v7.1's 72). 52% win. +$424/trade. CI [-$112, +$954].
+- **VERDICT: NOT READY** (CI includes 0).
+- Per-session: LON n=8 75% +$1031 (edge), ASIA n=13 46% +$309 (marginal), **NY n=4 25% −$415 (negative)**.
+
+**SPRT re-baseline:** H0=0.52 (corrected) vs H1=0.35. log-LR=+2.33 < halt boundary +2.94 → **SPRT_CONTINUE**. Halt no longer fires under honest baseline.
+
+**Combined:** DSR fails AND SPRT continues. Do NOT trade live because DSR fail, not because of decisive live evidence.
+
+**Kill switch stays on.** Refined proposal Y' (docs/experiments/2026-07-13_path_y_results.md):
+- Halt NY specifically (negative in-sample)
+- Re-enable LON + ASIA at 50% position size for 20-trade window
+- Re-audit after 20 trades; if still fail, scope v8
+
+**Pending user decision on Y' vs alternatives.**
+
 ## HALT DECISION PENDING FROM USER
 
 **Impact if HALT accepted:**
