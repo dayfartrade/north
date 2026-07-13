@@ -31,6 +31,12 @@ def resolve_orb(bars, atr, slope, open_ts):
         if not mask.any():
             return None
         s_ts = bars.index[mask][0]
+        # Reject if the nearest bar is >30min later than nominal open — that
+        # means market was closed at the nominal open (weekend/COMEX close)
+        # and this attribution would be false (fix: dupe rows on Sunday
+        # sessions all landing on the Sunday reopen bar).
+        if (s_ts - open_ts) > pd.Timedelta(minutes=30):
+            return None
     else:
         s_ts = open_ts
     s_idx = bars.index.get_loc(s_ts)
