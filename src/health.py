@@ -28,8 +28,10 @@ def bar_freshness() -> dict:
 
 
 def market_likely_open(now: pd.Timestamp | None = None) -> bool:
-    """GC trades nearly 24/5. Closed Friday 17:00 ET → Sunday 18:00 ET (CME).
-    We approximate by checking US weekday & avoiding the maintenance gap.
+    """GC trades nearly 24/5. Closed:
+      - Friday 17:00 ET → Sunday 18:00 ET (CME weekend gap)
+      - Daily 17:00 ET → 18:00 ET (COMEX daily maintenance window)
+    We approximate by checking US weekday & the maintenance hours.
     """
     now = now or pd.Timestamp.now(tz="UTC")
     et = now.tz_convert("America/New_York")
@@ -40,6 +42,8 @@ def market_likely_open(now: pd.Timestamp | None = None) -> bool:
     if wd == 4 and h >= 17:  # Friday after 5pm
         return False
     if wd == 6 and h < 18:  # Sunday before 6pm
+        return False
+    if h == 17:  # Daily COMEX close (any weekday not already returned False)
         return False
     return True
 
