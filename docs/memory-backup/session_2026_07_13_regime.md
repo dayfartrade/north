@@ -79,6 +79,39 @@ originSessionId: current
   - Halt call not sensitive to hypothesis choice
 - Note: user must confirm actual account capital; $100k is placeholder
 
+## 🚨 CRITICAL FINDING (14:20 UTC): LIVE/BACKTEST STRATEGY DIVERGENCE
+
+`src/dispatch_orb.py:528` — live only applies one OR/ATR filter:
+```python
+or_max = cfg.get("or_vs_atr_max", 2.0) * cur_atr
+if or_range > or_max: skip
+```
+
+`src/edge_session_orb_v7_final.py` (backtest) applies per-session filters:
+- LON: `or_vs_atr_max: 2.0` (skip if OR > 2×ATR) — **matches live** ✓
+- NY: `or_vs_atr_min: 2.5` (skip if OR < 2.5×ATR) — **NOT in live** ❌
+- ASIA: `or_atr_deadzone: (2.0, 2.5)` — **NOT in live** ❌
+
+**Live effect:** NY and ASIA sessions fall through to the DEFAULT `or_vs_atr_max=2.0` — LON's filter is silently applied to them. Filter direction is INVERTED vs intent for NY.
+
+**Verified:**
+- 07-13 NY (today): OR 21.90, ATR 5.32 → LON-default filter said 21.90 > 10.64 → skip. Correct outcome, wrong filter.
+- 07-09 NY: OR 12.00, small ATR (~4-5) → filter passed → LONG entered → -$1,224 loss.
+
+**Implications:**
+1. Live is running a DIFFERENT strategy than backtest.
+2. DSR audit (2026-07-07) validated backtest — doesn't apply to live.
+3. SPRT halt call (H0=57% backtested win rate) may be testing wrong hypothesis.
+4. v7.1 accuracy claim (+75% mean/trade) never actually deployed as intended.
+5. Today's regime analysis assumed live=backtest — needs re-framing.
+
+**Decision paths:**
+1. Fix live to match backtest (add per-session filters in dispatch_orb.py). ~30 LOC.
+2. Fix backtest to match live (remove min/deadzone). Re-run backtest for honest live metrics.
+3. Accept divergence, re-baseline SPRT to actual live.
+
+**Do NOT ship any strategy change without deciding this first.** All other filter work is downstream of this.
+
 ## HALT DECISION PENDING FROM USER
 
 **Impact if HALT accepted:**
