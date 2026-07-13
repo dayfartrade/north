@@ -36,10 +36,15 @@ from stand_down import stand_down_for_entry, _load_calendar
 
 
 SESSION_CONFIG = {
+    # Path Y (2026-07-13): synced to live's actual filter behavior.
+    # dispatch_orb.py:528 falls through to default or_vs_atr_max=2.0 for any
+    # session without an explicit key. The v7.1 per-session gates
+    # (or_vs_atr_min for NY, or_atr_deadzone for ASIA) were never shipped
+    # to live — this backtest config now honestly reflects what has been
+    # trading. See docs/experiments/2026-07-13_v7_2_2_filter_sync_proposal.md.
     "ASIA": {
-        # v7.1: dead-zone gate — 2.0 <= OR/ATR <= 2.5 hit 36% win, -$119/trade
         "use_or_filter": True,
-        "or_atr_deadzone": (2.0, 2.5),
+        "or_vs_atr_max": 2.0,
         "stop_mode": "or_range",     # "or_range" | "fixed"
         "fixed_stop_price": None,
         "target_mode": "or_range",   # "or_range" | "stop_x_tp"
@@ -54,16 +59,15 @@ SESSION_CONFIG = {
         "tp_mult": 1.5,
     },
     "NY": {
-        # v7.1: low-OR/ATR gate — OR/ATR < 2.5 hit 30% win, -$1006/trade
         "use_or_filter": True,
-        "or_vs_atr_min": 2.5,
+        "or_vs_atr_max": 2.0,
         "stop_mode": "or_range",
         "fixed_stop_price": None,
         "target_mode": "or_range",
-        # v7.2: TP 1.5 -> 1.0 for NY. OOS test 76% -> 81% win rate, negligible
-        # $ cost. Rationale: NY OR/ATR filter now demands wide ranges;
-        # wider ranges hit 1.0R more reliably than 1.5R within the 2h hold.
-        "tp_mult": 1.0,
+        # v7.2 TP was tuned against v7.1 backtest (kept 1.0). Reverting to
+        # 1.5 for Path Y since the v7.1 rationale ("filter demands wide
+        # ranges -> 1.0R hits") no longer applies without the min gate.
+        "tp_mult": 1.5,
     },
 }
 TP_MULT_DEFAULT = 1.5

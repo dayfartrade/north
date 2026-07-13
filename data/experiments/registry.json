@@ -217,6 +217,24 @@
       "sr_per_period": null,
       "n_observations": 14,
       "notes": "Bootstrapped p95 max DD from pre-launch 14-trade null with M=10000 draws. n=10 horizon = $13,695 (used as REFERENCE_MAX_DD in halt_monitor.py, replacing $20k placeholder). n=72 horizon = $42,498. Refresh at n=30, 50, 100 live samples."
+    },
+    {
+      "id": "path_y_filter_sync",
+      "registered_utc": "2026-07-13T15:00:00Z",
+      "layer": "strategy_engine",
+      "verdict": "shipped",
+      "sr_per_period": null,
+      "n_observations": 25,
+      "notes": "Path Y: synced backtest SESSION_CONFIG to match live's actual filter (or_vs_atr_max=2.0 default on all sessions). v7.1 per-session filters (or_vs_atr_min NY, or_atr_deadzone ASIA) never shipped to live per commit a363282 which only touched backtest. NY tp_mult 1.0->1.5 (v7.2 rationale invalidated). New DSR: n=25, 52% win, +$424/trade, CI [-$112,+$954] -> FAIL (NOT READY). Per-session: LON 75% win/$1031/trade edge, ASIA 46%/$309 marginal, NY 25%/-$415 negative. See docs/experiments/2026-07-13_path_y_results.md."
+    },
+    {
+      "id": "sprt_v72_1_launch_path_y",
+      "registered_utc": "2026-07-13T15:00:00Z",
+      "layer": "operational_halt",
+      "verdict": "pre_registered",
+      "sr_per_period": null,
+      "n_observations": 10,
+      "notes": "SPRT re-baseline under Path Y: H0=0.52 (corrected backtest win rate) vs H1=0.35. Old sprt_v72_1_launch (H0=0.57) is invalid because it used v7.1 phantom-backtest metric. Under Path Y: log-LR = +2.33 (below halt boundary +2.94) -> SPRT_CONTINUE. Halt does NOT fire under corrected baseline. Sensitivity: H1=0.30 -> +2.84 CONTINUE, H1=0.25 -> +3.28 HALT. Kill switch stays on regardless because DSR audit FAILS on Path Y (CI includes 0)."
     }
   ]
 }
