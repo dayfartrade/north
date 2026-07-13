@@ -297,9 +297,24 @@ def main() -> None:
 
     if prev_verdict != verdict:
         print(f"\n  ** TRANSITION: {prev_verdict} -> {verdict} **")
-        # TODO wire private Telegram alert on transition (post-CPI wire-up)
-        # from telegram_bot import send
-        # send(f"[HALT_MONITOR] {prev_verdict} -> {verdict}: {detail['reason']}", audience="private")
+        try:
+            _src = Path(__file__).resolve().parent.parent / "src"
+            import sys as _sys
+            if str(_src) not in _sys.path:
+                _sys.path.insert(0, str(_src))
+            from telegram_bot import send
+            emoji = {"HALT": "🛑", "AMBER": "🟡", "GREEN": "🟢"}.get(verdict, "⚙️")
+            msg = (
+                f"{emoji} *HALT MONITOR — {prev_verdict} → {verdict}*\n"
+                f"  reason: `{detail['reason']}`\n"
+                f"  live DD: `${abs(state['realized_max_dd']):,.0f}` "
+                f"({state['capital_pct']:.1%} of capital)\n"
+                f"  SPRT: `{sprt_result['verdict']}` (log-LR={sprt_result['log_lr']:+.2f})\n"
+                f"  n live trades since launch: {state['n_trades_since_launch']}"
+            )
+            send(msg, audience="private")
+        except Exception as e:
+            print(f"  [halt_monitor] Telegram alert failed: {type(e).__name__}: {e}")
 
     return 0 if verdict != "HALT" else 1
 

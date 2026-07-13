@@ -278,6 +278,15 @@ def main():
     except Exception as e:
         print(f"[dispatch] shadow_resolver failed: {type(e).__name__}: {e}")
 
+    # Halt monitor: DD + SPRT verdict. Advisory-only — kill switch (H3) is the
+    # actual gate; this fires a private Telegram alert on verdict transitions
+    # so the operator sees state changes without manually running the script.
+    try:
+        from halt_monitor import main as _halt_main
+        _halt_main()  # writes data/halt_state.json + alerts on transitions
+    except Exception as e:
+        print(f"[dispatch] halt_monitor failed: {type(e).__name__}: {e}")
+
     # Daily brief — 1 fixed publication per UTC day at 22:00
     try:
         from daily_brief import maybe_publish_daily_brief
