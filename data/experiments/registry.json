@@ -269,11 +269,12 @@
     {
       "id": "knapp_er_stops_v9",
       "registered_utc": "2026-07-20T14:45:00Z",
+      "resolved_utc": "2026-07-20T16:45:00Z",
       "layer": "strategy_engine",
-      "verdict": "pre_registered_draft",
+      "verdict": "rejected_pre_apply",
       "sr_per_period": null,
-      "n_observations": 0,
-      "notes": "DRAFT: v9 candidate #1 -- Volker Knapp asymmetric ER-based stops (Kaufman 5th Ed. Ch 17 p.792). Replaces symmetric fixed stop with 6x ATR base modulated by 20-bar 5m Efficiency Ratio: LONG stops tightened 0.1x ATR in mid-trend ER (0.30-0.60), SHORT stops tightened 0.5x ATR (asymmetric). Directly addresses observed n=18 launch LONG stop-hit failure mode. Requires PRE-REG activation via user review + 3 OOS gates (3-months-ago test pass, gold 20yr OOS test, 3-market reproduction study). NO code changes yet. NO live effect. Ship gate: n>=100 shadow decisions with paired lift >= +$50/trade AND 95% CI clears zero. Reject gate: paired lift < 0 at n=100, or CI includes 0 with lift < +$25, or per-session precision drops >5pp, or Bonferroni-adjusted DSR < 0.90, or hard-stop 2026-10-13. This candidate IS Path C from sprt_v72_1_reentry_prereg -- ship = re-entry. Full pre-reg: docs/experiments/2026-07-20_v9_knapp_er_stops_prereg.md. Also see docs/experiments/2026-07-20_path_y_postmortem.md for closure of Path Y that motivated this direction."
+      "n_observations": 1018,
+      "notes": "REJECTED pre-apply on 2026-07-20 (same-day resolution): reproduction study failed on 3 non-gold markets + gold below ship gate. Gold (XAU/USD n=1018): paired lift +$2.35/trade (ship gate required +$50/trade). EUR/USD n=1216: +/-$0.00 lift. GBP/USD n=1203: +/-$0.00 lift. USD/JPY n=1226: +$0.20 lift, CI spans zero. Even at 100x scale correction for FX contract sizing, all three FX markets remain under +$50/trade. Higher-ER band on gold (ER>=0.60) showed +$12.81/trade lift (n=37) but sample too small to defend. Knapp asymmetric stop logic does not add measurable P&L when applied to Path Y-style ORB entries. Filed as v9 candidate #1; will be replaced by NY-SHORT sub-edge investigation as v9 candidate #2 (see docs/experiments/2026-07-20_deep_analysis_findings.md). Bonferroni-N increments. Original draft pre-reg: docs/experiments/2026-07-20_v9_knapp_er_stops_prereg.md."
     }
   ]
 }

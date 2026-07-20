@@ -67,6 +67,38 @@ The edge STRENGTHENED in 2025-2026. This is concerning because:
 - Could be data-mining artifact (we selected filters using this data — look-ahead bias in the filter design itself)
 - Could be genuine edge that emerged as gold's volatility regime shifted (2024 low-vol → 2026 high-vol correction phase)
 
+## Real GC 5m confirmation (60-day yfinance) — SIGN MATCHES
+
+Ran `scripts/deep_analysis_orb.py` on `data/gc/GC_5m.csv` (real GC futures, yfinance 60-day rolling window, n=117 entries). Small sample but authentic gold FUTURES data, not spot proxy.
+
+Session × Direction cross-tab:
+```
+              LONG                     SHORT
+ASIA    n=13  -$4/trade         n=22  -$161/trade  ← loses
+LON     n=12  -$340/trade       n=22  -$498/trade  ← loses  
+NY      n=17  -$99/trade        n=31  +$36/trade   ← positive (only quadrant)
+```
+
+n=31 NY-SHORT on real GC = +$36/trade, +$1,116 total, 54.8% win rate.
+
+**Directional sign matches XAU/USD n=1018 finding.** Same quadrant (NY + SHORT) is the only winner on both datasets. Different sample sizes (31 vs 186), different data sources (yfinance GC futures vs Dukascopy XAU spot), same finding.
+
+This is meaningful non-trivial confirmation that the edge is NOT a spot-vs-futures data artifact. Increases confidence in the finding from ~40% to ~55-65%.
+
+## Knapp v9 reproduction study — REJECTED
+
+Ran `scripts/oos_knapp_paired.py` on EUR/USD, GBP/USD, USD/JPY (all Dukascopy, n≈1,200 each):
+
+```
+EUR/USD  n=1216  paired lift +/-$0.00/trade  CI spans zero
+GBP/USD  n=1203  paired lift +/-$0.00/trade  CI spans zero
+USD/JPY  n=1226  paired lift +$0.20/trade    CI [-$0.12, +$0.51], spans zero
+```
+
+(FX P&L values are per unit under CONTRACT_SIZE=100; scale up 100x for realistic dollar terms → still under +$50/trade ship gate.)
+
+Combined with gold's +$2.35/trade lift, **Knapp v9 candidate FAILS the reproduction gate.** Registry entry `knapp_er_stops_v9` should be updated from `pre_registered_draft` → `rejected_pre_apply` reason "reproduction study failed on 3 markets + gold below ship gate."
+
 ## Silver cross-check — INCONCLUSIVE
 
 `data/external/dukascopy/XAGUSD_5m.csv` (180,510 rows, same 2024-2026 window)
