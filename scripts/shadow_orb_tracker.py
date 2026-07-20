@@ -38,7 +38,7 @@ import pytz
 # said for this decision. Purely additive fields; existing consumers ignore
 # unknown keys.
 try:
-    from regime_context import _daily_20d_slope  # type: ignore
+    from regime_context import _daily_20d_slope, _efficiency_ratio  # type: ignore
     _CANDIDATE_TRACKING = True
 except Exception:
     _CANDIDATE_TRACKING = False
@@ -163,7 +163,8 @@ def track_shadow_decisions() -> int:
 
         # Pre-registered v8 candidate-filter shadow decisions (2026-07-18+).
         # Purely additive — actual dispatch is unaffected. See
-        # docs/experiments/2026-07-18_daily_slope_consistency_shadow.md.
+        # docs/experiments/2026-07-18_daily_slope_consistency_shadow.md
+        # docs/experiments/2026-07-20_path_z_ny_short_prereg.md
         candidate_shadows: dict = {}
         if _CANDIDATE_TRACKING and direction in ("LONG", "SHORT"):
             try:
@@ -180,6 +181,40 @@ def track_shadow_decisions() -> int:
                 }
             except Exception:
                 pass  # never let candidate tracking break the tracker itself
+
+            # Path Z candidate (2026-07-20): NY session + SHORT + ER<0.30 + Mon-Wed.
+            # Restrictive filter — MOST candidates get would_skip=True. The few
+            # that pass become the ship-gate sample. Deep-analysis in-sample
+            # showed n=91 mean +$409/trade CI clears zero; must reproduce on
+            # organic forward n>=100 before promotion. See:
+            # docs/experiments/2026-07-20_path_z_ny_short_prereg.md
+            try:
+                # Take last 21 closes ending at OR close for ER (20 diffs)
+                closes_pre = bars5.iloc[max(0, or_close_idx - 20): or_close_idx + 1]["close"].tolist()
+                er_val = _efficiency_ratio(closes_pre, n=20)
+                dow = today_open.weekday()  # 0=Mon
+                path_z_reasons = []
+                if sess_name != "NY":
+                    path_z_reasons.append(f"session {sess_name} != NY")
+                if direction != "SHORT":
+                    path_z_reasons.append(f"direction {direction} != SHORT")
+                if er_val is None:
+                    path_z_reasons.append("ER unavailable")
+                elif er_val >= 0.30:
+                    path_z_reasons.append(f"ER {er_val:.3f} >= 0.30")
+                if dow not in (0, 1, 2):
+                    dow_name = ("Mon","Tue","Wed","Thu","Fri","Sat","Sun")[dow]
+                    path_z_reasons.append(f"dow {dow_name} not Mon-Wed")
+                would_skip = bool(path_z_reasons)
+                candidate_shadows["path_z"] = {
+                    "would_skip": would_skip,
+                    "would_take": not would_skip,
+                    "skip_reason": " | ".join(path_z_reasons) if path_z_reasons else None,
+                    "er_5m_20": er_val,
+                    "dow": ("Mon","Tue","Wed","Thu","Fri","Sat","Sun")[dow],
+                }
+            except Exception:
+                pass  # fail-open
 
         # Engine B (Knox research/beta) decision: v7 Path Y config + daily-slope
         # consistency filter. Publishes to GOLDTRADER_TG_CHAT_RESEARCH when

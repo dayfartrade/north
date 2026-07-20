@@ -21,13 +21,23 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 SHADOW_LOG = ROOT / "data/shadow_equity_since_halt.jsonl"
 
-# Ship gates from docs/experiments/2026-07-18_daily_slope_consistency_shadow.md
+# Ship gates from candidate pre-reg docs
 CANDIDATES: dict[str, dict] = {
     "daily_slope_consistency": {
         "n_ship": 100,
         "precision_ship": 0.60,
         "precision_reject": 0.55,
         "skip_rate_max": 0.40,
+        "hard_stop_utc": "2026-10-13",
+    },
+    # Path Z: NY-SHORT + ER<0.30 + Mon-Wed. Restrictive-take filter.
+    # Ship gate is different from dsc — measured on TAKEN trades, not skips.
+    # See docs/experiments/2026-07-20_path_z_ny_short_prereg.md.
+    "path_z": {
+        "n_ship": 100,           # of TAKEN (would_take=True) trades
+        "mean_ship": 0.0,        # mean per-trade P&L > 0 required
+        "win_rate_ship": 0.55,   # of taken trades, >= 55% winners
+        "ci_lo_ship": 0.0,       # bootstrap 95% CI lower bound clears zero
         "hard_stop_utc": "2026-10-13",
     },
 }
@@ -65,7 +75,18 @@ def _bootstrap_ci(diffs: list[float], n: int = 2000, alpha: float = 0.05) -> tup
 
 
 def analyze_candidate(rows: list[dict], name: str) -> dict:
-    """Return per-candidate report dict."""
+    """Return per-candidate report dict.
+
+    Two candidate types with different semantics:
+      - "skip filter" (e.g. daily_slope_consistency): filter SKIPS bad entries.
+        Measure lift = (baseline P&L) - (baseline P&L on kept only), and
+        precision-on-losers of the skips.
+      - "take filter" (e.g. path_z): filter TAKES only in a restrictive subset.
+        Measure mean/CI/win-rate on the WOULD-TAKE rows directly.
+    """
+    if name == "path_z":
+        return _analyze_take_filter(rows, name)
+
     # Only rows where:
     #   - strategy actually took (would_skip=False)
     #   - outcome resolved (net_pnl present)
@@ -125,24 +146,82 @@ def analyze_candidate(rows: list[dict], name: str) -> dict:
     }
 
 
+def _analyze_take_filter(rows: list[dict], name: str) -> dict:
+    """For take-filters (Path Z): measure P&L/CI/win-rate on TAKEN trades."""
+    taken = []
+    for r in rows:
+        outcome = r.get("outcome")
+        if outcome is None or outcome.get("net_pnl") is None:
+            continue
+        cs = (r.get("candidate_shadows") or {}).get(name)
+        if not cs:
+            continue
+        # Candidate must have said would_take=True (i.e., NOT would_skip)
+        if cs.get("would_skip") is not False:
+            continue
+        taken.append({
+            "net_pnl": float(outcome["net_pnl"]),
+            "session": r.get("session"),
+            "direction": r.get("direction_bias"),
+            "date": r.get("or_open_utc", "")[:10],
+        })
+
+    n = len(taken)
+    if n == 0:
+        return {"n": 0}
+
+    pnls = [t["net_pnl"] for t in taken]
+    wins = sum(1 for p in pnls if p > 0)
+    total = sum(pnls)
+    mean = total / n
+    ci_lo, ci_hi = _bootstrap_ci(pnls)
+
+    return {
+        "n": n,
+        "n_wins": wins,
+        "n_losses": n - wins,
+        "win_rate": wins / n,
+        "total_pnl": total,
+        "mean_pnl_per_trade": mean,
+        "ci95_lo": ci_lo,
+        "ci95_hi": ci_hi,
+    }
+
+
 def gate_status(name: str, r: dict) -> str:
     gates = CANDIDATES[name]
     n = r["n"]
     if n < 5:
         return "INSUFFICIENT_DATA"
 
+    n_ship = gates["n_ship"]
+
+    # Path Z: take-filter gates
+    if name == "path_z":
+        wr = r.get("win_rate", 0.0)
+        mean = r.get("mean_pnl_per_trade", 0.0)
+        ci_lo = r.get("ci95_lo", 0.0)
+        if n >= n_ship and mean <= gates["mean_ship"]:
+            return "REJECT (mean P&L not positive)"
+        if n >= n_ship and ci_lo <= gates["ci_lo_ship"]:
+            return "REJECT (CI includes zero)"
+        if (n >= n_ship
+                and mean > gates["mean_ship"]
+                and wr >= gates["win_rate_ship"]
+                and ci_lo > gates["ci_lo_ship"]):
+            return "READY-TO-SHIP"
+        return f"IN-PROGRESS ({n}/{n_ship} taken)"
+
+    # Skip-filter gates (dsc-style)
     p = r.get("precision_on_losers", 0.0)
     sr = r.get("skip_rate", 0.0)
     ci_lo = r.get("pnl_lift_ci95_lo_mean", 0.0)
-    n_ship = gates["n_ship"]
 
-    # Reject checks
     if n >= n_ship and p < gates["precision_reject"]:
         return "REJECT (precision below floor)"
     if n >= n_ship and sr > gates["skip_rate_max"]:
         return "REJECT (skip-rate above ceiling)"
 
-    # Ship check
     if (n >= n_ship
             and p >= gates["precision_ship"]
             and sr <= gates["skip_rate_max"]
@@ -165,6 +244,19 @@ def main() -> None:
         if r["n"] == 0:
             print("  no resolved shadow decisions with valid candidate signal yet")
             continue
+
+        if name == "path_z":
+            # Take-filter reporting
+            print(f"  n TAKEN by candidate:                {r['n']}")
+            print(f"  wins / losses:                       {r['n_wins']} / {r['n_losses']}")
+            print(f"  win rate:                            {100 * r['win_rate']:.1f}%")
+            print(f"  total P&L:                           ${r['total_pnl']:+,.0f}")
+            print(f"  mean/trade:                          ${r['mean_pnl_per_trade']:+,.2f}")
+            print(f"  Bootstrap 95% CI on mean:            [${r['ci95_lo']:+,.2f}, ${r['ci95_hi']:+,.2f}]")
+            print()
+            print(f"  GATE STATUS: {gate_status(name, r)}")
+            continue
+
         print(f"  n resolved (with candidate signal):  {r['n']}")
         print(f"  candidate skip rate:                 {100 * r['skip_rate']:.1f}%")
         print(f"  skips: W={r['skips_won']}  L={r['skips_lost']}  precision-on-losers={100 * r['precision_on_losers']:.1f}%")

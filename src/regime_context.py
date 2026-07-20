@@ -107,6 +107,35 @@ def _prior_day_stats(date_str: str) -> tuple[Optional[float], Optional[float]]:
     return (prev_range, prev_change)
 
 
+def _efficiency_ratio(closes, n: int = 20) -> Optional[float]:
+    """Kaufman Efficiency Ratio on the last (n+1) closes.
+
+    ER = |close[-1] - close[-n-1]| / sum(|close[i] - close[i-1]| for i in [-n..-1])
+
+    Range [0, 1] where 0 = pure noise (no net movement despite bar activity)
+    and 1 = perfect trend (net movement equals summed activity). Denominator
+    of 0 (no bar activity at all) returns None.
+
+    Used by filter_path_z (2026-07-20 shadow candidate #2 — NY-SHORT+LowER+Mon-Wed).
+    """
+    if closes is None:
+        return None
+    try:
+        seq = list(closes)
+    except TypeError:
+        return None
+    if len(seq) < n + 1:
+        return None
+    seg = seq[-(n + 1):]
+    numer = abs(seg[-1] - seg[0])
+    denom = 0.0
+    for i in range(1, len(seg)):
+        denom += abs(seg[i] - seg[i - 1])
+    if denom == 0:
+        return None
+    return numer / denom
+
+
 def _daily_20d_slope(date_str: str, lookback: int = 20) -> Optional[float]:
     """Linear-regression slope (pts/day) of last `lookback` daily GC closes
     strictly before `date_str`. Used by filter_daily_slope_consistency.
@@ -138,7 +167,8 @@ def build_regime_context(as_of_utc: pd.Timestamp,
                           funding_annualized_pct: Optional[float] = None,
                           basis_pct: Optional[float] = None,
                           cot_mm_net_long: Optional[float] = None,
-                          cot_pct_52w: Optional[float] = None) -> RegimeContext:
+                          cot_pct_52w: Optional[float] = None,
+                          efficiency_ratio_5m_20: Optional[float] = None) -> RegimeContext:
     """Construct a RegimeContext for the given timestamp.
 
     Bar-level context (or_atr_ratio, or_win_vol_ratio, trend_slope) and side
@@ -172,6 +202,7 @@ def build_regime_context(as_of_utc: pd.Timestamp,
         funding_annualized_pct=funding_annualized_pct,
         basis_pct=basis_pct,
         daily_20d_slope=daily_20d_slope,
+        efficiency_ratio_5m_20=efficiency_ratio_5m_20,
     )
 
 

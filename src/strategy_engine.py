@@ -81,6 +81,12 @@ class RegimeContext:
     # 2026-07-18_daily_slope_consistency_shadow.md.
     daily_20d_slope: Optional[float] = None
 
+    # Kaufman Efficiency Ratio on 20-bar 5m closes ending at OR close (2026-07-20
+    # shadow candidate #2 — Path Z). ER = |Δp_net| / Σ|Δp|. Range [0, 1] where
+    # 0 = noisy/sideways, 1 = pure trend. Used by filter_path_z to isolate
+    # low-ER (noisy) sessions where NY-SHORT breakouts show edge.
+    efficiency_ratio_5m_20: Optional[float] = None
+
 
 # ---------------------------------------------------------------------------
 # Decision protocol (P5)
@@ -118,6 +124,14 @@ class SessionConfig:
     # skips PLAN when intraday-slope-derived direction opposes 20d daily GC slope.
     # Default False keeps existing configs no-op; Engine B (Knox) flips it True.
     require_daily_slope_alignment: bool = False
+
+    # Path Z pre-reg (2026-07-20): NY session + SHORT direction + ER<0.30 + Mon-Wed.
+    # Discovered via deep_analysis_orb.py on n=1018 XAU/USD 2024-2026: unfiltered
+    # Path Y loses -$25k, but NY-SHORT quadrant alone wins +$29,874 (n=186), and
+    # tighter filter to Low-ER + Mon-Wed gives n=91 mean +$409/trade CI clears zero.
+    # Default False keeps configs no-op; shadow tracker sets True for Path Z evaluation.
+    # See docs/experiments/2026-07-20_path_z_ny_short_prereg.md.
+    require_path_z: bool = False
 
     # Session UTC open time (DST-aware, computed per-date by caller)
     utc_open_local: time = time(0, 0)
@@ -343,6 +357,52 @@ def filter_daily_slope_consistency(cfg: SessionConfig, ctx: OrContext, regime: R
     return None
 
 
+def filter_path_z(cfg: SessionConfig, ctx: OrContext, regime: RegimeContext) -> Optional[str]:
+    """Path Z: skip unless (session=NY) AND (direction=SHORT) AND (ER_5m_20<0.30) AND (Mon-Wed).
+
+    Shadow candidate #2 pre-registered 2026-07-20. Discovered via
+    scripts/deep_analysis_orb.py on Dukascopy XAU/USD 5m 2024-01 to 2026-07
+    (n=1018 entries). Path Y overall lost -$25,249 but the NY session + SHORT
+    direction quadrant alone won +$29,874 (n=186). Tightening to Low-ER (<0.30
+    on 20 5m closes ending at OR close) + Monday-Tuesday-Wednesday narrows to
+    n=91 with mean +$409/trade, 62.6% win rate, bootstrap 95% CI [+$45, +$760]
+    that clears zero.
+
+    Mechanism identified (see 2026-07-20_deep_analysis_findings.md):
+      - Winners come on 25% wider OR (mean 12.9 vs 10.3 pts on losers)
+      - Asymmetric payoff: winner mean +$1,233 vs loser mean -$971 (1.27x)
+      - Real yield IDENTICAL between winners/losers (not a macro-regime edge)
+      - Sign confirmed on real GC futures 5m n=31 (yfinance 60-day)
+
+    No-op until cfg.require_path_z=True is flipped. Ship gate:
+      n >= 100 shadow-taken decisions AND mean/trade > 0 AND
+      bootstrap 95% CI clears zero AND win rate >= 55%.
+    Reject gate:
+      Any of (n>=100 AND mean<=0), (CI includes 0 with mean<+$50), or
+      hard-stop 2026-10-13.
+    """
+    if not getattr(cfg, "require_path_z", False):
+        return None
+    # 1. Session
+    if cfg.name != "NY":
+        return f"path_z: session {cfg.name} != NY"
+    # 2. Direction (via intraday slope sign)
+    if ctx.slope_at_close >= 0:
+        return f"path_z: slope {ctx.slope_at_close:+.2f} not negative (not SHORT)"
+    # 3. Low ER
+    er = regime.efficiency_ratio_5m_20
+    if er is None:
+        return "path_z: ER unavailable"
+    if er >= 0.30:
+        return f"path_z: ER {er:.3f} >= 0.30 (not low)"
+    # 4. Day-of-week (Mon=0, Tue=1, Wed=2)
+    dow = ctx.session_open_utc.weekday()
+    if dow not in (0, 1, 2):
+        dow_name = ("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")[dow]
+        return f"path_z: dow {dow_name} not in Mon-Tue-Wed"
+    return None
+
+
 def filter_gap_after_down_day(cfg: SessionConfig, ctx: OrContext, regime: RegimeContext) -> Optional[str]:
     """Skip LONG PLAN if prior day closed sharply lower (dead-cat bounce filter).
 
@@ -375,6 +435,8 @@ REGISTERED_FILTERS: tuple[FilterFn, ...] = (
     filter_crabel_3day_pattern,
     # Post-halt candidate (2026-07-18):
     filter_daily_slope_consistency,
+    # Path Z candidate (2026-07-20, replaces rejected Knapp v9):
+    filter_path_z,
     # London fix filter is entry-level (per breakout), not session-level;
     # handled in dispatch/backtest execution layer.
     # Break-even-stop-at-60min (Crabel Ch 2) is execution-level,
@@ -502,6 +564,32 @@ SESSION_CONFIGS_V8_B = {
         target_mode=cfg.target_mode,
         tp_mult=cfg.tp_mult,
         require_daily_slope_alignment=True,
+        utc_open_local=cfg.utc_open_local,
+    )
+    for name, cfg in SESSION_CONFIGS_V8_INITIAL.items()
+}
+
+
+# Path Z config (2026-07-20): identical to Path Y except require_path_z=True
+# on all sessions. filter_path_z will let entries through only in the tight
+# subset (NY + SHORT + ER<0.30 + Mon-Tue-Wed). All other candidates are
+# skipped with a "path_z" reason. See docs/experiments/
+# 2026-07-20_path_z_ny_short_prereg.md.
+SESSION_CONFIGS_V9_Z = {
+    name: SessionConfig(
+        name=cfg.name,
+        or_bars=cfg.or_bars,
+        watch_bars=cfg.watch_bars,
+        max_hold_bars=cfg.max_hold_bars,
+        or_atr_max=cfg.or_atr_max,
+        or_atr_min=cfg.or_atr_min,
+        or_atr_deadzone=cfg.or_atr_deadzone,
+        require_trend=cfg.require_trend,
+        stop_mode=cfg.stop_mode,
+        fixed_stop_dollars=cfg.fixed_stop_dollars,
+        target_mode=cfg.target_mode,
+        tp_mult=cfg.tp_mult,
+        require_path_z=True,
         utc_open_local=cfg.utc_open_local,
     )
     for name, cfg in SESSION_CONFIGS_V8_INITIAL.items()

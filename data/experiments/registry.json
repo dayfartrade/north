@@ -267,6 +267,15 @@
       "notes": "DEPRECATED never activated: was gated on Knox n=50 which never accumulated (Knox never went live because research channel never created + dsc filter rejected before reaching activation threshold). No SPRT rebase attempted. Original pre-reg: docs/experiments/2026-07-18_knox_sprt_prereg.md."
     },
     {
+      "id": "path_z_ny_short_shadow",
+      "registered_utc": "2026-07-20T17:30:00Z",
+      "layer": "strategy_engine",
+      "verdict": "pre_registered",
+      "sr_per_period": null,
+      "n_observations": 91,
+      "notes": "SHADOW pre-reg (v9 candidate #2): filter_path_z. Take-filter (restrictive) that takes ONLY when session=NY AND direction=SHORT AND ER_5m_20<0.30 AND dow in Mon-Tue-Wed. Discovered via scripts/deep_analysis_orb.py on Dukascopy XAU/USD 5m 2024-2026 (n=1018). Path Y overall lost -$25,249 but NY-SHORT+LowER+Mon-Wed subset (n=91) has mean +$409/trade, 62.6% win rate, bootstrap 95% CI [+$45,+$760] clears zero. Mechanism identified: winners come on 25% wider OR + asymmetric payoff (winner mean +$1,233 vs loser mean -$971 = 1.27:1). Real yield IDENTICAL across winners/losers (not macro-regime edge). Sign confirmed on real GC 5m yfinance n=31 (NY-SHORT +$36/trade, only positive quadrant). Concentration risk documented: top 5 trades = 64% of P&L. Ship gate: n>=100 shadow-taken AND mean>0 AND CI clears 0 AND win rate>=55% AND Bonferroni-adjusted DSR passes AND fresh Path Z-specific SPRT pre-reg. Reject gate: mean<=0, or CI includes 0 with mean<+$50, or win rate<55%, or hard-stop 2026-10-13. Fails 3-months-ago test (discovered from analyzing today's sample). Bonferroni-N increments +6-8 for today's segmentation multiplicity. Full pre-reg: docs/experiments/2026-07-20_path_z_ny_short_prereg.md. No live effect (require_path_z=False in all live configs)."
+    },
+    {
       "id": "knapp_er_stops_v9",
       "registered_utc": "2026-07-20T14:45:00Z",
       "resolved_utc": "2026-07-20T16:45:00Z",

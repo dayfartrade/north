@@ -23,9 +23,11 @@ from strategy_engine import (  # noqa: E402
     RegimeContext,
     SessionConfig,
     SESSION_CONFIGS_V8_INITIAL,
+    SESSION_CONFIGS_V9_Z,
     evaluate_session,
     filter_daily_slope_consistency,
     filter_or_atr,
+    filter_path_z,
     filter_trend,
 )
 
@@ -157,6 +159,93 @@ class TestFilterDailySlopeConsistency:
         ctx = _or_ctx(slope=+1.0)
         regime = _regime(daily_20d_slope=0.0)
         assert filter_daily_slope_consistency(cfg, ctx, regime) is None
+
+
+class TestFilterPathZ:
+    """Pre-reg: docs/experiments/2026-07-20_path_z_ny_short_prereg.md
+
+    Path Z fires ONLY when all 4 conditions hold:
+      1. session == "NY"
+      2. slope_at_close < 0 (SHORT direction)
+      3. efficiency_ratio_5m_20 < 0.30 (noisy prior 20 5m bars)
+      4. session_open_utc.weekday() in {0,1,2} (Mon/Tue/Wed)
+    """
+
+    NY_MON = pd.Timestamp("2026-07-13 13:00", tz="UTC")   # Monday 13:00 UTC
+    NY_THU = pd.Timestamp("2026-07-16 13:00", tz="UTC")   # Thursday
+    LON_MON = pd.Timestamp("2026-07-13 07:00", tz="UTC")  # Monday London
+
+    def _cfg_on(self, name: str = "NY") -> SessionConfig:
+        return SessionConfig(name=name, require_path_z=True)
+
+    def _ctx(self, session_open, slope: float) -> OrContext:
+        return OrContext(
+            session_open_utc=session_open,
+            or_close_utc=session_open + pd.Timedelta(minutes=30),
+            or_high=4100.0, or_low=4090.0, or_range=10.0,
+            atr_at_close=5.0, slope_at_close=slope,
+            or_bars_df=pd.DataFrame(),
+        )
+
+    def test_shadow_off_by_default(self):
+        cfg = SessionConfig(name="NY")
+        ctx = self._ctx(self.NY_MON, slope=-1.0)
+        regime = _regime(efficiency_ratio_5m_20=0.20)
+        assert filter_path_z(cfg, ctx, regime) is None
+
+    def test_all_conditions_met_passes(self):
+        """NY + SHORT + Low-ER + Monday = take."""
+        cfg = self._cfg_on("NY")
+        ctx = self._ctx(self.NY_MON, slope=-1.0)
+        regime = _regime(efficiency_ratio_5m_20=0.20)
+        assert filter_path_z(cfg, ctx, regime) is None
+
+    def test_wrong_session_skips(self):
+        cfg = self._cfg_on("LON")
+        ctx = self._ctx(self.LON_MON, slope=-1.0)
+        regime = _regime(efficiency_ratio_5m_20=0.20)
+        r = filter_path_z(cfg, ctx, regime)
+        assert r is not None and "LON" in r
+
+    def test_long_direction_skips(self):
+        cfg = self._cfg_on("NY")
+        ctx = self._ctx(self.NY_MON, slope=+1.0)  # LONG
+        regime = _regime(efficiency_ratio_5m_20=0.20)
+        r = filter_path_z(cfg, ctx, regime)
+        assert r is not None and ("SHORT" in r or "not negative" in r)
+
+    def test_high_er_skips(self):
+        cfg = self._cfg_on("NY")
+        ctx = self._ctx(self.NY_MON, slope=-1.0)
+        regime = _regime(efficiency_ratio_5m_20=0.45)  # above 0.30
+        r = filter_path_z(cfg, ctx, regime)
+        assert r is not None and "0.30" in r
+
+    def test_thursday_skips(self):
+        cfg = self._cfg_on("NY")
+        ctx = self._ctx(self.NY_THU, slope=-1.0)
+        regime = _regime(efficiency_ratio_5m_20=0.20)
+        r = filter_path_z(cfg, ctx, regime)
+        assert r is not None and "Thu" in r
+
+    def test_missing_er_skips(self):
+        """Path Z is restrictive: no ER data = no trade."""
+        cfg = self._cfg_on("NY")
+        ctx = self._ctx(self.NY_MON, slope=-1.0)
+        regime = _regime(efficiency_ratio_5m_20=None)
+        r = filter_path_z(cfg, ctx, regime)
+        assert r is not None and "ER" in r
+
+    def test_flat_slope_skips(self):
+        cfg = self._cfg_on("NY")
+        ctx = self._ctx(self.NY_MON, slope=0.0)
+        regime = _regime(efficiency_ratio_5m_20=0.20)
+        r = filter_path_z(cfg, ctx, regime)
+        assert r is not None
+
+    def test_session_configs_v9_z_all_have_flag(self):
+        for name, cfg in SESSION_CONFIGS_V9_Z.items():
+            assert cfg.require_path_z is True, f"{name} missing Path Z flag"
 
 
 # ---------------------------------------------------------------------------
