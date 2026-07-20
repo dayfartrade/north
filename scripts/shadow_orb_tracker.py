@@ -33,6 +33,16 @@ from edge_session_orb_v7_final import SESSION_CONFIG
 from mers_v3_peb import compute_atr
 import pytz
 
+# Optional candidate-filter tracking. If regime_context is importable, the
+# shadow tracker records what pre-registered v8 shadow filters WOULD have
+# said for this decision. Purely additive fields; existing consumers ignore
+# unknown keys.
+try:
+    from regime_context import _daily_20d_slope  # type: ignore
+    _CANDIDATE_TRACKING = True
+except Exception:
+    _CANDIDATE_TRACKING = False
+
 SHADOW_LOG = ROOT / "data/shadow_equity_since_halt.jsonl"
 OR_BARS = 6  # 30-min opening range on 5m
 PLAN_WINDOW_BEFORE = 2  # minutes before or_close
@@ -151,6 +161,36 @@ def track_shadow_decisions() -> int:
         else:
             target_dist = cfg.get("tp_mult", 1.5) * or_range
 
+        # Pre-registered v8 candidate-filter shadow decisions (2026-07-18+).
+        # Purely additive — actual dispatch is unaffected. See
+        # docs/experiments/2026-07-18_daily_slope_consistency_shadow.md.
+        candidate_shadows: dict = {}
+        if _CANDIDATE_TRACKING and direction in ("LONG", "SHORT"):
+            try:
+                dsl = _daily_20d_slope(today_open.strftime("%Y-%m-%d"))
+                if dsl is None or dsl == 0:
+                    dsc_would_skip = None  # data unavailable / ambiguous
+                else:
+                    intra_sign = 1 if cur_slope > 0 else -1 if cur_slope < 0 else 0
+                    daily_sign = 1 if dsl > 0 else -1
+                    dsc_would_skip = bool(intra_sign != 0 and intra_sign != daily_sign)
+                candidate_shadows["daily_slope_consistency"] = {
+                    "would_skip": dsc_would_skip,
+                    "daily_20d_slope": dsl,
+                }
+            except Exception:
+                pass  # never let candidate tracking break the tracker itself
+
+        # Engine B (Knox research/beta) decision: v7 Path Y config + daily-slope
+        # consistency filter. Publishes to GOLDTRADER_TG_CHAT_RESEARCH when
+        # KNOX_RESEARCH_ENABLED=1 AND Engine A takes AND Engine B takes.
+        engine_b_takes = False
+        dsc = candidate_shadows.get("daily_slope_consistency") or {}
+        if (skip_reason is None
+                and direction in ("LONG", "SHORT")
+                and dsc.get("would_skip") is False):
+            engine_b_takes = True
+
         row = {
             "ts_recorded_utc": now.isoformat(),
             "session": sess_name,
@@ -174,11 +214,79 @@ def track_shadow_decisions() -> int:
             "target_short": or_low - target_dist if not skip_reason else None,
             "stop_short": or_low + stop_dist if not skip_reason else None,
             "strategy_version": "v7-actual-path-y",
+            "candidate_shadows": candidate_shadows,
+            "engine_b_takes": engine_b_takes,
         }
         _append_row(row)
         new_rows += 1
 
+        # Publish research alert (Knox soft-launch, 2026-07-18) — opt-in,
+        # fail-open (never breaks the shadow tracker itself).
+        # Gated by BOTH env var AND state file (defense-in-depth kill switch).
+        if engine_b_takes and _knox_alerts_enabled():
+            _try_send_research_alert(sess_name, today_open, direction,
+                                      or_high, or_low, stop_dist, target_dist,
+                                      cur_slope, dsc.get("daily_20d_slope"))
+
     return new_rows
+
+
+def _knox_alerts_enabled() -> bool:
+    """Two-key kill: env KNOX_RESEARCH_ENABLED=1 AND data/knox_state.enabled != False."""
+    if os.environ.get("KNOX_RESEARCH_ENABLED") != "1":
+        return False
+    state_file = ROOT / "data/knox_state.json"
+    if not state_file.exists():
+        return True  # file missing = default enabled (env is the gate)
+    try:
+        import json as _json
+        state = _json.loads(state_file.read_text())
+        return bool(state.get("enabled", True))
+    except Exception:
+        return True  # unreadable = fail-open to env
+
+
+def _try_send_research_alert(sess_name: str, open_ts, direction: str,
+                              or_high: float, or_low: float,
+                              stop_dist: float, target_dist: float,
+                              intraday_slope: float,
+                              daily_20d_slope: float | None) -> None:
+    """Format + send Engine B PLAN alert to research audience. Fail-open."""
+    try:
+        from telegram_bot import send as _tg_send
+    except Exception:
+        return
+
+    if direction == "LONG":
+        entry = or_high
+        stop = or_high - stop_dist
+        target = or_high + target_dist
+    else:
+        entry = or_low
+        stop = or_low + stop_dist
+        target = or_low - target_dist
+    rr = target_dist / stop_dist if stop_dist > 0 else 0
+    daily_str = f"{daily_20d_slope:+.2f}" if daily_20d_slope is not None else "n/a"
+
+    text = (
+        "🧪 *KNOX RESEARCH ALERT — UNVALIDATED*\n"
+        "_Shadow-gate n/100 · CI on P&L lift still includes zero_\n"
+        "_Do NOT trade this with money you can't lose._\n\n"
+        f"*{sess_name} PLAN* · {open_ts.strftime('%Y-%m-%d %H:%M UTC')}\n"
+        f"Direction: *{direction}*\n"
+        f"Entry: `{entry:.2f}`\n"
+        f"Stop:  `{stop:.2f}`  ({stop_dist:.2f} pts)\n"
+        f"Target: `{target:.2f}`  ({target_dist:.2f} pts, {rr:.2f}R)\n\n"
+        f"_intraday_slope={intraday_slope:+.2f}_ · "
+        f"_daily_20d_slope={daily_str}_\n\n"
+        "Filter chain: OR/ATR ≤ 2.0 · trend-aligned · "
+        "*daily_slope_consistency=ON*\n"
+        "Pre-reg: docs/experiments/2026-07-18_daily_slope_consistency_shadow.md"
+    )
+    try:
+        _tg_send(text, audience="research")
+    except Exception:
+        pass  # fail-open
 
 
 if __name__ == "__main__":

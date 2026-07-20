@@ -1,0 +1,12 @@
+[Unit]
+Description=Knox alert post-mortem (resolve + follow-up in research channel)
+After=network-online.target gdt-dispatch.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=gdt
+WorkingDirectory=/home/gdt/golddaytrador
+ExecStart=/home/gdt/golddaytrador/.venv/bin/python scripts/knox_post_mortem.py
+Environment=PYTHONPATH=/home/gdt/golddaytrador/src
+EnvironmentFile=/home/gdt/golddaytrador/.env.vps

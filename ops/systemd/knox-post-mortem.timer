@@ -1,0 +1,10 @@
+[Unit]
+Description=Knox post-mortem every 30 min (matches dispatch cadence, offset +5 min)
+
+[Timer]
+OnCalendar=*:05,35
+Persistent=true
+Unit=knox-post-mortem.service
+
+[Install]
+WantedBy=timers.target

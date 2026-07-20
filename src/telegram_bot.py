@@ -8,13 +8,17 @@ Setup (one-time):
         $env:GOLDTRADER_TG_TOKEN         = "123456:ABC..."
         $env:GOLDTRADER_TG_CHAT          = "987654321"  # private/default chat
         $env:GOLDTRADER_TG_CHAT_PUBLIC   = "-100..."    # optional public channel id
+        $env:GOLDTRADER_TG_CHAT_RESEARCH = "-100..."    # optional Knox research/beta channel
      Or write them to C:/golddaytrador/.telegram (key=value lines).
 
 Routing:
-  send(text, audience="private")  -> GOLDTRADER_TG_CHAT
-  send(text, audience="public")   -> GOLDTRADER_TG_CHAT_PUBLIC if set,
-                                     else falls back to GOLDTRADER_TG_CHAT
-  send(text)                       -> default = private (preserves old behavior)
+  send(text, audience="private")   -> GOLDTRADER_TG_CHAT
+  send(text, audience="public")    -> GOLDTRADER_TG_CHAT_PUBLIC if set,
+                                      else falls back to GOLDTRADER_TG_CHAT
+  send(text, audience="research")  -> GOLDTRADER_TG_CHAT_RESEARCH (Knox v8 unvalidated
+                                      shadow signals; falls back to private with LOUD
+                                      banner if unset — never public)
+  send(text)                        -> default = private (preserves old behavior)
 """
 from __future__ import annotations
 import os
@@ -25,7 +29,8 @@ import requests
 ROOT = Path(__file__).resolve().parent.parent
 ENV_FILE = ROOT / ".telegram"
 
-_KEYS = ("GOLDTRADER_TG_TOKEN", "GOLDTRADER_TG_CHAT", "GOLDTRADER_TG_CHAT_PUBLIC")
+_KEYS = ("GOLDTRADER_TG_TOKEN", "GOLDTRADER_TG_CHAT", "GOLDTRADER_TG_CHAT_PUBLIC",
+         "GOLDTRADER_TG_CHAT_RESEARCH")
 
 
 def _load_all() -> dict:
@@ -73,6 +78,18 @@ def send(text: str, parse_mode: str = "Markdown", silent: bool = False,
             chat = c["GOLDTRADER_TG_CHAT"]
             text = ("⚠️ *FALLBACK: public channel not configured — this alert "
                     "would have gone to subscribers*\n\n" + text)
+    elif audience == "research":
+        # Knox research/beta channel for v8 unvalidated shadow signals.
+        # Never falls back to public — the fallback banner tells the operator
+        # to configure GOLDTRADER_TG_CHAT_RESEARCH; unvalidated signals must
+        # NEVER be sent to the public/subscriber channel.
+        res = c["GOLDTRADER_TG_CHAT_RESEARCH"]
+        if res:
+            chat = res
+        else:
+            chat = c["GOLDTRADER_TG_CHAT"]
+            text = ("⚠️ *FALLBACK: research channel not configured — "
+                    "GOLDTRADER_TG_CHAT_RESEARCH unset*\n\n" + text)
     else:
         chat = c["GOLDTRADER_TG_CHAT"]
     if not tok or not chat:

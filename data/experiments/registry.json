@@ -235,6 +235,33 @@
       "sr_per_period": null,
       "n_observations": 10,
       "notes": "SPRT re-baseline under Path Y: H0=0.52 (corrected backtest win rate) vs H1=0.35. Old sprt_v72_1_launch (H0=0.57) is invalid because it used v7.1 phantom-backtest metric. Under Path Y: log-LR = +2.33 (below halt boundary +2.94) -> SPRT_CONTINUE. Halt does NOT fire under corrected baseline. Sensitivity: H1=0.30 -> +2.84 CONTINUE, H1=0.25 -> +3.28 HALT. Kill switch stays on regardless because DSR audit FAILS on Path Y (CI includes 0)."
+    },
+    {
+      "id": "daily_slope_consistency_shadow",
+      "registered_utc": "2026-07-18T07:15:00Z",
+      "layer": "strategy_engine",
+      "verdict": "shadow",
+      "sr_per_period": null,
+      "n_observations": 18,
+      "notes": "SHADOW (v8 filter_daily_slope_consistency): skip PLAN when intraday-slope-derived direction opposes 20d daily GC slope. Motivation: post-halt review of n=18 live+shadow trades since 2026-07-01 found 0/6 wins on COUNTER-trend LONG entries (-$9,804) vs 4/12 (33%, +$1,067) on ALIGNED entries. p(0/6 | H0=0.52) = 0.012. Full forward-log replay (n=32 pre+post-launch): 8 skips, 1W/7L, precision 87.5%, P&L lift +$9,502. All 18 launch-era trades were in ry>=2.2 regime; correlation between 'downtrending' and 'high-real-yield' may not be coincidence. No-op until cfg.require_daily_slope_alignment=True. Ship gate: n>=100 shadow decisions with precision>=60% on skipped losers AND positive P&L lift with CI clearing zero. Rejection gate: precision<55% at n=100 OR skip-rate>40% of PLANs unless P&L improvement decisive OR not cleared by 2026-10-13. Fails 3-months-ago test (not derivable from WGC canonical vars alone; observed post-launch). Bonferroni-N increments. See docs/experiments/2026-07-18_daily_slope_consistency_shadow.md."
+    },
+    {
+      "id": "knox_soft_launch_engine_b",
+      "registered_utc": "2026-07-18T08:30:00Z",
+      "layer": "operational_launch",
+      "verdict": "pre_registered",
+      "sr_per_period": null,
+      "n_observations": 16,
+      "notes": "SOFT-LAUNCH pre-reg: Engine B (Knox) publishes to GOLDTRADER_TG_CHAT_RESEARCH with unvalidated disclosure banner on every alert. Config = SESSION_CONFIGS_V8_B (Path Y + require_daily_slope_alignment=True). Enabled by env KNOX_RESEARCH_ENABLED=1 AND data/knox_state.json enabled=true; instant kill via scripts/knox_kill.py off. Publication route: shadow_orb_tracker.py:_try_send_research_alert when Engine A OR/ATR passes AND Engine B dsc passes. Engine A remains halted independently. Public promotion gates (must all clear): shadow n>=100, precision>=60%, CI clears zero, Knox-specific DSR pass, Knox-specific SPRT pre-reg + no early halt, VPS stable 30d, explicit user go-ahead. Reject gates: precision<55% at n=100, skip-rate>40%, hard-stop 2026-10-13, Knox SPRT halt. Full plan: docs/launch/2026-07-18_soft_launch_plan.md. Public posts + Knox disclosure: docs/launch/telegram_posts.md."
+    },
+    {
+      "id": "knox_sprt_prereg",
+      "registered_utc": "2026-07-18T09:00:00Z",
+      "layer": "operational_halt",
+      "verdict": "pre_registered_dormant",
+      "sr_per_period": null,
+      "n_observations": 0,
+      "notes": "PRE-REGISTERED DORMANT: Knox-specific SPRT parameters, activation deferred until Knox shadow n=50. On activation: H0 = observed shadow win rate clamped to [0.45, 0.60], H1 = H0 - 0.15 floored at 0.30, alpha=beta=0.05, boundaries +/-2.944. Tested on Knox-DISPATCHED research alerts (not full shadow log). HALT crossing triggers auto scripts/knox_kill.py off + auto-post to research channel. SAFE crossing does NOT auto-promote to public — requires ship-gate + user go-ahead. Full pre-reg: docs/experiments/2026-07-18_knox_sprt_prereg.md."
     }
   ]
 }

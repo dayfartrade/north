@@ -1,0 +1,10 @@
+[Unit]
+Description=Weekly Knox ship-gate report — Sunday 22:15 UTC
+
+[Timer]
+OnCalendar=Sun *-*-* 22:15:00 UTC
+Persistent=true
+Unit=knox-weekly-report.service
+
+[Install]
+WantedBy=timers.target

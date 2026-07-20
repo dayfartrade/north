@@ -75,6 +75,12 @@ class RegimeContext:
     # 2026-07-13_crabel_findings.md)
     three_day_pattern: Optional[str] = None
 
+    # Daily-trend consistency feature (2026-07-18 shadow candidate).
+    # Linear slope of last 20 daily GC closes as-of session date; sign used to
+    # gate direction-aligned entries. See docs/experiments/
+    # 2026-07-18_daily_slope_consistency_shadow.md.
+    daily_20d_slope: Optional[float] = None
+
 
 # ---------------------------------------------------------------------------
 # Decision protocol (P5)
@@ -107,6 +113,11 @@ class SessionConfig:
     fixed_stop_dollars: Optional[float] = None
     target_mode: str = "or_range" # "or_range" | "stop_x_tp"
     tp_mult: float = 1.5
+
+    # Post-halt shadow filter (2026-07-18). When True, filter_daily_slope_consistency
+    # skips PLAN when intraday-slope-derived direction opposes 20d daily GC slope.
+    # Default False keeps existing configs no-op; Engine B (Knox) flips it True.
+    require_daily_slope_alignment: bool = False
 
     # Session UTC open time (DST-aware, computed per-date by caller)
     utc_open_local: time = time(0, 0)
@@ -299,6 +310,39 @@ def filter_crabel_3day_pattern(cfg: SessionConfig, ctx: OrContext, regime: Regim
     return None
 
 
+def filter_daily_slope_consistency(cfg: SessionConfig, ctx: OrContext, regime: RegimeContext) -> Optional[str]:
+    """Skip PLAN when intraday breakout direction opposes the 20d daily slope.
+
+    Shadow candidate pre-registered 2026-07-18. Motivation: post-halt review of
+    18 live+shadow trades since 2026-07-01 launch found all 6 LONG entries
+    (0/6 wins, -$9,804) fired on days where 20d daily slope was negative.
+    Intraday 1h-EMA50 slope (fetch_higher_tf_trend) picks up bounces inside a
+    down-trend and calls them UP. Filter is direction-agnostic: it requires
+    sign alignment between OR-breakout direction and daily slope.
+
+    No-op until cfg.require_daily_slope_alignment=True is flipped. Threshold
+    for eventual live ship: n>=100 shadow decisions with precision>=60% on
+    skipped losers AND positive P&L lift with CI clearing zero.
+    """
+    if not getattr(cfg, "require_daily_slope_alignment", False):
+        return None
+    if regime.daily_20d_slope is None:
+        return None  # data unavailable, don't apply
+    # Direction inferred from intraday slope (same rule evaluate_session uses)
+    if ctx.slope_at_close == 0:
+        return None  # flat handled by filter_trend
+    intraday_sign = 1 if ctx.slope_at_close > 0 else -1
+    daily_sign = 1 if regime.daily_20d_slope > 0 else -1 if regime.daily_20d_slope < 0 else 0
+    if daily_sign == 0:
+        return None  # ambiguous daily trend, don't gate
+    if intraday_sign != daily_sign:
+        return (
+            f"daily_slope_consistency: intraday_dir={'LONG' if intraday_sign>0 else 'SHORT'}"
+            f" opposes daily_20d_slope={regime.daily_20d_slope:.2f}"
+        )
+    return None
+
+
 def filter_gap_after_down_day(cfg: SessionConfig, ctx: OrContext, regime: RegimeContext) -> Optional[str]:
     """Skip LONG PLAN if prior day closed sharply lower (dead-cat bounce filter).
 
@@ -329,6 +373,8 @@ REGISTERED_FILTERS: tuple[FilterFn, ...] = (
     filter_prior_day_nr7_lon,
     filter_lon_short_only,
     filter_crabel_3day_pattern,
+    # Post-halt candidate (2026-07-18):
+    filter_daily_slope_consistency,
     # London fix filter is entry-level (per breakout), not session-level;
     # handled in dispatch/backtest execution layer.
     # Break-even-stop-at-60min (Crabel Ch 2) is execution-level,
@@ -433,4 +479,30 @@ SESSION_CONFIGS_V8_INITIAL = {
         target_mode="or_range",
         tp_mult=1.5,
     ),
+}
+
+
+# Engine B config (Knox research/beta, 2026-07-18): identical to Path Y
+# except require_daily_slope_alignment=True on all sessions. This is the
+# strategy that will publish to GOLDTRADER_TG_CHAT_RESEARCH with the
+# unvalidated-shadow disclosure banner. Still shadow-gated for capital;
+# soft-launch route publishes decisions publicly, not private trading.
+SESSION_CONFIGS_V8_B = {
+    name: SessionConfig(
+        name=cfg.name,
+        or_bars=cfg.or_bars,
+        watch_bars=cfg.watch_bars,
+        max_hold_bars=cfg.max_hold_bars,
+        or_atr_max=cfg.or_atr_max,
+        or_atr_min=cfg.or_atr_min,
+        or_atr_deadzone=cfg.or_atr_deadzone,
+        require_trend=cfg.require_trend,
+        stop_mode=cfg.stop_mode,
+        fixed_stop_dollars=cfg.fixed_stop_dollars,
+        target_mode=cfg.target_mode,
+        tp_mult=cfg.tp_mult,
+        require_daily_slope_alignment=True,
+        utc_open_local=cfg.utc_open_local,
+    )
+    for name, cfg in SESSION_CONFIGS_V8_INITIAL.items()
 }

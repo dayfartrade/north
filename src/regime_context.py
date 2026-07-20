@@ -107,6 +107,30 @@ def _prior_day_stats(date_str: str) -> tuple[Optional[float], Optional[float]]:
     return (prev_range, prev_change)
 
 
+def _daily_20d_slope(date_str: str, lookback: int = 20) -> Optional[float]:
+    """Linear-regression slope (pts/day) of last `lookback` daily GC closes
+    strictly before `date_str`. Used by filter_daily_slope_consistency.
+
+    Returns None if fewer than `lookback` prior closes are available.
+    """
+    gc = _load_gc_daily()
+    if not gc:
+        return None
+    prior = [gc[k][3] for k in sorted(gc.keys()) if k < date_str]
+    if len(prior) < lookback:
+        return None
+    ys = prior[-lookback:]
+    n = len(ys)
+    xs = list(range(n))
+    mean_x = sum(xs) / n
+    mean_y = sum(ys) / n
+    num = sum((xs[i] - mean_x) * (ys[i] - mean_y) for i in range(n))
+    den = sum((xs[i] - mean_x) ** 2 for i in range(n))
+    if den == 0:
+        return None
+    return num / den
+
+
 def build_regime_context(as_of_utc: pd.Timestamp,
                           or_atr_ratio: Optional[float] = None,
                           or_win_vol_ratio: Optional[float] = None,
@@ -131,6 +155,7 @@ def build_regime_context(as_of_utc: pd.Timestamp,
     tnx = _lookup_le(_load_series("data/macro/tnx_10y__DGS10.csv"), date_str)
 
     prior_range, prior_close_change = _prior_day_stats(date_str)
+    daily_20d_slope = _daily_20d_slope(date_str)
 
     return RegimeContext(
         as_of_utc=as_of_utc,
@@ -146,6 +171,7 @@ def build_regime_context(as_of_utc: pd.Timestamp,
         trend_slope=trend_slope,
         funding_annualized_pct=funding_annualized_pct,
         basis_pct=basis_pct,
+        daily_20d_slope=daily_20d_slope,
     )
 
 
@@ -159,3 +185,4 @@ if __name__ == "__main__":
     print(f"tnx: {ctx.tnx}")
     print(f"prior_day_range: {ctx.prior_day_range}")
     print(f"prior_day_close_change: {ctx.prior_day_close_change}")
+    print(f"daily_20d_slope: {ctx.daily_20d_slope}")

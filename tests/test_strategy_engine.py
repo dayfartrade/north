@@ -24,6 +24,7 @@ from strategy_engine import (  # noqa: E402
     SessionConfig,
     SESSION_CONFIGS_V8_INITIAL,
     evaluate_session,
+    filter_daily_slope_consistency,
     filter_or_atr,
     filter_trend,
 )
@@ -105,6 +106,57 @@ class TestFilterTrend:
         cfg = SessionConfig(name="LON", require_trend=False)
         ctx = _or_ctx(slope=0)
         assert filter_trend(cfg, ctx, _regime()) is None
+
+
+class TestFilterDailySlopeConsistency:
+    """Pre-reg: docs/experiments/2026-07-18_daily_slope_consistency_shadow.md"""
+
+    def _cfg_on(self) -> SessionConfig:
+        return SessionConfig(name="NY", require_daily_slope_alignment=True)
+
+    def test_shadow_off_by_default(self):
+        cfg = SessionConfig(name="NY")
+        ctx = _or_ctx(slope=+1.0)
+        regime = _regime(daily_20d_slope=-5.0)
+        assert filter_daily_slope_consistency(cfg, ctx, regime) is None
+
+    def test_flag_on_long_counter_downtrend_skips(self):
+        cfg = self._cfg_on()
+        ctx = _or_ctx(slope=+1.0)  # LONG
+        regime = _regime(daily_20d_slope=-5.0)
+        r = filter_daily_slope_consistency(cfg, ctx, regime)
+        assert r is not None and "opposes" in r and "LONG" in r
+
+    def test_flag_on_short_aligned_downtrend_passes(self):
+        cfg = self._cfg_on()
+        ctx = _or_ctx(slope=-1.0)  # SHORT
+        regime = _regime(daily_20d_slope=-5.0)
+        assert filter_daily_slope_consistency(cfg, ctx, regime) is None
+
+    def test_flag_on_long_aligned_uptrend_passes(self):
+        cfg = self._cfg_on()
+        ctx = _or_ctx(slope=+1.0)
+        regime = _regime(daily_20d_slope=+5.0)
+        assert filter_daily_slope_consistency(cfg, ctx, regime) is None
+
+    def test_missing_daily_slope_passes(self):
+        cfg = self._cfg_on()
+        ctx = _or_ctx(slope=+1.0)
+        regime = _regime(daily_20d_slope=None)
+        assert filter_daily_slope_consistency(cfg, ctx, regime) is None
+
+    def test_flat_intraday_slope_passes(self):
+        """Flat trend is handled by filter_trend, not this one."""
+        cfg = self._cfg_on()
+        ctx = _or_ctx(slope=0.0)
+        regime = _regime(daily_20d_slope=-5.0)
+        assert filter_daily_slope_consistency(cfg, ctx, regime) is None
+
+    def test_zero_daily_slope_passes(self):
+        cfg = self._cfg_on()
+        ctx = _or_ctx(slope=+1.0)
+        regime = _regime(daily_20d_slope=0.0)
+        assert filter_daily_slope_consistency(cfg, ctx, regime) is None
 
 
 # ---------------------------------------------------------------------------

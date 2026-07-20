@@ -1,0 +1,12 @@
+[Unit]
+Description=Knox weekly ship-gate report (Sun 22:15 UTC, 15 min after weekly-validation)
+After=network-online.target gdt-weekly-validation.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=gdt
+WorkingDirectory=/home/gdt/golddaytrador
+ExecStart=/home/gdt/golddaytrador/.venv/bin/python scripts/knox_weekly_report.py
+Environment=PYTHONPATH=/home/gdt/golddaytrador/src
+EnvironmentFile=/home/gdt/golddaytrador/.env.vps
