@@ -570,18 +570,31 @@ SESSION_CONFIGS_V8_B = {
 }
 
 
-# Path Z config (2026-07-20): identical to Path Y except require_path_z=True
-# on all sessions. filter_path_z will let entries through only in the tight
-# subset (NY + SHORT + ER<0.30 + Mon-Tue-Wed). All other candidates are
-# skipped with a "path_z" reason. See docs/experiments/
-# 2026-07-20_path_z_ny_short_prereg.md.
+# Path Z config (2026-07-20 — corrected 2026-07-20T18:15Z):
+# REPLACEMENT strategy on NY session. Deep-analysis n=91 in-sample edge
+# (+$409/trade) was measured WITHOUT Path Y's or_atr_max=2.0 filter — that
+# filter removes 83 of the 91 winning candidates because winners come on
+# WIDE-OR days (winner mean or_range 12.9 vs loser 10.3). Applying Path Y's
+# or_atr filter drops n from 91 -> 8 and flips mean from +$409 to -$162.
+#
+# So Path Z drops or_atr_max on NY (the only session where Path Z can fire).
+# Other sessions inherit their Path Y filters — filter_path_z will block them
+# via session != NY check regardless.
+#
+# All other Path Y safety filters (filter_trend, filter_news_stand_down)
+# still apply — those are execution safety, not strategy.
+#
+# See docs/experiments/2026-07-20_path_z_ny_short_prereg.md § "Design
+# correction 2026-07-20T18:15Z".
 SESSION_CONFIGS_V9_Z = {
     name: SessionConfig(
         name=cfg.name,
         or_bars=cfg.or_bars,
         watch_bars=cfg.watch_bars,
         max_hold_bars=cfg.max_hold_bars,
-        or_atr_max=cfg.or_atr_max,
+        # Drop or_atr_max on NY (Path Z takes wide-OR days). Keep on LON/ASIA
+        # (filter_path_z blocks them anyway via session check; belt-and-suspenders).
+        or_atr_max=None if name == "NY" else cfg.or_atr_max,
         or_atr_min=cfg.or_atr_min,
         or_atr_deadzone=cfg.or_atr_deadzone,
         require_trend=cfg.require_trend,
