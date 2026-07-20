@@ -1,0 +1,8 @@
+[Unit]
+Description=Log VPS resource stats (CPU/mem/disk) to /home/gdt/system_stats.csv
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=gdt
+ExecStart=/home/gdt/golddaytrador/ops/vps/system_stats.sh

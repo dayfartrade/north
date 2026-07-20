@@ -1,0 +1,10 @@
+[Unit]
+Description=Fire system-stats log every 15 min
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=15min
+Unit=gdt-sysstats.service
+
+[Install]
+WantedBy=timers.target
