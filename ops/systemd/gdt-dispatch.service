@@ -1,0 +1,16 @@
+[Unit]
+Description=Gold day-trader dispatch tick
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=gdt
+WorkingDirectory=/home/gdt/golddaytrador
+ExecStart=/home/gdt/golddaytrador/scripts/dispatch_with_healthcheck.sh
+Environment=PYTHONPATH=/home/gdt/golddaytrador/src
+EnvironmentFile=/home/gdt/golddaytrador/.env.vps
+# .env.vps must set at minimum:
+#   GOLDTRADER_TG_CHAT_PUBLIC=<channel_id_or_leave_unset>
+#   GOLDTRADER_STRICT_PUBLIC=1
+#   HEALTHCHECKS_DISPATCH_UUID=<uuid_from_healthchecks.io>

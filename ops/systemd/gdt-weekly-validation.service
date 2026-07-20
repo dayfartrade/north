@@ -1,0 +1,12 @@
+[Unit]
+Description=Gold day-trader weekly validation (Sun 22:00 UTC)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=gdt
+WorkingDirectory=/home/gdt/golddaytrador
+ExecStart=/home/gdt/golddaytrador/.venv/bin/python -m src.weekly_validation
+Environment=PYTHONPATH=/home/gdt/golddaytrador/src
+EnvironmentFile=/home/gdt/golddaytrador/.env.vps

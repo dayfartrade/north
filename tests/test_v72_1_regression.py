@@ -87,6 +87,8 @@ def test_dispatch_orb_hold_v72_1():
 # Path Y baseline (2026-07-13): synced backtest config to live-actual filter.
 # n dropped from v7.2.1's 52 (phantom-v7.1 numbers) to Path Y's 25 (honest).
 # Wide tolerances because news filter application is bar-timing-sensitive.
+# Data-window cap: golden pinned against bars <= 2026-07-08. Cap in the test
+# keeps the golden invariant to future data accumulation.
 V721_GOLDEN = {
     "n": 25,
     "wins": 13,
@@ -95,6 +97,7 @@ V721_GOLDEN = {
     "total_usd_max": 14000,
     "mean_per_trade_min": 350,
     "mean_per_trade_max": 500,
+    "data_end_utc": "2026-07-09 23:59:59",
 }
 
 
@@ -111,6 +114,9 @@ def test_v72_1_full_backtest_golden():
     bars = gc_load('5m').sort_index()
     if bars.index.tz is None:
         bars.index = bars.index.tz_localize('UTC')
+    # Cap bars at golden pin-date so the assertion is invariant to data drift
+    cap = pd.Timestamp(V721_GOLDEN["data_end_utc"], tz="UTC")
+    bars = bars[bars.index <= cap]
 
     frames = []
     for sess_name in SESSION_CONFIG:

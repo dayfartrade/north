@@ -58,9 +58,31 @@ builtins._dispatch_log = _log
 
 
 def load_state() -> dict:
-    if STATE_FILE.exists():
+    if not STATE_FILE.exists():
+        return {"sent": []}
+    try:
         return json.loads(STATE_FILE.read_text())
-    return {"sent": []}
+    except (json.JSONDecodeError, UnicodeDecodeError) as e:
+        # Chaos hardening (2026-07-18): corrupt state file would otherwise
+        # crash every subsequent tick. Rename the corrupt file for forensics
+        # + reset to empty, then LOUD-log so an operator notices.
+        import shutil
+        from datetime import datetime, timezone
+        ts = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+        corrupt = STATE_FILE.with_suffix(f".corrupt.{ts}.json")
+        try:
+            shutil.copy2(STATE_FILE, corrupt)
+        except Exception:
+            pass
+        _log(f"[dispatch] CORRUPT STATE FILE: {STATE_FILE} unreadable ({type(e).__name__}: {e}). "
+             f"Copied to {corrupt}. Resetting to empty dedup registry.")
+        try:
+            from telegram_bot import send as _tg_send
+            _tg_send(f"🚨 CORRUPT dispatch_state.json — reset to empty. Backup: {corrupt.name}",
+                     audience="private")
+        except Exception:
+            pass
+        return {"sent": []}
 
 
 def save_state(state: dict):

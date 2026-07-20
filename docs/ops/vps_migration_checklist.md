@@ -1,7 +1,13 @@
 # VPS migration checklist — Hetzner CX22
 
 **Owner:** Farhad. **Assist:** Knox. **Target date:** 2026-07-13 (post-CPI).
-**Reason:** Windows Task Scheduler outages caused 36h dark in last 48h. Public launch 2026-07-30 requires >99% uptime. Per quant framework (2026-07-13): Hetzner CX22 + systemd + healthchecks.io is the retail-quant standard.
+**Reason:** Windows Task Scheduler outages caused 36h dark in last 48h. 23h gap 07-17→07-18 confirmed same root cause on 2026-07-18. Public launch requires >99% uptime. Per quant framework (2026-07-13): Hetzner CX22 + systemd + healthchecks.io is the retail-quant standard.
+
+**Pre-staged (2026-07-18) — reduces hands-on time to ~1h:**
+- Systemd units: `ops/systemd/gdt-dispatch.{service,timer}`, `ops/systemd/gdt-weekly-validation.{service,timer}`
+- Healthcheck wrapper: `scripts/dispatch_with_healthcheck.sh`
+- One-shot bootstrap: `scripts/vps_bootstrap.sh <github_pat>`
+- Smoke test: `scripts/vps_smoke_test.sh`
 
 ## Pre-flight (30 min)
 
@@ -11,38 +17,48 @@
 - [ ] SSH key upload during provisioning. Note IPv4/IPv6 addresses.
 - [ ] Sign up healthchecks.io free tier. Create one check per timer: `dispatch-30min`, `daily-refresh`, `weekly-validation`.
 
-## OS + Python (20 min)
+## OS + Python + repo (5 min — automated)
+
+Single command replaces the OS/Python/repo/systemd steps:
 
 ```bash
 ssh root@<vps_ip>
-apt update && apt upgrade -y
-apt install -y python3.12 python3.12-venv python3-pip git tmux vim ufw fail2ban
-useradd -m -s /bin/bash gdt
-usermod -aG sudo gdt
-# copy SSH key: mkdir /home/gdt/.ssh; cp ~/.ssh/authorized_keys /home/gdt/.ssh/; chown -R gdt:gdt /home/gdt/.ssh; chmod 700 /home/gdt/.ssh
-ufw allow OpenSSH
-ufw enable
-# disable root SSH
-sed -i 's/#PermitRootLogin.*/PermitRootLogin no/' /etc/ssh/sshd_config
-systemctl restart ssh
+# Clone once temporarily (bootstrap will re-clone as gdt)
+git clone https://<PAT>@github.com/far-reach/golddaytrador.git /root/golddaytrador
+bash /root/golddaytrador/scripts/vps_bootstrap.sh <PAT>
 ```
 
-## Repo + secrets (15 min)
-
-```bash
-su - gdt
-git clone https://<PAT>@github.com/far-reach/golddaytrador.git
-cd golddaytrador
-python3.12 -m venv .venv
-.venv/bin/pip install -r requirements.txt
-```
+The bootstrap script performs all of:
+- OS package install (python3.12, git, ufw, fail2ban, curl, tmux)
+- gdt user creation + SSH key mirror + root SSH disable + firewall
+- Repo clone to /home/gdt/golddaytrador as gdt
+- venv + requirements.txt install
+- systemd units installed to /etc/systemd/system/ (not enabled yet)
+- `daemon-reload` executed
 
 **Files to scp from Windows (do NOT commit — user's responsibility):**
+
+Secrets (chmod 600):
 - [ ] `.telegram` (bot token + chat IDs)
 - [ ] `.github-token` (push access; only if syncing state back)
+
+Create `.env.vps` on the VPS (not scp'd — write it in with `vim`):
+```
+GOLDTRADER_TG_CHAT_PUBLIC=<channel_id_or_leave_empty>
+GOLDTRADER_STRICT_PUBLIC=1
+GOLDTRADER_TG_CHAT_RESEARCH=<knox_beta_channel_id>
+KNOX_RESEARCH_ENABLED=1
+HEALTHCHECKS_DISPATCH_UUID=<uuid_from_healthchecks.io>
+```
+
+`GOLDTRADER_TG_CHAT_RESEARCH` + `KNOX_RESEARCH_ENABLED=1` activate the Knox soft-launch (Engine B). Set `KNOX_RESEARCH_ENABLED=0` to instantly disable Knox alerts without redeploy — see `docs/launch/2026-07-18_soft_launch_plan.md`.
+
+State + data:
 - [ ] `data/dispatch_state.json` (dedup registry — brings tick history)
 - [ ] `data/health.json` (heartbeat state)
 - [ ] `data/validation_state.json` (H3 kill-switch state)
+- [ ] `data/halt_state.json` (SPRT halt state — 2026-07-18: HALT verdict active)
+- [ ] `data/shadow_equity_since_halt.jsonl` (shadow accumulation since halt)
 - [ ] `data/tracker/orb_forward_log.csv`, `data/tracker/journal.csv`, `data/tracker/forward_log.csv`
 - [ ] `data/experiments/registry.json`
 - [ ] `data/shadow_decisions.jsonl`
@@ -52,71 +68,59 @@ python3.12 -m venv .venv
 - [ ] `data/basis/*.csv` (if present)
 - [ ] `data/cot/*` (if present)
 
-Command from Windows:
-```powershell
+Command from Windows (Git Bash / WSL):
+```bash
 scp -r data .telegram .github-token gdt@<vps_ip>:/home/gdt/golddaytrador/
+ssh gdt@<vps_ip> 'chmod 600 golddaytrador/.telegram golddaytrador/.github-token'
 ```
 
-## systemd wiring (25 min)
+## systemd wiring — pre-staged (0 min)
 
-Create `/etc/systemd/system/gdt-dispatch.service`:
-```ini
-[Unit]
-Description=Gold day-trader dispatch tick
-After=network-online.target
-Wants=network-online.target
+Systemd unit files ALREADY committed at `ops/systemd/`:
+- `gdt-dispatch.service` — one-shot wrapper call with EnvironmentFile=.env.vps
+- `gdt-dispatch.timer` — every 30 min
+- `gdt-weekly-validation.service` — kill-switch refresh
+- `gdt-weekly-validation.timer` — Sun 22:00 UTC
+- `knox-weekly-report.service` — Knox ship-gate report to both Telegram channels
+- `knox-weekly-report.timer` — Sun 22:15 UTC (15 min after weekly-validation)
+- `knox-post-mortem.service` — outcome follow-ups for dispatched Knox alerts
+- `knox-post-mortem.timer` — every 30 min at :05 and :35 (offset from dispatch)
 
-[Service]
-Type=oneshot
-User=gdt
-WorkingDirectory=/home/gdt/golddaytrador
-ExecStart=/home/gdt/golddaytrador/.venv/bin/python -m src.dispatch
-Environment=PYTHONPATH=/home/gdt/golddaytrador/src
-Environment=GOLDTRADER_TG_CHAT_PUBLIC=<channel_id_if_set>
-Environment=GOLDTRADER_STRICT_PUBLIC=1
-```
+The bootstrap script installs them; no manual editing needed.
 
-Create `/etc/systemd/system/gdt-dispatch.timer`:
-```ini
-[Unit]
-Description=Fire dispatch every 30 minutes
-
-[Timer]
-OnCalendar=*:0/30
-Persistent=true
-Unit=gdt-dispatch.service
-
-[Install]
-WantedBy=timers.target
-```
-
-**Enable + start:**
+**Enable Knox timers alongside main timers:**
 ```bash
-sudo systemctl daemon-reload
-sudo systemctl enable --now gdt-dispatch.timer
-systemctl list-timers gdt-dispatch.timer
+sudo systemctl enable --now knox-weekly-report.timer knox-post-mortem.timer
 ```
 
-## Healthchecks.io wrapper (10 min)
-
-Modify `src/dispatch.py` to ping at start + end (or add a wrapper script):
+**Knox instant kill (defense-in-depth beyond env var):**
 ```bash
-# /home/gdt/golddaytrador/scripts/dispatch_with_healthcheck.sh
-#!/bin/bash
-curl -fsS --retry 3 "https://hc-ping.com/<uuid>/start" > /dev/null
-python -m src.dispatch
-EXIT=$?
-curl -fsS --retry 3 "https://hc-ping.com/<uuid>/$EXIT" > /dev/null
-exit $EXIT
+sudo -u gdt bash -c 'cd /home/gdt/golddaytrador && python scripts/knox_kill.py off "reason here"'
+# re-enable:
+sudo -u gdt bash -c 'cd /home/gdt/golddaytrador && python scripts/knox_kill.py on "reason here"'
+# check state:
+sudo -u gdt bash -c 'cd /home/gdt/golddaytrador && python scripts/knox_kill.py status'
 ```
 
-Update service `ExecStart` to point at wrapper. Test: unplug run, verify healthchecks.io alert fires within grace window.
+## Healthchecks.io wrapper — pre-staged (0 min)
 
-## Cutover (15 min)
+`scripts/dispatch_with_healthcheck.sh` ALREADY committed. Reads `HEALTHCHECKS_DISPATCH_UUID` from `.env.vps`. Retries the ping 3× with 2s backoff and never blocks the actual dispatch if the ping fails (fail-open on monitor, not on trader).
 
-- [ ] On Windows: disable `\GoldDayTrader\Dispatch` scheduled task (`Disable-ScheduledTask`).
-- [ ] On VPS: force one manual run: `systemctl start gdt-dispatch.service`. Verify `data/dispatch.log` gets a new entry.
-- [ ] Wait for next :30 or :00 tick — confirm timer fires.
+## Smoke test (5 min)
+
+```bash
+sudo -u gdt bash /home/gdt/golddaytrador/scripts/vps_smoke_test.sh
+```
+
+Checks: venv, secret files present, .env.vps has required keys, systemd units installed, wrapper executable, Python imports resolve, `pytest tests/test_strategy_engine.py` passes. Refuses to green-light if any fail.
+
+## Cutover (10 min)
+
+- [ ] On Windows PowerShell: `Disable-ScheduledTask -TaskName \GoldDayTrader\Dispatch`
+- [ ] On VPS: `sudo systemctl enable --now gdt-dispatch.timer gdt-weekly-validation.timer`
+- [ ] Force one manual run: `sudo systemctl start gdt-dispatch.service`
+- [ ] Verify: `sudo journalctl -u gdt-dispatch.service -n 50`
+- [ ] Wait for next :00 or :30 tick — confirm timer fires: `systemctl list-timers gdt-dispatch.timer`
 - [ ] After 2 clean ticks: cutover complete.
 
 ## Verification (ongoing)
@@ -134,7 +138,7 @@ If VPS fails within first 6h:
 2. Kill VPS timer: `systemctl stop gdt-dispatch.timer; systemctl disable gdt-dispatch.timer`
 3. Investigate root cause. Do not delete VPS — debug later.
 
-**Estimated total time:** 2h. If bogged, VPS is not a same-day project — hold.
+**Estimated total time (with pre-staging as of 2026-07-18):** ~1h. Breakdown: 30m pre-flight (account, provisioning, healthchecks.io signup) + 5m bootstrap + 15m scp secrets/state + 5m smoke test + 10m cutover. If bogged, VPS is not a same-day project — hold.
 
 ## After cutover: update memory
 

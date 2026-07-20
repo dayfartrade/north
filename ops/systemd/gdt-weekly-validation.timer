@@ -1,0 +1,10 @@
+[Unit]
+Description=Weekly-validation kill-switch refresh — Sunday 22:00 UTC
+
+[Timer]
+OnCalendar=Sun *-*-* 22:00:00 UTC
+Persistent=true
+Unit=gdt-weekly-validation.service
+
+[Install]
+WantedBy=timers.target

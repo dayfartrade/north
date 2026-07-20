@@ -1,0 +1,10 @@
+[Unit]
+Description=Fire dispatch every 30 minutes
+
+[Timer]
+OnCalendar=*:0/30
+Persistent=true
+Unit=gdt-dispatch.service
+
+[Install]
+WantedBy=timers.target
