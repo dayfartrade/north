@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Gold Day Trader — live session ORB alerts</title>
+  <meta name="description" content="Session-open opening-range breakout alerts on GC gold futures. Live P&L, honest numbers, no cherry-picking." />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap">
+      <h1>Gold Day Trader</h1>
+      <p class="tagline">Session-open opening-range breakout signals on GC gold futures.
+        London, New York, Asia — one plan per session, or nothing.</p>
+      <div class="status">
+        <span id="bot-dot" class="dot dot-unknown"></span>
+        <span id="bot-status">checking bot status…</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="grid">
+      <article class="card">
+        <h2>Live P&amp;L since launch</h2>
+        <p class="hint">2026-07-01 → now · No cherry-picking, no hindsight edits</p>
+        <div id="live" class="metrics"><span class="muted">loading…</span></div>
+      </article>
+
+      <article class="card">
+        <h2>Validated backtest</h2>
+        <p class="hint">Auto-revalidated weekly · Phase 7 gates</p>
+        <div id="historical" class="metrics"><span class="muted">loading…</span></div>
+      </article>
+    </section>
+
+    <section class="card">
+      <h2>Recent PLAN alerts</h2>
+      <p class="hint">Redacted preview — subscribers see full levels in real time</p>
+      <div id="alerts">
+        <span class="muted">loading…</span>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>How it works</h2>
+      <ul class="how">
+        <li><strong>Session ORB.</strong> First 30 minutes of each major session establishes the opening range.</li>
+        <li><strong>Breakout with trend filter.</strong> Trade in the direction of the 1h EMA-50 slope, if the range breaks.</li>
+        <li><strong>Fixed geometry per session.</strong> London uses a fixed stop; New York and Asia use OR-range stops with a target multiple.</li>
+        <li><strong>5-box audit gate.</strong> Signal · stand-down (news/fix) · funding regime · basis divergence · CFTC COT context. All must pass.</li>
+        <li><strong>Time-boxed.</strong> Cancel if no breakout in 60 min. Time-exit at 2 hours max.</li>
+      </ul>
+    </section>
+
+    <section class="card muted-card">
+      <h2>Disclaimer</h2>
+      <p id="disclaimer" class="muted">loading…</p>
+    </section>
+  </main>
+
+  <footer>
+    <p class="muted">Not financial advice · Futures involve substantial risk · Your capital, your decision.</p>
+  </footer>
+
+  <script src="./app.js"></script>
+</body>
+</html>
