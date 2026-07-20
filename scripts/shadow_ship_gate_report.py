@@ -147,11 +147,27 @@ def analyze_candidate(rows: list[dict], name: str) -> dict:
 
 
 def _analyze_take_filter(rows: list[dict], name: str) -> dict:
-    """For take-filters (Path Z): measure P&L/CI/win-rate on TAKEN trades."""
+    """For take-filters (Path Z): measure P&L/CI/win-rate on TAKEN trades.
+
+    Path Z is a filter ON TOP of Path Y. A row counts only if BOTH:
+      - Parent row was taken by Path Y (would_skip=False)
+      - Candidate would_take=True (i.e. candidate.would_skip=False)
+      - Outcome resolved with valid net_pnl
+
+    Path-Y-skipped rows have net_pnl=0 by convention (no trade simulated),
+    so they must be excluded — otherwise they'd bias the mean toward 0.
+    """
     taken = []
     for r in rows:
+        # Parent Path Y must have taken this candidate
+        if r.get("would_skip"):
+            continue
         outcome = r.get("outcome")
         if outcome is None or outcome.get("net_pnl") is None:
+            continue
+        # Skip no-entry outcomes (breakout never triggered in watch window)
+        kind = outcome.get("kind")
+        if kind in ("no_breakout", "flat_no_entry", "skipped"):
             continue
         cs = (r.get("candidate_shadows") or {}).get(name)
         if not cs:
