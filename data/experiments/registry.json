@@ -265,6 +265,15 @@
       "sr_per_period": null,
       "n_observations": 0,
       "notes": "DEPRECATED never activated: was gated on Knox n=50 which never accumulated (Knox never went live because research channel never created + dsc filter rejected before reaching activation threshold). No SPRT rebase attempted. Original pre-reg: docs/experiments/2026-07-18_knox_sprt_prereg.md."
+    },
+    {
+      "id": "knapp_er_stops_v9",
+      "registered_utc": "2026-07-20T14:45:00Z",
+      "layer": "strategy_engine",
+      "verdict": "pre_registered_draft",
+      "sr_per_period": null,
+      "n_observations": 0,
+      "notes": "DRAFT: v9 candidate #1 -- Volker Knapp asymmetric ER-based stops (Kaufman 5th Ed. Ch 17 p.792). Replaces symmetric fixed stop with 6x ATR base modulated by 20-bar 5m Efficiency Ratio: LONG stops tightened 0.1x ATR in mid-trend ER (0.30-0.60), SHORT stops tightened 0.5x ATR (asymmetric). Directly addresses observed n=18 launch LONG stop-hit failure mode. Requires PRE-REG activation via user review + 3 OOS gates (3-months-ago test pass, gold 20yr OOS test, 3-market reproduction study). NO code changes yet. NO live effect. Ship gate: n>=100 shadow decisions with paired lift >= +$50/trade AND 95% CI clears zero. Reject gate: paired lift < 0 at n=100, or CI includes 0 with lift < +$25, or per-session precision drops >5pp, or Bonferroni-adjusted DSR < 0.90, or hard-stop 2026-10-13. This candidate IS Path C from sprt_v72_1_reentry_prereg -- ship = re-entry. Full pre-reg: docs/experiments/2026-07-20_v9_knapp_er_stops_prereg.md. Also see docs/experiments/2026-07-20_path_y_postmortem.md for closure of Path Y that motivated this direction."
     }
   ]
 }
