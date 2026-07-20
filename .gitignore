@@ -39,6 +39,12 @@ desktop.ini
 
 # Ad-hoc state snapshots (rollback backups)
 data/dispatch_state.baseline_*.json
+data/**/*.bak_*
+data/**/*.jsonl.bak_*
 
 # Research PDFs (large, licensed content — not for repo)
 research material/
+.alphavantage
+
+# External data sources (large; reproducible via scripts/fetch_*.py)
+data/external/

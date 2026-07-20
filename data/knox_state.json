@@ -1,5 +1,5 @@
 {
-  "enabled": true,
-  "changed_utc": "2026-07-18T12:29:31.677436+00:00",
-  "reason": "smoke test complete"
+  "enabled": false,
+  "changed_utc": "2026-07-20T14:15:00+00:00",
+  "reason": "dsc_rejected_at_n329 — SESSION_CONFIGS_V8_B config depends on rejected filter; see docs/experiments/2026-07-18_daily_slope_consistency_shadow.md § Rejection verdict"
 }

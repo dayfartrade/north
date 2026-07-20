@@ -25,14 +25,25 @@ fi
 
 echo "[bootstrap] apt update + install"
 apt update
+# Detect Python 3 minor version available on this Ubuntu (24.04 = 3.12, 26.04 = 3.14, etc.)
+PY_MINOR=$(apt-cache pkgnames | grep -E '^python3\.[0-9]+$' | sort -V | tail -1 | cut -d. -f2)
+if [ -z "$PY_MINOR" ]; then
+    echo "[bootstrap] ERROR: no python3.X package found in apt" 1>&2
+    exit 3
+fi
+PY_BIN="python3.${PY_MINOR}"
+echo "[bootstrap] using ${PY_BIN}"
 DEBIAN_FRONTEND=noninteractive apt install -y \
-    python3.12 python3.12-venv python3-pip git tmux vim ufw fail2ban curl
+    ${PY_BIN} ${PY_BIN}-venv python3-pip git tmux vim ufw fail2ban curl
 
-echo "[bootstrap] create gdt user"
+echo "[bootstrap] create gdt user + passwordless sudo"
 if ! id gdt >/dev/null 2>&1; then
     useradd -m -s /bin/bash gdt
     usermod -aG sudo gdt
 fi
+# Passwordless sudo so re-runs / recovery don't get locked out
+echo 'gdt ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/90-gdt
+chmod 440 /etc/sudoers.d/90-gdt
 
 echo "[bootstrap] mirror root's authorized_keys to gdt"
 mkdir -p /home/gdt/.ssh
@@ -43,11 +54,8 @@ chown -R gdt:gdt /home/gdt/.ssh
 chmod 700 /home/gdt/.ssh
 chmod 600 /home/gdt/.ssh/authorized_keys 2>/dev/null || true
 
-echo "[bootstrap] harden SSH + firewall"
-sed -i 's/^#\?PermitRootLogin.*/PermitRootLogin no/' /etc/ssh/sshd_config
-sed -i 's/^#\?PasswordAuthentication.*/PasswordAuthentication no/' /etc/ssh/sshd_config
-systemctl restart ssh
-ufw --force allow OpenSSH
+echo "[bootstrap] firewall (SSH-safe order)"
+ufw allow OpenSSH
 ufw --force enable
 
 echo "[bootstrap] clone repo as gdt"
@@ -64,7 +72,7 @@ echo "[bootstrap] python venv + requirements"
 sudo -u gdt bash -c "
     cd /home/gdt/golddaytrador
     if [ ! -d .venv ]; then
-        python3.12 -m venv .venv
+        ${PY_BIN} -m venv .venv
     fi
     .venv/bin/pip install --upgrade pip
     .venv/bin/pip install -r requirements.txt
@@ -77,6 +85,11 @@ install -m 644 /home/gdt/golddaytrador/ops/systemd/gdt-weekly-validation.service
 install -m 644 /home/gdt/golddaytrador/ops/systemd/gdt-weekly-validation.timer /etc/systemd/system/
 chmod +x /home/gdt/golddaytrador/scripts/dispatch_with_healthcheck.sh
 systemctl daemon-reload
+
+echo "[bootstrap] harden SSH (LAST — do not fail earlier and lock out)"
+sed -i 's/^#\?PermitRootLogin.*/PermitRootLogin no/' /etc/ssh/sshd_config
+sed -i 's/^#\?PasswordAuthentication.*/PasswordAuthentication no/' /etc/ssh/sshd_config
+systemctl restart ssh
 
 cat <<EOF
 

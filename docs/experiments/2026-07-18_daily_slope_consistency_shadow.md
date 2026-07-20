@@ -1,10 +1,11 @@
 # Daily-slope-consistency shadow filter — pre-registration
 
 **Registered UTC:** 2026-07-18T07:15:00Z
+**Resolved UTC:** 2026-07-20T14:15:00Z
 **Filter name:** `filter_daily_slope_consistency` (v8 strategy_engine)
 **Trial id:** `daily_slope_consistency_shadow`
 **Owner:** Knox
-**Status:** SHADOW (no-op; live threshold OFF)
+**Final verdict:** **REJECTED** at n=329 (see § Rejection verdict — 2026-07-20)
 
 ## Motivation — post-halt review
 
@@ -174,3 +175,63 @@ Reads-across:
 ## Immediate action
 
 None. Filter registered as shadow-only. Kill switch stays ON. Shadow tracker will begin recording daily-slope-consistency decisions on the next ORB session tick after these changes deploy.
+
+## Rejection verdict — 2026-07-20
+
+**REJECTED at n=329 per pre-registered rejection gate #2: skip-rate above 40% ceiling without decisive P&L improvement.**
+
+### Data source
+
+`data/gc/GC_5m.csv` (yfinance) is capped at 60-day rolling window and gave only n=17 (in-sample launch) → n=41 (100-day yfinance backfill). Insufficient to trigger the n≥100 gate.
+
+Substituted **XAU/USD 5m from Dukascopy** (2024-01-15 → 2026-07-20, 180,700 bars) as extended proxy. Pulled free (no account) via `dukascopy-python` package, script at `scripts/fetch_dukascopy_xauusd.py`. XAU/USD spot is ~95% correlated with GC futures — direction and skip-rate signals valid; P&L $ amounts approximate (spot vs futures basis, no roll gaps). Ran `scripts/backfill_shadow_log.py --start 2024-01-15` with GC_5m.csv temporarily swapped for XAUUSD_5m.csv, then `scripts/backfill_daily_slope_consistency.py`, then `scripts/shadow_ship_gate_report.py`. Original GC_5m.csv and pre-analysis shadow log restored after run; XAU/USD-backfilled shadow analysis preserved separately at `data/shadow_equity_xauusd_backfill_full.jsonl`.
+
+### Ship-gate report at n=329
+
+| Metric | Value | Gate |
+|---|---|---|
+| n resolved (with candidate signal) | 329 | ≥100 ✅ |
+| Skip rate | **41.6%** | ≤40% ❌ (gate #2 trip) |
+| Precision on skipped losers | 58.4% | ≥60% ship / ≥55% reject (in ambiguous zone) |
+| P&L (no filter) | -$5,495 | — |
+| P&L (with filter applied) | -$9,191 | — |
+| P&L lift (total) | **-$3,696** | positive required |
+| P&L lift (mean/trade) | **-$11.23** | positive required |
+| Bootstrap 95% CI on mean lift | **[-$77, +$49]** | must clear zero (does NOT) |
+
+Skip counts: 137 skipped of 329 → 57 wins skipped + 80 losses skipped (precision 58.4%).
+
+### Verdict logic
+
+Per pre-reg § Rejection gates:
+- ~~Precision < 55% at n=100 → REJECT~~ — 58.4% is above 55% floor, does not trip
+- **Skip-rate > 40% at n=100 without decisive P&L improvement → REJECT** — 41.6% > 40% AND P&L lift is negative with CI spanning zero (not decisive improvement) → **TRIP**
+- ~~Not cleared by 2026-10-13 → REJECT~~ — resolved earlier
+- ~~Regime confound with ry-bucket → REJECT~~ — not the failure mode
+
+Second consideration: the *direction* of the P&L result. Filter costs $11/trade on average; the trades it skips are, on net, *better* than the trades it keeps. This is not a "filter doesn't work" — this is a "filter has anti-signal."
+
+### Bigger finding: Path Y itself
+
+Unfiltered Path Y P&L on the same n=329 XAU/USD sample: **-$16.70/trade average** (-$5,495 over 2.5 years). The strategy without any additional filter shows negative expectancy at 329-trade sample size on XAU/USD proxy.
+
+This retroactively **validates the `sprt_v72_1_launch_path_y` halt** at n=18 → the halt was not unlucky sequencing; it was correctly identifying a strategy without positive expectancy. The n=41 yfinance backfill showed unfiltered Path Y as +$78/trade over 100 days — that was small-sample optimism; at 3.3× the sample it flips negative.
+
+### Caveats
+
+1. **XAU/USD ≠ GC.** ~95% correlated. Direction and precision signals valid; contract math (P&L $ amounts) is approximate (spot vs futures basis, contract multiplier).
+2. **Skip rate margin.** 41.6% is only 1.6pp above the 40% ceiling. The gate trips with a margin, not a landslide. But precision (58.4%) is also below the ship floor (60%), so both indicators point the same direction.
+3. **Post-hoc filter selection.** Pre-reg noted dsc fails the 3-months-ago test (discovered post-halt from live data). Rejection at n=329 confirms the guarded-skepticism was warranted.
+
+### Downstream actions taken
+
+- Registry entry `daily_slope_consistency_shadow` updated to `verdict: rejected`, n=329
+- Registry entry `knox_soft_launch_engine_b` updated to `verdict: deprecated_by_dependency` (Knox soft-launch config `SESSION_CONFIGS_V8_B` used `require_daily_slope_alignment=True`, now retired)
+- Registry entry `knox_sprt_prereg` updated to `verdict: deprecated_never_activated` (Knox never accumulated n=50 needed to activate)
+- `data/knox_state.json` disabled with reason "dsc_rejected_at_n329"
+- VPS `.env.vps` `KNOX_RESEARCH_ENABLED=0` (was already 0 — Knox research channel never created)
+- No live systems affected (Knox never dispatched; Engine A remains halted per prior pre-reg)
+
+### Next candidate for Engine B (v9)
+
+**Volker Knapp asymmetric ER-based stops** (Kaufman Ch 17 p.792, filed 2026-07-20 in `memory/kaufman_ch17_readnotes.md`). Directly addresses the LONG-stops failure mode that dsc failed to address. Requires new pre-reg doc + new registry entry; NOT auto-inherited from this experiment. Halt discipline for Engine A remains independent — Path A/B/C re-entry conditions unchanged.
