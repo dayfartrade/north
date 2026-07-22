@@ -233,13 +233,27 @@ def main() -> None:
         # Silently no-op on failure (VPS may not have creds; log will show).
         import subprocess
         try:
+            # Rebase onto origin/main with autostash so all local churn
+            # (dispatch state, GC bars, etc.) doesn't block the rebase.
+            fetch = subprocess.run(
+                ["git", "fetch", "origin", "main"],
+                cwd=str(ROOT), check=False, capture_output=True, timeout=30)
+            pull = subprocess.run(
+                ["git", "pull", "--rebase", "--autostash", "origin", "main"],
+                cwd=str(ROOT), check=False, capture_output=True, timeout=90)
+            if pull.returncode != 0:
+                print(f"[git] pull-rebase failed: {pull.stderr.decode()[:200]}")
+            # Re-write JSON in case autostash pop had issues
+            write_site_files(call, history)
+
             subprocess.run(
                 ["git", "add", str(CALLS_LOG), str(SITE_CURRENT), str(SITE_HISTORY)],
                 cwd=str(ROOT), check=False, capture_output=True, timeout=30)
             msg = f"FAR Weekly Gold Read: {call.get('direction', 'ERROR')} "\
                   f"call for {call.get('week_of', 'unknown')}"
             r = subprocess.run(
-                ["git", "commit", "-m", msg, "--author=Knox VPS <knox@golddaytrador.local>"],
+                ["git", "commit", "-m", msg,
+                 "--author=Knox VPS <knox@golddaytrador.local>"],
                 cwd=str(ROOT), check=False, capture_output=True, timeout=30)
             if r.returncode == 0:
                 push = subprocess.run(
@@ -248,9 +262,9 @@ def main() -> None:
                 if push.returncode == 0:
                     print("[git] committed + pushed")
                 else:
-                    print(f"[git] commit OK, push failed: {push.stderr.decode()[:200]}")
+                    print(f"[git] commit OK, push failed: "
+                          f"{push.stderr.decode()[:200]}")
             else:
-                # Empty commit or other benign
                 print(f"[git] no commit needed: {r.stdout.decode()[:100]}")
         except Exception as e:
             print(f"[git] skipped: {e}")
