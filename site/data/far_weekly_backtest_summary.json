@@ -1,0 +1,22 @@
+{
+  "sample_start": "2010-04-05",
+  "sample_end": "2026-07-13",
+  "total_calls": 363,
+  "cumulative_pnl": 181598.0,
+  "max_drawdown": -56043.0,
+  "best_year": {
+    "year": "2025",
+    "pnl": 58419.0
+  },
+  "worst_year": {
+    "year": "2017",
+    "pnl": -15765.0
+  },
+  "longest_losing_streak": 6,
+  "worst_dd_period": {
+    "start": "2026-02-02",
+    "recover": "2026-06-22",
+    "weeks": 12,
+    "amount": -56043.0
+  }
+}
