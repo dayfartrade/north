@@ -1,0 +1,10 @@
+[Unit]
+Description=Fire FAR Weekly Gold Read publisher every Sunday 22:00 UTC
+
+[Timer]
+OnCalendar=Sun 22:00 UTC
+Persistent=true
+Unit=gdt-far-weekly.service
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,23 @@
+{
+  "type": "call",
+  "signal_date_utc": "2026-07-20T00:00:00+00:00",
+  "week_of": "2026-07-27",
+  "week_end": "2026-07-31",
+  "direction": "SHORT",
+  "instrument": "GC (Gold Futures) or GLD ETF",
+  "signal_components": {
+    "M20_pct": -4.137,
+    "M60_pct": -14.44,
+    "MA10_above_MA40": false,
+    "RY_chg_20d_bps": 7.0
+  },
+  "current_price": 4014.24,
+  "atr_20d": 98.52,
+  "entry_approx": 4014.24,
+  "stop_price": 4211.29,
+  "exit_type": "Friday close (time exit) or stop hit",
+  "expected_atr_move": 98.52,
+  "published_utc": "2026-07-22T08:37:50.193717+00:00",
+  "pre_reg_ref": "2026-07-22_far_weekly_gold_read_prereg.md",
+  "confidence_disclaimer": "BETA \u2014 3 of 6 pre-reg gates borderline failed. Live-tracking is the final validation. Position size accordingly."
+}

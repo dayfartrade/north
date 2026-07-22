@@ -294,6 +294,16 @@
       "sr_per_period": null,
       "n_observations": 0,
       "notes": "Path Z-specific SPRT halt framework. Pre-registered dormant; activates on first Path Z live trade. Satisfies Path Z ship-gate #6. Parameters: p0=0.541 (in-sample WR), p1=0.35 (broken threshold), alpha=beta=0.05, halt boundary +2.9444, safe boundary -2.9444, per-win LR -0.4355, per-loss LR +0.3479. Frozen sample window semantics; hard-stop 2026-10-13 aligned with Path C. Full doc: docs/experiments/2026-07-22_path_z_sprt_prereg.md."
+    },
+    {
+      "id": "far_weekly_gold_read_v1",
+      "registered_utc": "2026-07-22T11:00:00Z",
+      "resolved_utc": null,
+      "layer": "strategy_engine_weekly",
+      "verdict": "shadow_beta",
+      "sr_per_period": 0.1001,
+      "n_observations": 266,
+      "notes": "FAR Weekly Gold Read v1: momentum (M20/M60 + MA10/40 cross) + macro (RY_chg<0) filter on weekly gold. Pre-reg: docs/experiments/2026-07-22_far_weekly_gold_read_prereg.md. Backtest 2015-2026 (n=266 trades): total +$140k, WR 55.6%, Sharpe ann 0.72. Gates: 3/6 pass, 3/6 borderline fail (training Sharpe 0.478 vs 0.5 target, combined CI [-0.16%, +0.35%] doesn't clear 0, PSR 0.9483 vs 0.95). Year-by-year 9/12 positive. Stops are the loss driver (15% stop rate, -$5930/stop). SHIPPING AS BETA per user directive to build product; live tracking replaces failed statistical gates. Retire if 12mo live diverges from backtest."
     }
   ]
 }

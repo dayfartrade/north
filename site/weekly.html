@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FAR Weekly Gold Read — by Knox</title>
+  <meta name="description" content="One directional gold call per week. Long, short, or flat. Published Sunday evening, resolved Friday close. Public track record, no cherry-picking." />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap">
+      <div class="brand-line">
+        <span class="brand-tag">by Knox</span>
+      </div>
+      <h1>FAR Weekly Gold Read</h1>
+      <p class="tagline">One call per week. Long, short, or flat. Published Sunday · resolved Friday close.
+        Full track record on this page. No cherry-picking.</p>
+      <div class="status">
+        <span id="signal-dot" class="dot dot-unknown"></span>
+        <span id="signal-status">loading current call…</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+
+    <!-- Current call -->
+    <section class="card call-card">
+      <h2>This week's call</h2>
+      <p class="hint" id="call-week-hint">loading…</p>
+      <div id="current-call">
+        <span class="muted">loading current signal…</span>
+      </div>
+    </section>
+
+    <!-- Track record summary -->
+    <section class="grid">
+      <article class="card">
+        <h2>Live track record</h2>
+        <p class="hint">Resolved calls only · updates every Friday close</p>
+        <div id="track-summary" class="metrics"><span class="muted">loading…</span></div>
+      </article>
+
+      <article class="card">
+        <h2>Signal drivers</h2>
+        <p class="hint">This week's raw inputs · no interpretation</p>
+        <div id="signal-drivers" class="metrics"><span class="muted">loading…</span></div>
+      </article>
+    </section>
+
+    <!-- Call history -->
+    <section class="card">
+      <h2>Every call, in order</h2>
+      <p class="hint">Append-only. Once published, never edited.</p>
+      <div id="call-history"><span class="muted">loading…</span></div>
+    </section>
+
+    <!-- Methodology -->
+    <section class="card">
+      <h2>How the call is made</h2>
+      <ul class="how">
+        <li><strong>4-week momentum.</strong> Gold close vs 20 trading days ago. Positive → LONG-eligible; Negative → SHORT-eligible.</li>
+        <li><strong>12-week momentum.</strong> Same, 60 trading days. Both must agree with 4-week.</li>
+        <li><strong>Moving-average filter.</strong> 10-day SMA vs 40-day SMA. Trend must match direction.</li>
+        <li><strong>Real-yield conditioning.</strong> 10y TIPS yield 4-week change: falling supports LONG; rising supports SHORT.</li>
+        <li><strong>All four must agree.</strong> Otherwise the call is FLAT (no position).</li>
+        <li><strong>Position management.</strong> Entry Monday NY open. Stop = 2× ATR(20d). Exit = Friday close or stop, whichever first.</li>
+      </ul>
+    </section>
+
+    <!-- Backtest -->
+    <section class="card">
+      <h2>Pre-registered backtest</h2>
+      <p class="hint">2015–2026 XAU/USD 5m data (Dukascopy) · pre-reg published 2026-07-22</p>
+      <div class="metrics">
+        <div class="metric">
+          <div class="metric-label">Total calls</div>
+          <div class="metric-value">266</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Backtest win rate</div>
+          <div class="metric-value">55.6%</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Backtest Sharpe (ann)</div>
+          <div class="metric-value">0.72</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Positive years</div>
+          <div class="metric-value">9 of 12</div>
+        </div>
+      </div>
+      <p class="hint" style="margin-top: 20px;">
+        BETA product. 3 of 6 pre-registered statistical gates were borderline failed
+        on the 2015–2023 subset (marginal significance). Live tracking on this page
+        is the final validation. If 12 months of live results diverge from backtest,
+        the product retires publicly.
+      </p>
+    </section>
+
+    <!-- Disclaimer -->
+    <section class="card muted-card">
+      <h2>Disclaimer</h2>
+      <p class="muted">Not financial advice. Futures involve substantial risk of loss. Past
+        performance in backtests does not guarantee future results — especially given
+        the borderline pre-reg gates disclosed above. Position size per your risk
+        tolerance and consult a licensed advisor.</p>
+    </section>
+  </main>
+
+  <footer>
+    <p class="muted">FAR Action Radar · Knox operates this call · Track record is append-only and never edited.</p>
+    <p class="muted"><a href="./index.html" style="color:var(--muted);">← back to home</a></p>
+  </footer>
+
+  <script src="./weekly.js"></script>
+</body>
+</html>
