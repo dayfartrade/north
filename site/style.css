@@ -99,3 +99,42 @@ footer {
 .call-card {
   background: linear-gradient(180deg, rgba(242,201,76,0.05) 0%, var(--bg-card) 60%);
 }
+
+.chart-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+canvas#equity-chart {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  display: block;
+  background: rgba(0,0,0,0.15);
+  border-radius: 6px;
+}
+
+.year-row {
+  display: grid;
+  grid-template-columns: 60px 60px 80px 100px 1fr;
+  gap: 10px;
+  padding: 8px 0;
+  border-top: 1px solid var(--border);
+  font-size: 14px;
+  align-items: center;
+}
+.year-row:first-child { border-top: none; }
+.year-year { font-weight: 600; color: var(--accent); }
+.year-bar {
+  height: 8px;
+  border-radius: 4px;
+  background: var(--border);
+  overflow: hidden;
+  position: relative;
+}
+.year-bar-fill {
+  position: absolute;
+  top: 0; bottom: 0;
+  border-radius: 4px;
+}
+.year-bar-fill.up { background: var(--up); }
+.year-bar-fill.down { background: var(--down); }

@@ -158,15 +158,138 @@ function renderHistory(history) {
   }
 }
 
+function renderYearTable(curve) {
+  const container = document.getElementById('year-table');
+  if (!container || !curve || !curve.year_stats) return;
+  container.innerHTML = '';
+  const maxAbs = Math.max(...curve.year_stats.map(y => Math.abs(y.total_pnl)));
+
+  const header = el('div', { class: 'year-row muted' },
+    el('div', {}, 'Year'),
+    el('div', {}, 'Calls'),
+    el('div', {}, 'Win %'),
+    el('div', {}, 'P&L'),
+    el('div', {}, ''),
+  );
+  container.appendChild(header);
+
+  for (const y of curve.year_stats) {
+    const cls = y.total_pnl >= 0 ? 'up' : 'down';
+    const barPct = maxAbs > 0 ? Math.abs(y.total_pnl) / maxAbs * 100 : 0;
+    const barFillStyle = y.total_pnl >= 0
+      ? `left: 50%; width: ${barPct/2}%;`
+      : `right: 50%; width: ${barPct/2}%;`;
+
+    const row = el('div', { class: 'year-row' },
+      el('div', { class: 'year-year' }, y.year),
+      el('div', {}, String(y.trades)),
+      el('div', {}, `${y.win_rate}%`),
+      el('div', { class: cls }, `${y.total_pnl >= 0 ? '+' : ''}$${y.total_pnl.toLocaleString()}`),
+      el('div', { class: 'year-bar' },
+        el('div', { class: `year-bar-fill ${cls}`, style: barFillStyle }),
+      ),
+    );
+    container.appendChild(row);
+  }
+}
+
+function renderEquityChart(curve) {
+  const canvas = document.getElementById('equity-chart');
+  if (!canvas || !curve || !curve.equity_curve || curve.equity_curve.length === 0) return;
+
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.getBoundingClientRect();
+  const w = Math.floor(rect.width * dpr);
+  const h = Math.floor(360 * dpr);
+  canvas.width = w; canvas.height = h;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+
+  const padding = { top: 20, right: 40, bottom: 30, left: 60 };
+  const W = rect.width;
+  const H = 360;
+
+  const eq = curve.equity_curve;
+  const cums = eq.map(p => p.cum_pct);
+  const minY = Math.min(...cums, 0);
+  const maxY = Math.max(...cums, 0);
+  const rangeY = maxY - minY || 1;
+
+  // Grid lines
+  ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+  ctx.lineWidth = 1;
+  for (let g = 0; g <= 4; g++) {
+    const y = padding.top + (H - padding.top - padding.bottom) * g / 4;
+    ctx.beginPath();
+    ctx.moveTo(padding.left, y);
+    ctx.lineTo(W - padding.right, y);
+    ctx.stroke();
+  }
+
+  // Zero line
+  const zeroY = padding.top + (maxY / rangeY) * (H - padding.top - padding.bottom);
+  ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+  ctx.setLineDash([4, 4]);
+  ctx.beginPath();
+  ctx.moveTo(padding.left, zeroY);
+  ctx.lineTo(W - padding.right, zeroY);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Equity line
+  ctx.strokeStyle = '#f2c94c';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  const chartW = W - padding.left - padding.right;
+  const chartH = H - padding.top - padding.bottom;
+  for (let i = 0; i < eq.length; i++) {
+    const x = padding.left + (i / (eq.length - 1)) * chartW;
+    const y = padding.top + ((maxY - eq[i].cum_pct) / rangeY) * chartH;
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+
+  // Fill under line
+  ctx.lineTo(padding.left + chartW, zeroY);
+  ctx.lineTo(padding.left, zeroY);
+  ctx.closePath();
+  ctx.fillStyle = 'rgba(242,201,76,0.08)';
+  ctx.fill();
+
+  // Y-axis labels
+  ctx.fillStyle = '#8a8f99';
+  ctx.font = '12px system-ui';
+  ctx.textAlign = 'right';
+  for (let g = 0; g <= 4; g++) {
+    const v = maxY - (rangeY * g / 4);
+    const y = padding.top + (H - padding.top - padding.bottom) * g / 4;
+    ctx.fillText(`${v >= 0 ? '+' : ''}${v.toFixed(1)}%`, padding.left - 8, y + 4);
+  }
+
+  // X-axis labels — first, middle, last year
+  ctx.textAlign = 'center';
+  const positions = [0, Math.floor(eq.length / 2), eq.length - 1];
+  for (const idx of positions) {
+    const x = padding.left + (idx / (eq.length - 1)) * chartW;
+    ctx.fillText(eq[idx].date.slice(0, 4), x, H - 10);
+  }
+}
+
 async function init() {
-  const [current, history] = await Promise.all([
+  const [current, history, curve] = await Promise.all([
     loadJSON(CURRENT_URL),
     loadJSON(HISTORY_URL),
+    loadJSON('./data/far_weekly_backtest_curve.json'),
   ]);
   renderCurrentCall(current);
   renderSignalDrivers(current);
   renderTrackSummary(history);
   renderHistory(history);
+  renderYearTable(curve);
+  renderEquityChart(curve);
 }
 
 init();
+window.addEventListener('resize', () => {
+  loadJSON('./data/far_weekly_backtest_curve.json').then(renderEquityChart);
+});

@@ -1,0 +1,2340 @@
+{
+  "product": "FAR Weekly Gold Read",
+  "sample": "2010-01-01 to 2026-07-20 (16.5 years)",
+  "n_trades": 363,
+  "equity_curve": [
+    {
+      "date": "2010-04-05",
+      "cum_pct": -2.775,
+      "direction": "SHORT",
+      "pnl": -3117.0
+    },
+    {
+      "date": "2010-04-19",
+      "cum_pct": -1.034,
+      "direction": "LONG",
+      "pnl": 1979.0
+    },
+    {
+      "date": "2010-04-26",
+      "cum_pct": 1.118,
+      "direction": "LONG",
+      "pnl": 2482.0
+    },
+    {
+      "date": "2010-05-03",
+      "cum_pct": 3.697,
+      "direction": "LONG",
+      "pnl": 3035.0
+    },
+    {
+      "date": "2010-05-10",
+      "cum_pct": 6.423,
+      "direction": "LONG",
+      "pnl": 3270.0
+    },
+    {
+      "date": "2010-05-17",
+      "cum_pct": 3.282,
+      "direction": "LONG",
+      "pnl": -3879.0
+    },
+    {
+      "date": "2010-05-24",
+      "cum_pct": 5.99,
+      "direction": "LONG",
+      "pnl": 3199.0
+    },
+    {
+      "date": "2010-06-07",
+      "cum_pct": 6.801,
+      "direction": "LONG",
+      "pnl": 986.0
+    },
+    {
+      "date": "2010-06-21",
+      "cum_pct": 4.035,
+      "direction": "LONG",
+      "pnl": -3483.0
+    },
+    {
+      "date": "2010-06-28",
+      "cum_pct": 1.089,
+      "direction": "LONG",
+      "pnl": -3696.0
+    },
+    {
+      "date": "2010-08-23",
+      "cum_pct": 2.038,
+      "direction": "LONG",
+      "pnl": 1164.0
+    },
+    {
+      "date": "2010-08-30",
+      "cum_pct": 2.801,
+      "direction": "LONG",
+      "pnl": 943.0
+    },
+    {
+      "date": "2010-09-20",
+      "cum_pct": 4.348,
+      "direction": "LONG",
+      "pnl": 1975.0
+    },
+    {
+      "date": "2010-09-27",
+      "cum_pct": 6.045,
+      "direction": "LONG",
+      "pnl": 2199.0
+    },
+    {
+      "date": "2010-10-04",
+      "cum_pct": 8.333,
+      "direction": "LONG",
+      "pnl": 3012.0
+    },
+    {
+      "date": "2010-10-11",
+      "cum_pct": 9.339,
+      "direction": "LONG",
+      "pnl": 1362.0
+    },
+    {
+      "date": "2010-10-18",
+      "cum_pct": 6.904,
+      "direction": "LONG",
+      "pnl": -3326.0
+    },
+    {
+      "date": "2010-10-25",
+      "cum_pct": 8.799,
+      "direction": "LONG",
+      "pnl": 2527.0
+    },
+    {
+      "date": "2010-11-01",
+      "cum_pct": 11.043,
+      "direction": "LONG",
+      "pnl": 3057.0
+    },
+    {
+      "date": "2011-01-24",
+      "cum_pct": 11.697,
+      "direction": "SHORT",
+      "pnl": 880.0
+    },
+    {
+      "date": "2011-01-31",
+      "cum_pct": 11.411,
+      "direction": "SHORT",
+      "pnl": -385.0
+    },
+    {
+      "date": "2011-02-07",
+      "cum_pct": 10.548,
+      "direction": "SHORT",
+      "pnl": -1161.0
+    },
+    {
+      "date": "2011-03-07",
+      "cum_pct": 9.335,
+      "direction": "LONG",
+      "pnl": -1740.0
+    },
+    {
+      "date": "2011-03-14",
+      "cum_pct": 6.919,
+      "direction": "LONG",
+      "pnl": -3445.0
+    },
+    {
+      "date": "2011-03-21",
+      "cum_pct": 7.179,
+      "direction": "LONG",
+      "pnl": 371.0
+    },
+    {
+      "date": "2011-04-11",
+      "cum_pct": 7.919,
+      "direction": "LONG",
+      "pnl": 1092.0
+    },
+    {
+      "date": "2011-04-18",
+      "cum_pct": 9.184,
+      "direction": "LONG",
+      "pnl": 1882.0
+    },
+    {
+      "date": "2011-04-25",
+      "cum_pct": 12.53,
+      "direction": "LONG",
+      "pnl": 5059.0
+    },
+    {
+      "date": "2011-05-02",
+      "cum_pct": 10.302,
+      "direction": "LONG",
+      "pnl": -3460.0
+    },
+    {
+      "date": "2011-05-09",
+      "cum_pct": 10.317,
+      "direction": "LONG",
+      "pnl": 23.0
+    },
+    {
+      "date": "2011-05-16",
+      "cum_pct": 11.654,
+      "direction": "LONG",
+      "pnl": 1995.0
+    },
+    {
+      "date": "2011-06-20",
+      "cum_pct": 9.605,
+      "direction": "LONG",
+      "pnl": -3153.0
+    },
+    {
+      "date": "2011-07-18",
+      "cum_pct": 9.815,
+      "direction": "LONG",
+      "pnl": 335.0
+    },
+    {
+      "date": "2011-07-25",
+      "cum_pct": 10.476,
+      "direction": "LONG",
+      "pnl": 1068.0
+    },
+    {
+      "date": "2011-08-01",
+      "cum_pct": 13.407,
+      "direction": "LONG",
+      "pnl": 4734.0
+    },
+    {
+      "date": "2011-08-08",
+      "cum_pct": 16.797,
+      "direction": "LONG",
+      "pnl": 5723.0
+    },
+    {
+      "date": "2011-08-15",
+      "cum_pct": 23.662,
+      "direction": "LONG",
+      "pnl": 11895.0
+    },
+    {
+      "date": "2011-08-22",
+      "cum_pct": 19.679,
+      "direction": "LONG",
+      "pnl": -7451.0
+    },
+    {
+      "date": "2011-08-29",
+      "cum_pct": 22.941,
+      "direction": "LONG",
+      "pnl": 5947.0
+    },
+    {
+      "date": "2011-09-05",
+      "cum_pct": 21.415,
+      "direction": "LONG",
+      "pnl": -2874.0
+    },
+    {
+      "date": "2011-09-12",
+      "cum_pct": 18.873,
+      "direction": "LONG",
+      "pnl": -4724.0
+    },
+    {
+      "date": "2011-11-07",
+      "cum_pct": 20.68,
+      "direction": "LONG",
+      "pnl": 3173.0
+    },
+    {
+      "date": "2011-12-05",
+      "cum_pct": 23.147,
+      "direction": "SHORT",
+      "pnl": 4326.0
+    },
+    {
+      "date": "2012-02-20",
+      "cum_pct": 25.346,
+      "direction": "LONG",
+      "pnl": 3812.0
+    },
+    {
+      "date": "2012-02-27",
+      "cum_pct": 22.703,
+      "direction": "LONG",
+      "pnl": -4686.0
+    },
+    {
+      "date": "2012-07-02",
+      "cum_pct": 23.741,
+      "direction": "SHORT",
+      "pnl": 1659.0
+    },
+    {
+      "date": "2012-08-06",
+      "cum_pct": 24.608,
+      "direction": "LONG",
+      "pnl": 1392.0
+    },
+    {
+      "date": "2012-08-13",
+      "cum_pct": 24.241,
+      "direction": "LONG",
+      "pnl": -595.0
+    },
+    {
+      "date": "2012-09-03",
+      "cum_pct": 27.007,
+      "direction": "LONG",
+      "pnl": 4672.0
+    },
+    {
+      "date": "2012-09-10",
+      "cum_pct": 28.924,
+      "direction": "LONG",
+      "pnl": 3327.0
+    },
+    {
+      "date": "2012-09-17",
+      "cum_pct": 28.8,
+      "direction": "LONG",
+      "pnl": -219.0
+    },
+    {
+      "date": "2012-09-24",
+      "cum_pct": 28.891,
+      "direction": "LONG",
+      "pnl": 160.0
+    },
+    {
+      "date": "2012-10-01",
+      "cum_pct": 29.72,
+      "direction": "LONG",
+      "pnl": 1464.0
+    },
+    {
+      "date": "2012-10-08",
+      "cum_pct": 28.283,
+      "direction": "LONG",
+      "pnl": -2556.0
+    },
+    {
+      "date": "2012-12-17",
+      "cum_pct": 30.555,
+      "direction": "SHORT",
+      "pnl": 3851.0
+    },
+    {
+      "date": "2012-12-24",
+      "cum_pct": 30.717,
+      "direction": "SHORT",
+      "pnl": 270.0
+    },
+    {
+      "date": "2012-12-31",
+      "cum_pct": 28.638,
+      "direction": "SHORT",
+      "pnl": -3446.0
+    },
+    {
+      "date": "2013-01-07",
+      "cum_pct": 28.27,
+      "direction": "SHORT",
+      "pnl": -610.0
+    },
+    {
+      "date": "2013-01-14",
+      "cum_pct": 26.865,
+      "direction": "SHORT",
+      "pnl": -2333.0
+    },
+    {
+      "date": "2013-02-18",
+      "cum_pct": 28.829,
+      "direction": "SHORT",
+      "pnl": 3167.0
+    },
+    {
+      "date": "2013-03-11",
+      "cum_pct": 27.973,
+      "direction": "SHORT",
+      "pnl": -1352.0
+    },
+    {
+      "date": "2013-05-06",
+      "cum_pct": 29.566,
+      "direction": "SHORT",
+      "pnl": 2343.0
+    },
+    {
+      "date": "2013-05-13",
+      "cum_pct": 35.076,
+      "direction": "SHORT",
+      "pnl": 7921.0
+    },
+    {
+      "date": "2013-05-20",
+      "cum_pct": 30.729,
+      "direction": "SHORT",
+      "pnl": -5861.0
+    },
+    {
+      "date": "2013-05-27",
+      "cum_pct": 30.546,
+      "direction": "SHORT",
+      "pnl": -253.0
+    },
+    {
+      "date": "2013-06-03",
+      "cum_pct": 31.421,
+      "direction": "SHORT",
+      "pnl": 1219.0
+    },
+    {
+      "date": "2013-06-10",
+      "cum_pct": 30.966,
+      "direction": "SHORT",
+      "pnl": -630.0
+    },
+    {
+      "date": "2013-06-24",
+      "cum_pct": 36.118,
+      "direction": "SHORT",
+      "pnl": 6699.0
+    },
+    {
+      "date": "2013-07-01",
+      "cum_pct": 37.473,
+      "direction": "SHORT",
+      "pnl": 1680.0
+    },
+    {
+      "date": "2013-07-08",
+      "cum_pct": 32.482,
+      "direction": "SHORT",
+      "pnl": -6082.0
+    },
+    {
+      "date": "2013-07-15",
+      "cum_pct": 32.027,
+      "direction": "SHORT",
+      "pnl": -586.0
+    },
+    {
+      "date": "2013-11-18",
+      "cum_pct": 35.494,
+      "direction": "SHORT",
+      "pnl": 4465.0
+    },
+    {
+      "date": "2013-11-25",
+      "cum_pct": 34.647,
+      "direction": "SHORT",
+      "pnl": -1050.0
+    },
+    {
+      "date": "2013-12-02",
+      "cum_pct": 36.169,
+      "direction": "SHORT",
+      "pnl": 1900.0
+    },
+    {
+      "date": "2013-12-09",
+      "cum_pct": 35.329,
+      "direction": "SHORT",
+      "pnl": -1032.0
+    },
+    {
+      "date": "2013-12-16",
+      "cum_pct": 38.0,
+      "direction": "SHORT",
+      "pnl": 3301.0
+    },
+    {
+      "date": "2013-12-23",
+      "cum_pct": 37.241,
+      "direction": "SHORT",
+      "pnl": -914.0
+    },
+    {
+      "date": "2013-12-30",
+      "cum_pct": 35.311,
+      "direction": "SHORT",
+      "pnl": -2342.0
+    },
+    {
+      "date": "2014-03-03",
+      "cum_pct": 35.352,
+      "direction": "LONG",
+      "pnl": 54.0
+    },
+    {
+      "date": "2014-03-17",
+      "cum_pct": 32.829,
+      "direction": "LONG",
+      "pnl": -3498.0
+    },
+    {
+      "date": "2014-06-16",
+      "cum_pct": 31.018,
+      "direction": "SHORT",
+      "pnl": -2315.0
+    },
+    {
+      "date": "2014-07-07",
+      "cum_pct": 32.605,
+      "direction": "LONG",
+      "pnl": 2091.0
+    },
+    {
+      "date": "2014-07-14",
+      "cum_pct": 30.5,
+      "direction": "LONG",
+      "pnl": -2818.0
+    },
+    {
+      "date": "2014-09-08",
+      "cum_pct": 33.461,
+      "direction": "SHORT",
+      "pnl": 3751.0
+    },
+    {
+      "date": "2014-09-15",
+      "cum_pct": 34.517,
+      "direction": "SHORT",
+      "pnl": 1298.0
+    },
+    {
+      "date": "2014-09-22",
+      "cum_pct": 34.356,
+      "direction": "SHORT",
+      "pnl": -196.0
+    },
+    {
+      "date": "2014-09-29",
+      "cum_pct": 36.504,
+      "direction": "SHORT",
+      "pnl": 2613.0
+    },
+    {
+      "date": "2014-10-06",
+      "cum_pct": 33.956,
+      "direction": "SHORT",
+      "pnl": -3022.0
+    },
+    {
+      "date": "2014-11-10",
+      "cum_pct": 32.423,
+      "direction": "SHORT",
+      "pnl": -1795.0
+    },
+    {
+      "date": "2014-11-17",
+      "cum_pct": 30.814,
+      "direction": "SHORT",
+      "pnl": -1902.0
+    },
+    {
+      "date": "2014-11-24",
+      "cum_pct": 33.72,
+      "direction": "SHORT",
+      "pnl": 3492.0
+    },
+    {
+      "date": "2015-01-19",
+      "cum_pct": 34.922,
+      "direction": "LONG",
+      "pnl": 1537.0
+    },
+    {
+      "date": "2015-01-26",
+      "cum_pct": 31.858,
+      "direction": "LONG",
+      "pnl": -3974.0
+    },
+    {
+      "date": "2015-02-02",
+      "cum_pct": 28.511,
+      "direction": "LONG",
+      "pnl": -4287.0
+    },
+    {
+      "date": "2015-02-09",
+      "cum_pct": 27.82,
+      "direction": "LONG",
+      "pnl": -855.0
+    },
+    {
+      "date": "2015-03-09",
+      "cum_pct": 28.804,
+      "direction": "SHORT",
+      "pnl": 1150.0
+    },
+    {
+      "date": "2015-03-16",
+      "cum_pct": 26.634,
+      "direction": "SHORT",
+      "pnl": -2510.0
+    },
+    {
+      "date": "2015-06-22",
+      "cum_pct": 28.607,
+      "direction": "SHORT",
+      "pnl": 2366.0
+    },
+    {
+      "date": "2015-06-29",
+      "cum_pct": 30.026,
+      "direction": "SHORT",
+      "pnl": 1682.0
+    },
+    {
+      "date": "2015-07-20",
+      "cum_pct": 32.986,
+      "direction": "SHORT",
+      "pnl": 3351.0
+    },
+    {
+      "date": "2015-08-17",
+      "cum_pct": 29.707,
+      "direction": "SHORT",
+      "pnl": -3654.0
+    },
+    {
+      "date": "2015-10-12",
+      "cum_pct": 31.52,
+      "direction": "LONG",
+      "pnl": 2095.0
+    },
+    {
+      "date": "2015-10-19",
+      "cum_pct": 30.389,
+      "direction": "LONG",
+      "pnl": -1331.0
+    },
+    {
+      "date": "2015-10-26",
+      "cum_pct": 28.476,
+      "direction": "LONG",
+      "pnl": -2227.0
+    },
+    {
+      "date": "2015-11-09",
+      "cum_pct": 29.063,
+      "direction": "SHORT",
+      "pnl": 640.0
+    },
+    {
+      "date": "2015-11-16",
+      "cum_pct": 30.126,
+      "direction": "SHORT",
+      "pnl": 1158.0
+    },
+    {
+      "date": "2015-11-23",
+      "cum_pct": 31.827,
+      "direction": "SHORT",
+      "pnl": 1829.0
+    },
+    {
+      "date": "2016-02-01",
+      "cum_pct": 36.819,
+      "direction": "LONG",
+      "pnl": 5578.0
+    },
+    {
+      "date": "2016-02-08",
+      "cum_pct": 43.053,
+      "direction": "LONG",
+      "pnl": 7261.0
+    },
+    {
+      "date": "2016-02-15",
+      "cum_pct": 40.129,
+      "direction": "LONG",
+      "pnl": -3606.0
+    },
+    {
+      "date": "2016-02-22",
+      "cum_pct": 39.875,
+      "direction": "LONG",
+      "pnl": -311.0
+    },
+    {
+      "date": "2016-02-29",
+      "cum_pct": 42.962,
+      "direction": "LONG",
+      "pnl": 3770.0
+    },
+    {
+      "date": "2016-03-07",
+      "cum_pct": 41.902,
+      "direction": "LONG",
+      "pnl": -1340.0
+    },
+    {
+      "date": "2016-03-14",
+      "cum_pct": 42.058,
+      "direction": "LONG",
+      "pnl": 195.0
+    },
+    {
+      "date": "2016-04-25",
+      "cum_pct": 46.88,
+      "direction": "LONG",
+      "pnl": 5945.0
+    },
+    {
+      "date": "2016-05-02",
+      "cum_pct": 46.269,
+      "direction": "LONG",
+      "pnl": -791.0
+    },
+    {
+      "date": "2016-05-16",
+      "cum_pct": 44.52,
+      "direction": "LONG",
+      "pnl": -2228.0
+    },
+    {
+      "date": "2016-05-30",
+      "cum_pct": 41.617,
+      "direction": "SHORT",
+      "pnl": -3505.0
+    },
+    {
+      "date": "2016-06-06",
+      "cum_pct": 39.634,
+      "direction": "SHORT",
+      "pnl": -2476.0
+    },
+    {
+      "date": "2016-06-20",
+      "cum_pct": 36.899,
+      "direction": "LONG",
+      "pnl": -3525.0
+    },
+    {
+      "date": "2016-06-27",
+      "cum_pct": 37.489,
+      "direction": "LONG",
+      "pnl": 785.0
+    },
+    {
+      "date": "2016-07-04",
+      "cum_pct": 39.196,
+      "direction": "LONG",
+      "pnl": 2293.0
+    },
+    {
+      "date": "2016-07-11",
+      "cum_pct": 35.621,
+      "direction": "LONG",
+      "pnl": -4897.0
+    },
+    {
+      "date": "2016-07-18",
+      "cum_pct": 34.783,
+      "direction": "LONG",
+      "pnl": -1117.0
+    },
+    {
+      "date": "2016-07-25",
+      "cum_pct": 36.811,
+      "direction": "LONG",
+      "pnl": 2684.0
+    },
+    {
+      "date": "2016-08-01",
+      "cum_pct": 35.777,
+      "direction": "LONG",
+      "pnl": -1396.0
+    },
+    {
+      "date": "2016-09-19",
+      "cum_pct": 33.587,
+      "direction": "SHORT",
+      "pnl": -2871.0
+    },
+    {
+      "date": "2016-10-24",
+      "cum_pct": 32.937,
+      "direction": "SHORT",
+      "pnl": -823.0
+    },
+    {
+      "date": "2016-10-31",
+      "cum_pct": 30.747,
+      "direction": "SHORT",
+      "pnl": -2800.0
+    },
+    {
+      "date": "2016-11-14",
+      "cum_pct": 32.58,
+      "direction": "SHORT",
+      "pnl": 2254.0
+    },
+    {
+      "date": "2016-11-21",
+      "cum_pct": 34.436,
+      "direction": "SHORT",
+      "pnl": 2238.0
+    },
+    {
+      "date": "2016-11-28",
+      "cum_pct": 35.297,
+      "direction": "SHORT",
+      "pnl": 1022.0
+    },
+    {
+      "date": "2016-12-05",
+      "cum_pct": 37.091,
+      "direction": "SHORT",
+      "pnl": 2118.0
+    },
+    {
+      "date": "2016-12-12",
+      "cum_pct": 39.205,
+      "direction": "SHORT",
+      "pnl": 2449.0
+    },
+    {
+      "date": "2016-12-19",
+      "cum_pct": 39.493,
+      "direction": "SHORT",
+      "pnl": 326.0
+    },
+    {
+      "date": "2016-12-26",
+      "cum_pct": 36.982,
+      "direction": "SHORT",
+      "pnl": -2845.0
+    },
+    {
+      "date": "2017-01-02",
+      "cum_pct": 34.661,
+      "direction": "SHORT",
+      "pnl": -2669.0
+    },
+    {
+      "date": "2017-02-13",
+      "cum_pct": 34.943,
+      "direction": "LONG",
+      "pnl": 347.0
+    },
+    {
+      "date": "2017-02-20",
+      "cum_pct": 36.582,
+      "direction": "LONG",
+      "pnl": 2026.0
+    },
+    {
+      "date": "2017-02-27",
+      "cum_pct": 34.44,
+      "direction": "LONG",
+      "pnl": -2689.0
+    },
+    {
+      "date": "2017-04-03",
+      "cum_pct": 34.88,
+      "direction": "LONG",
+      "pnl": 548.0
+    },
+    {
+      "date": "2017-04-17",
+      "cum_pct": 34.09,
+      "direction": "LONG",
+      "pnl": -1022.0
+    },
+    {
+      "date": "2017-04-24",
+      "cum_pct": 33.504,
+      "direction": "LONG",
+      "pnl": -746.0
+    },
+    {
+      "date": "2017-05-01",
+      "cum_pct": 31.577,
+      "direction": "LONG",
+      "pnl": -2449.0
+    },
+    {
+      "date": "2017-05-15",
+      "cum_pct": 29.662,
+      "direction": "SHORT",
+      "pnl": -2355.0
+    },
+    {
+      "date": "2017-06-05",
+      "cum_pct": 28.6,
+      "direction": "LONG",
+      "pnl": -1359.0
+    },
+    {
+      "date": "2017-06-12",
+      "cum_pct": 27.453,
+      "direction": "LONG",
+      "pnl": -1455.0
+    },
+    {
+      "date": "2017-07-03",
+      "cum_pct": 29.826,
+      "direction": "SHORT",
+      "pnl": 2948.0
+    },
+    {
+      "date": "2017-07-10",
+      "cum_pct": 28.572,
+      "direction": "SHORT",
+      "pnl": -1522.0
+    },
+    {
+      "date": "2017-07-17",
+      "cum_pct": 26.629,
+      "direction": "SHORT",
+      "pnl": -2392.0
+    },
+    {
+      "date": "2017-07-24",
+      "cum_pct": 25.617,
+      "direction": "SHORT",
+      "pnl": -1271.0
+    },
+    {
+      "date": "2017-07-31",
+      "cum_pct": 24.656,
+      "direction": "LONG",
+      "pnl": -1221.0
+    },
+    {
+      "date": "2017-08-07",
+      "cum_pct": 27.113,
+      "direction": "LONG",
+      "pnl": 3089.0
+    },
+    {
+      "date": "2017-08-14",
+      "cum_pct": 26.704,
+      "direction": "LONG",
+      "pnl": -526.0
+    },
+    {
+      "date": "2017-08-21",
+      "cum_pct": 27.252,
+      "direction": "LONG",
+      "pnl": 703.0
+    },
+    {
+      "date": "2017-08-28",
+      "cum_pct": 29.654,
+      "direction": "LONG",
+      "pnl": 3105.0
+    },
+    {
+      "date": "2017-09-04",
+      "cum_pct": 30.401,
+      "direction": "LONG",
+      "pnl": 998.0
+    },
+    {
+      "date": "2017-09-11",
+      "cum_pct": 29.051,
+      "direction": "LONG",
+      "pnl": -1806.0
+    },
+    {
+      "date": "2017-09-18",
+      "cum_pct": 27.595,
+      "direction": "LONG",
+      "pnl": -1917.0
+    },
+    {
+      "date": "2017-11-13",
+      "cum_pct": 26.108,
+      "direction": "SHORT",
+      "pnl": -1895.0
+    },
+    {
+      "date": "2017-12-25",
+      "cum_pct": 24.355,
+      "direction": "SHORT",
+      "pnl": -2235.0
+    },
+    {
+      "date": "2018-01-01",
+      "cum_pct": 25.602,
+      "direction": "LONG",
+      "pnl": 1625.0
+    },
+    {
+      "date": "2018-01-08",
+      "cum_pct": 26.964,
+      "direction": "LONG",
+      "pnl": 1797.0
+    },
+    {
+      "date": "2018-04-02",
+      "cum_pct": 27.44,
+      "direction": "LONG",
+      "pnl": 632.0
+    },
+    {
+      "date": "2018-04-09",
+      "cum_pct": 28.395,
+      "direction": "LONG",
+      "pnl": 1272.0
+    },
+    {
+      "date": "2018-04-16",
+      "cum_pct": 27.747,
+      "direction": "LONG",
+      "pnl": -871.0
+    },
+    {
+      "date": "2018-05-07",
+      "cum_pct": 27.496,
+      "direction": "SHORT",
+      "pnl": -330.0
+    },
+    {
+      "date": "2018-05-14",
+      "cum_pct": 29.554,
+      "direction": "SHORT",
+      "pnl": 2717.0
+    },
+    {
+      "date": "2018-05-21",
+      "cum_pct": 28.749,
+      "direction": "SHORT",
+      "pnl": -1039.0
+    },
+    {
+      "date": "2018-05-28",
+      "cum_pct": 29.205,
+      "direction": "SHORT",
+      "pnl": 592.0
+    },
+    {
+      "date": "2018-06-04",
+      "cum_pct": 28.756,
+      "direction": "SHORT",
+      "pnl": -580.0
+    },
+    {
+      "date": "2018-07-30",
+      "cum_pct": 29.507,
+      "direction": "SHORT",
+      "pnl": 918.0
+    },
+    {
+      "date": "2018-08-06",
+      "cum_pct": 29.821,
+      "direction": "SHORT",
+      "pnl": 381.0
+    },
+    {
+      "date": "2018-08-13",
+      "cum_pct": 32.097,
+      "direction": "SHORT",
+      "pnl": 2759.0
+    },
+    {
+      "date": "2018-08-20",
+      "cum_pct": 29.989,
+      "direction": "SHORT",
+      "pnl": -2495.0
+    },
+    {
+      "date": "2018-09-10",
+      "cum_pct": 30.222,
+      "direction": "SHORT",
+      "pnl": 279.0
+    },
+    {
+      "date": "2018-09-24",
+      "cum_pct": 30.732,
+      "direction": "SHORT",
+      "pnl": 611.0
+    },
+    {
+      "date": "2018-10-01",
+      "cum_pct": 29.736,
+      "direction": "SHORT",
+      "pnl": -1186.0
+    },
+    {
+      "date": "2018-12-10",
+      "cum_pct": 28.864,
+      "direction": "LONG",
+      "pnl": -1089.0
+    },
+    {
+      "date": "2018-12-24",
+      "cum_pct": 30.587,
+      "direction": "LONG",
+      "pnl": 2169.0
+    },
+    {
+      "date": "2018-12-31",
+      "cum_pct": 30.994,
+      "direction": "LONG",
+      "pnl": 521.0
+    },
+    {
+      "date": "2019-01-07",
+      "cum_pct": 31.225,
+      "direction": "LONG",
+      "pnl": 297.0
+    },
+    {
+      "date": "2019-01-14",
+      "cum_pct": 30.694,
+      "direction": "LONG",
+      "pnl": -684.0
+    },
+    {
+      "date": "2019-01-21",
+      "cum_pct": 32.282,
+      "direction": "LONG",
+      "pnl": 2036.0
+    },
+    {
+      "date": "2019-01-28",
+      "cum_pct": 33.608,
+      "direction": "LONG",
+      "pnl": 1725.0
+    },
+    {
+      "date": "2019-02-04",
+      "cum_pct": 33.367,
+      "direction": "LONG",
+      "pnl": -318.0
+    },
+    {
+      "date": "2019-02-11",
+      "cum_pct": 33.929,
+      "direction": "LONG",
+      "pnl": 739.0
+    },
+    {
+      "date": "2019-02-18",
+      "cum_pct": 34.44,
+      "direction": "LONG",
+      "pnl": 675.0
+    },
+    {
+      "date": "2019-02-25",
+      "cum_pct": 32.835,
+      "direction": "LONG",
+      "pnl": -2131.0
+    },
+    {
+      "date": "2019-04-22",
+      "cum_pct": 32.129,
+      "direction": "SHORT",
+      "pnl": -902.0
+    },
+    {
+      "date": "2019-05-06",
+      "cum_pct": 32.02,
+      "direction": "SHORT",
+      "pnl": -140.0
+    },
+    {
+      "date": "2019-05-13",
+      "cum_pct": 32.765,
+      "direction": "SHORT",
+      "pnl": 959.0
+    },
+    {
+      "date": "2019-06-10",
+      "cum_pct": 33.204,
+      "direction": "LONG",
+      "pnl": 585.0
+    },
+    {
+      "date": "2019-06-17",
+      "cum_pct": 37.731,
+      "direction": "LONG",
+      "pnl": 6060.0
+    },
+    {
+      "date": "2019-06-24",
+      "cum_pct": 37.914,
+      "direction": "LONG",
+      "pnl": 257.0
+    },
+    {
+      "date": "2019-07-01",
+      "cum_pct": 38.381,
+      "direction": "LONG",
+      "pnl": 651.0
+    },
+    {
+      "date": "2019-07-15",
+      "cum_pct": 39.01,
+      "direction": "LONG",
+      "pnl": 891.0
+    },
+    {
+      "date": "2019-07-22",
+      "cum_pct": 38.518,
+      "direction": "LONG",
+      "pnl": -702.0
+    },
+    {
+      "date": "2019-07-29",
+      "cum_pct": 39.958,
+      "direction": "LONG",
+      "pnl": 2045.0
+    },
+    {
+      "date": "2019-08-05",
+      "cum_pct": 43.94,
+      "direction": "LONG",
+      "pnl": 5732.0
+    },
+    {
+      "date": "2019-08-12",
+      "cum_pct": 44.716,
+      "direction": "LONG",
+      "pnl": 1165.0
+    },
+    {
+      "date": "2019-08-19",
+      "cum_pct": 45.859,
+      "direction": "LONG",
+      "pnl": 1724.0
+    },
+    {
+      "date": "2019-08-26",
+      "cum_pct": 44.094,
+      "direction": "LONG",
+      "pnl": -2730.0
+    },
+    {
+      "date": "2019-09-02",
+      "cum_pct": 42.607,
+      "direction": "LONG",
+      "pnl": -2275.0
+    },
+    {
+      "date": "2019-09-09",
+      "cum_pct": 41.457,
+      "direction": "LONG",
+      "pnl": -1732.0
+    },
+    {
+      "date": "2019-11-11",
+      "cum_pct": 40.983,
+      "direction": "SHORT",
+      "pnl": -693.0
+    },
+    {
+      "date": "2019-11-18",
+      "cum_pct": 41.472,
+      "direction": "SHORT",
+      "pnl": 719.0
+    },
+    {
+      "date": "2019-12-02",
+      "cum_pct": 41.604,
+      "direction": "SHORT",
+      "pnl": 193.0
+    },
+    {
+      "date": "2019-12-30",
+      "cum_pct": 44.118,
+      "direction": "LONG",
+      "pnl": 3804.0
+    },
+    {
+      "date": "2020-01-06",
+      "cum_pct": 42.748,
+      "direction": "LONG",
+      "pnl": -2149.0
+    },
+    {
+      "date": "2020-01-13",
+      "cum_pct": 42.605,
+      "direction": "LONG",
+      "pnl": -224.0
+    },
+    {
+      "date": "2020-01-20",
+      "cum_pct": 43.533,
+      "direction": "LONG",
+      "pnl": 1445.0
+    },
+    {
+      "date": "2020-01-27",
+      "cum_pct": 43.951,
+      "direction": "LONG",
+      "pnl": 662.0
+    },
+    {
+      "date": "2020-02-03",
+      "cum_pct": 41.485,
+      "direction": "LONG",
+      "pnl": -3920.0
+    },
+    {
+      "date": "2020-02-10",
+      "cum_pct": 42.047,
+      "direction": "LONG",
+      "pnl": 885.0
+    },
+    {
+      "date": "2020-02-17",
+      "cum_pct": 45.845,
+      "direction": "LONG",
+      "pnl": 6013.0
+    },
+    {
+      "date": "2020-02-24",
+      "cum_pct": 43.924,
+      "direction": "LONG",
+      "pnl": -3200.0
+    },
+    {
+      "date": "2020-03-09",
+      "cum_pct": 40.612,
+      "direction": "LONG",
+      "pnl": -5630.0
+    },
+    {
+      "date": "2020-03-23",
+      "cum_pct": 33.431,
+      "direction": "SHORT",
+      "pnl": -10710.0
+    },
+    {
+      "date": "2020-04-13",
+      "cum_pct": 33.208,
+      "direction": "LONG",
+      "pnl": -377.0
+    },
+    {
+      "date": "2020-04-20",
+      "cum_pct": 36.323,
+      "direction": "LONG",
+      "pnl": 5220.0
+    },
+    {
+      "date": "2020-04-27",
+      "cum_pct": 34.805,
+      "direction": "LONG",
+      "pnl": -2618.0
+    },
+    {
+      "date": "2020-05-04",
+      "cum_pct": 34.924,
+      "direction": "LONG",
+      "pnl": 201.0
+    },
+    {
+      "date": "2020-05-18",
+      "cum_pct": 33.532,
+      "direction": "LONG",
+      "pnl": -2448.0
+    },
+    {
+      "date": "2020-06-01",
+      "cum_pct": 30.913,
+      "direction": "LONG",
+      "pnl": -4555.0
+    },
+    {
+      "date": "2020-06-22",
+      "cum_pct": 32.161,
+      "direction": "LONG",
+      "pnl": 2183.0
+    },
+    {
+      "date": "2020-06-29",
+      "cum_pct": 32.362,
+      "direction": "LONG",
+      "pnl": 356.0
+    },
+    {
+      "date": "2020-07-06",
+      "cum_pct": 33.646,
+      "direction": "LONG",
+      "pnl": 2278.0
+    },
+    {
+      "date": "2020-07-13",
+      "cum_pct": 34.162,
+      "direction": "LONG",
+      "pnl": 929.0
+    },
+    {
+      "date": "2020-07-20",
+      "cum_pct": 39.261,
+      "direction": "LONG",
+      "pnl": 9224.0
+    },
+    {
+      "date": "2020-07-27",
+      "cum_pct": 42.502,
+      "direction": "LONG",
+      "pnl": 6200.0
+    },
+    {
+      "date": "2020-08-03",
+      "cum_pct": 45.147,
+      "direction": "LONG",
+      "pnl": 5242.0
+    },
+    {
+      "date": "2020-08-10",
+      "cum_pct": 41.739,
+      "direction": "LONG",
+      "pnl": -6907.0
+    },
+    {
+      "date": "2020-08-17",
+      "cum_pct": 42.11,
+      "direction": "LONG",
+      "pnl": 715.0
+    },
+    {
+      "date": "2020-08-24",
+      "cum_pct": 43.627,
+      "direction": "LONG",
+      "pnl": 2935.0
+    },
+    {
+      "date": "2020-10-19",
+      "cum_pct": 43.594,
+      "direction": "SHORT",
+      "pnl": -61.0
+    },
+    {
+      "date": "2020-11-02",
+      "cum_pct": 40.903,
+      "direction": "SHORT",
+      "pnl": -5052.0
+    },
+    {
+      "date": "2020-11-23",
+      "cum_pct": 45.457,
+      "direction": "SHORT",
+      "pnl": 8526.0
+    },
+    {
+      "date": "2021-01-04",
+      "cum_pct": 42.828,
+      "direction": "LONG",
+      "pnl": -5031.0
+    },
+    {
+      "date": "2021-01-25",
+      "cum_pct": 43.351,
+      "direction": "SHORT",
+      "pnl": 971.0
+    },
+    {
+      "date": "2021-02-01",
+      "cum_pct": 45.603,
+      "direction": "SHORT",
+      "pnl": 4180.0
+    },
+    {
+      "date": "2021-02-22",
+      "cum_pct": 48.404,
+      "direction": "SHORT",
+      "pnl": 4994.0
+    },
+    {
+      "date": "2021-03-01",
+      "cum_pct": 50.683,
+      "direction": "SHORT",
+      "pnl": 3964.0
+    },
+    {
+      "date": "2021-03-08",
+      "cum_pct": 49.551,
+      "direction": "SHORT",
+      "pnl": -1932.0
+    },
+    {
+      "date": "2021-03-15",
+      "cum_pct": 48.411,
+      "direction": "SHORT",
+      "pnl": -1967.0
+    },
+    {
+      "date": "2021-03-22",
+      "cum_pct": 48.769,
+      "direction": "SHORT",
+      "pnl": 622.0
+    },
+    {
+      "date": "2021-05-10",
+      "cum_pct": 49.121,
+      "direction": "LONG",
+      "pnl": 646.0
+    },
+    {
+      "date": "2021-05-17",
+      "cum_pct": 50.953,
+      "direction": "LONG",
+      "pnl": 3384.0
+    },
+    {
+      "date": "2021-05-24",
+      "cum_pct": 51.973,
+      "direction": "LONG",
+      "pnl": 1920.0
+    },
+    {
+      "date": "2021-05-31",
+      "cum_pct": 49.478,
+      "direction": "LONG",
+      "pnl": -4748.0
+    },
+    {
+      "date": "2021-08-23",
+      "cum_pct": 47.362,
+      "direction": "SHORT",
+      "pnl": -3764.0
+    },
+    {
+      "date": "2021-09-20",
+      "cum_pct": 47.596,
+      "direction": "SHORT",
+      "pnl": 410.0
+    },
+    {
+      "date": "2021-09-27",
+      "cum_pct": 46.984,
+      "direction": "SHORT",
+      "pnl": -1070.0
+    },
+    {
+      "date": "2021-10-04",
+      "cum_pct": 47.347,
+      "direction": "SHORT",
+      "pnl": 640.0
+    },
+    {
+      "date": "2021-10-11",
+      "cum_pct": 46.616,
+      "direction": "SHORT",
+      "pnl": -1282.0
+    },
+    {
+      "date": "2021-11-01",
+      "cum_pct": 48.728,
+      "direction": "LONG",
+      "pnl": 3759.0
+    },
+    {
+      "date": "2021-11-08",
+      "cum_pct": 51.409,
+      "direction": "LONG",
+      "pnl": 4869.0
+    },
+    {
+      "date": "2021-11-15",
+      "cum_pct": 50.319,
+      "direction": "LONG",
+      "pnl": -2032.0
+    },
+    {
+      "date": "2021-11-22",
+      "cum_pct": 47.924,
+      "direction": "LONG",
+      "pnl": -4420.0
+    },
+    {
+      "date": "2021-12-06",
+      "cum_pct": 47.948,
+      "direction": "SHORT",
+      "pnl": 43.0
+    },
+    {
+      "date": "2022-03-07",
+      "cum_pct": 47.927,
+      "direction": "LONG",
+      "pnl": -41.0
+    },
+    {
+      "date": "2022-03-14",
+      "cum_pct": 45.242,
+      "direction": "LONG",
+      "pnl": -5300.0
+    },
+    {
+      "date": "2022-03-21",
+      "cum_pct": 47.26,
+      "direction": "LONG",
+      "pnl": 3871.0
+    },
+    {
+      "date": "2022-05-16",
+      "cum_pct": 45.454,
+      "direction": "SHORT",
+      "pnl": -3274.0
+    },
+    {
+      "date": "2022-05-23",
+      "cum_pct": 45.093,
+      "direction": "SHORT",
+      "pnl": -667.0
+    },
+    {
+      "date": "2022-05-30",
+      "cum_pct": 45.058,
+      "direction": "SHORT",
+      "pnl": -64.0
+    },
+    {
+      "date": "2022-06-20",
+      "cum_pct": 45.733,
+      "direction": "SHORT",
+      "pnl": 1241.0
+    },
+    {
+      "date": "2022-06-27",
+      "cum_pct": 46.84,
+      "direction": "SHORT",
+      "pnl": 2027.0
+    },
+    {
+      "date": "2022-07-04",
+      "cum_pct": 50.508,
+      "direction": "SHORT",
+      "pnl": 6633.0
+    },
+    {
+      "date": "2022-07-11",
+      "cum_pct": 52.459,
+      "direction": "SHORT",
+      "pnl": 3398.0
+    },
+    {
+      "date": "2022-09-05",
+      "cum_pct": 51.991,
+      "direction": "SHORT",
+      "pnl": -799.0
+    },
+    {
+      "date": "2022-09-12",
+      "cum_pct": 54.574,
+      "direction": "SHORT",
+      "pnl": 4439.0
+    },
+    {
+      "date": "2022-09-19",
+      "cum_pct": 56.611,
+      "direction": "SHORT",
+      "pnl": 3417.0
+    },
+    {
+      "date": "2022-09-26",
+      "cum_pct": 55.632,
+      "direction": "SHORT",
+      "pnl": -1609.0
+    },
+    {
+      "date": "2022-10-03",
+      "cum_pct": 52.55,
+      "direction": "SHORT",
+      "pnl": -5129.0
+    },
+    {
+      "date": "2022-10-10",
+      "cum_pct": 55.669,
+      "direction": "SHORT",
+      "pnl": 5292.0
+    },
+    {
+      "date": "2022-10-17",
+      "cum_pct": 55.061,
+      "direction": "SHORT",
+      "pnl": -1000.0
+    },
+    {
+      "date": "2022-11-07",
+      "cum_pct": 51.817,
+      "direction": "SHORT",
+      "pnl": -5427.0
+    },
+    {
+      "date": "2022-11-14",
+      "cum_pct": 51.083,
+      "direction": "LONG",
+      "pnl": -1295.0
+    },
+    {
+      "date": "2022-11-21",
+      "cum_pct": 51.209,
+      "direction": "LONG",
+      "pnl": 222.0
+    },
+    {
+      "date": "2022-11-28",
+      "cum_pct": 53.866,
+      "direction": "LONG",
+      "pnl": 4650.0
+    },
+    {
+      "date": "2022-12-05",
+      "cum_pct": 53.675,
+      "direction": "LONG",
+      "pnl": -342.0
+    },
+    {
+      "date": "2022-12-12",
+      "cum_pct": 53.553,
+      "direction": "LONG",
+      "pnl": -220.0
+    },
+    {
+      "date": "2022-12-19",
+      "cum_pct": 53.956,
+      "direction": "LONG",
+      "pnl": 722.0
+    },
+    {
+      "date": "2023-01-16",
+      "cum_pct": 54.393,
+      "direction": "LONG",
+      "pnl": 838.0
+    },
+    {
+      "date": "2023-01-23",
+      "cum_pct": 54.413,
+      "direction": "LONG",
+      "pnl": 37.0
+    },
+    {
+      "date": "2023-01-30",
+      "cum_pct": 51.926,
+      "direction": "LONG",
+      "pnl": -4796.0
+    },
+    {
+      "date": "2023-03-20",
+      "cum_pct": 51.978,
+      "direction": "LONG",
+      "pnl": 101.0
+    },
+    {
+      "date": "2023-03-27",
+      "cum_pct": 51.626,
+      "direction": "LONG",
+      "pnl": -695.0
+    },
+    {
+      "date": "2023-04-10",
+      "cum_pct": 51.528,
+      "direction": "LONG",
+      "pnl": -197.0
+    },
+    {
+      "date": "2023-04-17",
+      "cum_pct": 50.498,
+      "direction": "LONG",
+      "pnl": -2062.0
+    },
+    {
+      "date": "2023-06-19",
+      "cum_pct": 52.37,
+      "direction": "SHORT",
+      "pnl": 3663.0
+    },
+    {
+      "date": "2023-07-03",
+      "cum_pct": 52.07,
+      "direction": "SHORT",
+      "pnl": -576.0
+    },
+    {
+      "date": "2023-07-10",
+      "cum_pct": 50.512,
+      "direction": "SHORT",
+      "pnl": -2997.0
+    },
+    {
+      "date": "2023-07-17",
+      "cum_pct": 50.091,
+      "direction": "SHORT",
+      "pnl": -822.0
+    },
+    {
+      "date": "2023-08-14",
+      "cum_pct": 51.36,
+      "direction": "SHORT",
+      "pnl": 2427.0
+    },
+    {
+      "date": "2023-08-21",
+      "cum_pct": 50.043,
+      "direction": "SHORT",
+      "pnl": -2487.0
+    },
+    {
+      "date": "2023-08-28",
+      "cum_pct": 48.327,
+      "direction": "SHORT",
+      "pnl": -3288.0
+    },
+    {
+      "date": "2023-09-04",
+      "cum_pct": 49.466,
+      "direction": "SHORT",
+      "pnl": 2212.0
+    },
+    {
+      "date": "2023-10-02",
+      "cum_pct": 50.308,
+      "direction": "SHORT",
+      "pnl": 1555.0
+    },
+    {
+      "date": "2023-10-09",
+      "cum_pct": 48.398,
+      "direction": "SHORT",
+      "pnl": -3529.0
+    },
+    {
+      "date": "2023-11-06",
+      "cum_pct": 45.826,
+      "direction": "LONG",
+      "pnl": -5113.0
+    },
+    {
+      "date": "2023-12-04",
+      "cum_pct": 43.755,
+      "direction": "LONG",
+      "pnl": -4386.0
+    },
+    {
+      "date": "2023-12-11",
+      "cum_pct": 44.377,
+      "direction": "LONG",
+      "pnl": 1247.0
+    },
+    {
+      "date": "2023-12-18",
+      "cum_pct": 46.137,
+      "direction": "LONG",
+      "pnl": 3551.0
+    },
+    {
+      "date": "2023-12-25",
+      "cum_pct": 46.605,
+      "direction": "LONG",
+      "pnl": 961.0
+    },
+    {
+      "date": "2024-01-08",
+      "cum_pct": 46.82,
+      "direction": "LONG",
+      "pnl": 439.0
+    },
+    {
+      "date": "2024-03-11",
+      "cum_pct": 45.628,
+      "direction": "LONG",
+      "pnl": -2601.0
+    },
+    {
+      "date": "2024-04-01",
+      "cum_pct": 49.288,
+      "direction": "LONG",
+      "pnl": 8221.0
+    },
+    {
+      "date": "2024-05-20",
+      "cum_pct": 46.253,
+      "direction": "LONG",
+      "pnl": -7346.0
+    },
+    {
+      "date": "2024-07-15",
+      "cum_pct": 45.915,
+      "direction": "LONG",
+      "pnl": -814.0
+    },
+    {
+      "date": "2024-07-22",
+      "cum_pct": 44.89,
+      "direction": "LONG",
+      "pnl": -2472.0
+    },
+    {
+      "date": "2024-07-29",
+      "cum_pct": 46.812,
+      "direction": "LONG",
+      "pnl": 4607.0
+    },
+    {
+      "date": "2024-08-05",
+      "cum_pct": 43.713,
+      "direction": "LONG",
+      "pnl": -7565.0
+    },
+    {
+      "date": "2024-08-12",
+      "cum_pct": 46.965,
+      "direction": "LONG",
+      "pnl": 7896.0
+    },
+    {
+      "date": "2024-08-19",
+      "cum_pct": 47.199,
+      "direction": "LONG",
+      "pnl": 586.0
+    },
+    {
+      "date": "2024-08-26",
+      "cum_pct": 46.685,
+      "direction": "LONG",
+      "pnl": -1292.0
+    },
+    {
+      "date": "2024-09-09",
+      "cum_pct": 49.921,
+      "direction": "LONG",
+      "pnl": 8079.0
+    },
+    {
+      "date": "2024-09-16",
+      "cum_pct": 51.566,
+      "direction": "LONG",
+      "pnl": 4244.0
+    },
+    {
+      "date": "2024-09-23",
+      "cum_pct": 53.007,
+      "direction": "LONG",
+      "pnl": 3775.0
+    },
+    {
+      "date": "2024-09-30",
+      "cum_pct": 52.635,
+      "direction": "LONG",
+      "pnl": -992.0
+    },
+    {
+      "date": "2024-12-23",
+      "cum_pct": 52.743,
+      "direction": "SHORT",
+      "pnl": 285.0
+    },
+    {
+      "date": "2024-12-30",
+      "cum_pct": 52.132,
+      "direction": "SHORT",
+      "pnl": -1604.0
+    },
+    {
+      "date": "2025-01-27",
+      "cum_pct": 53.243,
+      "direction": "LONG",
+      "pnl": 3076.0
+    },
+    {
+      "date": "2025-02-03",
+      "cum_pct": 55.678,
+      "direction": "LONG",
+      "pnl": 6798.0
+    },
+    {
+      "date": "2025-02-10",
+      "cum_pct": 56.195,
+      "direction": "LONG",
+      "pnl": 1484.0
+    },
+    {
+      "date": "2025-02-17",
+      "cum_pct": 58.134,
+      "direction": "LONG",
+      "pnl": 5581.0
+    },
+    {
+      "date": "2025-02-24",
+      "cum_pct": 55.413,
+      "direction": "LONG",
+      "pnl": -7990.0
+    },
+    {
+      "date": "2025-03-03",
+      "cum_pct": 56.761,
+      "direction": "LONG",
+      "pnl": 3870.0
+    },
+    {
+      "date": "2025-03-10",
+      "cum_pct": 59.087,
+      "direction": "LONG",
+      "pnl": 6784.0
+    },
+    {
+      "date": "2025-03-17",
+      "cum_pct": 60.182,
+      "direction": "LONG",
+      "pnl": 3274.0
+    },
+    {
+      "date": "2025-03-24",
+      "cum_pct": 62.146,
+      "direction": "LONG",
+      "pnl": 5940.0
+    },
+    {
+      "date": "2025-04-07",
+      "cum_pct": 70.04,
+      "direction": "LONG",
+      "pnl": 23678.0
+    },
+    {
+      "date": "2025-05-12",
+      "cum_pct": 67.455,
+      "direction": "LONG",
+      "pnl": -8496.0
+    },
+    {
+      "date": "2025-06-23",
+      "cum_pct": 64.123,
+      "direction": "LONG",
+      "pnl": -11237.0
+    },
+    {
+      "date": "2025-07-07",
+      "cum_pct": 64.904,
+      "direction": "LONG",
+      "pnl": 2599.0
+    },
+    {
+      "date": "2025-07-28",
+      "cum_pct": 65.774,
+      "direction": "LONG",
+      "pnl": 2898.0
+    },
+    {
+      "date": "2025-08-04",
+      "cum_pct": 66.867,
+      "direction": "LONG",
+      "pnl": 3674.0
+    },
+    {
+      "date": "2025-08-11",
+      "cum_pct": 65.195,
+      "direction": "LONG",
+      "pnl": -5668.0
+    },
+    {
+      "date": "2025-09-01",
+      "cum_pct": 69.182,
+      "direction": "LONG",
+      "pnl": 13746.0
+    },
+    {
+      "date": "2025-09-08",
+      "cum_pct": 70.624,
+      "direction": "LONG",
+      "pnl": 5179.0
+    },
+    {
+      "date": "2025-09-15",
+      "cum_pct": 71.902,
+      "direction": "LONG",
+      "pnl": 4648.0
+    },
+    {
+      "date": "2025-09-22",
+      "cum_pct": 73.879,
+      "direction": "LONG",
+      "pnl": 7287.0
+    },
+    {
+      "date": "2025-10-27",
+      "cum_pct": 72.333,
+      "direction": "LONG",
+      "pnl": -6282.0
+    },
+    {
+      "date": "2025-12-01",
+      "cum_pct": 71.76,
+      "direction": "LONG",
+      "pnl": -2422.0
+    },
+    {
+      "date": "2026-01-12",
+      "cum_pct": 72.986,
+      "direction": "LONG",
+      "pnl": 5569.0
+    },
+    {
+      "date": "2026-01-19",
+      "cum_pct": 79.65,
+      "direction": "LONG",
+      "pnl": 31136.0
+    },
+    {
+      "date": "2026-02-02",
+      "cum_pct": 72.473,
+      "direction": "LONG",
+      "pnl": -34032.0
+    },
+    {
+      "date": "2026-02-09",
+      "cum_pct": 72.568,
+      "direction": "LONG",
+      "pnl": 476.0
+    },
+    {
+      "date": "2026-02-16",
+      "cum_pct": 74.29,
+      "direction": "LONG",
+      "pnl": 8646.0
+    },
+    {
+      "date": "2026-02-23",
+      "cum_pct": 76.48,
+      "direction": "LONG",
+      "pnl": 11311.0
+    },
+    {
+      "date": "2026-03-02",
+      "cum_pct": 70.183,
+      "direction": "LONG",
+      "pnl": -33921.0
+    },
+    {
+      "date": "2026-03-09",
+      "cum_pct": 69.055,
+      "direction": "LONG",
+      "pnl": -5725.0
+    },
+    {
+      "date": "2026-03-23",
+      "cum_pct": 68.428,
+      "direction": "SHORT",
+      "pnl": -2799.0
+    },
+    {
+      "date": "2026-05-18",
+      "cum_pct": 69.054,
+      "direction": "SHORT",
+      "pnl": 2838.0
+    },
+    {
+      "date": "2026-05-25",
+      "cum_pct": 69.694,
+      "direction": "SHORT",
+      "pnl": 2922.0
+    },
+    {
+      "date": "2026-06-01",
+      "cum_pct": 74.376,
+      "direction": "SHORT",
+      "pnl": 21254.0
+    },
+    {
+      "date": "2026-06-08",
+      "cum_pct": 77.277,
+      "direction": "SHORT",
+      "pnl": 12602.0
+    },
+    {
+      "date": "2026-06-15",
+      "cum_pct": 80.525,
+      "direction": "SHORT",
+      "pnl": 13945.0
+    },
+    {
+      "date": "2026-06-22",
+      "cum_pct": 81.782,
+      "direction": "SHORT",
+      "pnl": 5205.0
+    },
+    {
+      "date": "2026-06-29",
+      "cum_pct": 79.007,
+      "direction": "SHORT",
+      "pnl": -11274.0
+    },
+    {
+      "date": "2026-07-06",
+      "cum_pct": 80.518,
+      "direction": "SHORT",
+      "pnl": 6322.0
+    },
+    {
+      "date": "2026-07-13",
+      "cum_pct": 82.235,
+      "direction": "SHORT",
+      "pnl": 7013.0
+    }
+  ],
+  "year_stats": [
+    {
+      "year": "2010",
+      "trades": 19,
+      "wins": 14,
+      "losses": 5,
+      "win_rate": 73.7,
+      "total_pnl": 13691.0,
+      "mean_pnl": 721.0
+    },
+    {
+      "year": "2011",
+      "trades": 24,
+      "wins": 15,
+      "losses": 9,
+      "win_rate": 62.5,
+      "total_pnl": 20111.0,
+      "mean_pnl": 838.0
+    },
+    {
+      "year": "2012",
+      "trades": 14,
+      "wins": 9,
+      "losses": 5,
+      "win_rate": 64.3,
+      "total_pnl": 9104.0,
+      "mean_pnl": 650.0
+    },
+    {
+      "year": "2013",
+      "trades": 21,
+      "wins": 9,
+      "losses": 12,
+      "win_rate": 42.9,
+      "total_pnl": 9651.0,
+      "mean_pnl": 460.0
+    },
+    {
+      "year": "2014",
+      "trades": 13,
+      "wins": 6,
+      "losses": 7,
+      "win_rate": 46.2,
+      "total_pnl": -2248.0,
+      "mean_pnl": -173.0
+    },
+    {
+      "year": "2015",
+      "trades": 16,
+      "wins": 9,
+      "losses": 7,
+      "win_rate": 56.2,
+      "total_pnl": -3029.0,
+      "mean_pnl": -189.0
+    },
+    {
+      "year": "2016",
+      "trades": 29,
+      "wins": 14,
+      "losses": 15,
+      "win_rate": 48.3,
+      "total_pnl": 4387.0,
+      "mean_pnl": 151.0
+    },
+    {
+      "year": "2017",
+      "trades": 25,
+      "wins": 8,
+      "losses": 17,
+      "win_rate": 32.0,
+      "total_pnl": -15765.0,
+      "mean_pnl": -631.0
+    },
+    {
+      "year": "2018",
+      "trades": 20,
+      "wins": 13,
+      "losses": 7,
+      "win_rate": 65.0,
+      "total_pnl": 8683.0,
+      "mean_pnl": 434.0
+    },
+    {
+      "year": "2019",
+      "trades": 28,
+      "wins": 18,
+      "losses": 10,
+      "win_rate": 64.3,
+      "total_pnl": 17952.0,
+      "mean_pnl": 641.0
+    },
+    {
+      "year": "2020",
+      "trades": 29,
+      "wins": 16,
+      "losses": 13,
+      "win_rate": 55.2,
+      "total_pnl": 5166.0,
+      "mean_pnl": 178.0
+    },
+    {
+      "year": "2021",
+      "trades": 22,
+      "wins": 13,
+      "losses": 9,
+      "win_rate": 59.1,
+      "total_pnl": 4154.0,
+      "mean_pnl": 189.0
+    },
+    {
+      "year": "2022",
+      "trades": 24,
+      "wins": 11,
+      "losses": 13,
+      "win_rate": 45.8,
+      "total_pnl": 10744.0,
+      "mean_pnl": 448.0
+    },
+    {
+      "year": "2023",
+      "trades": 22,
+      "wins": 10,
+      "losses": 12,
+      "win_rate": 45.5,
+      "total_pnl": -14356.0,
+      "mean_pnl": -653.0
+    },
+    {
+      "year": "2024",
+      "trades": 17,
+      "wins": 9,
+      "losses": 8,
+      "win_rate": 52.9,
+      "total_pnl": 13445.0,
+      "mean_pnl": 791.0
+    },
+    {
+      "year": "2025",
+      "trades": 22,
+      "wins": 16,
+      "losses": 6,
+      "win_rate": 72.7,
+      "total_pnl": 58419.0,
+      "mean_pnl": 2655.0
+    },
+    {
+      "year": "2026",
+      "trades": 18,
+      "wins": 13,
+      "losses": 5,
+      "win_rate": 72.2,
+      "total_pnl": 41489.0,
+      "mean_pnl": 2305.0
+    }
+  ]
+}

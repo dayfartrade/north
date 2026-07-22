@@ -14,8 +14,8 @@
         <span class="brand-tag">by Knox</span>
       </div>
       <h1>FAR Weekly Gold Read</h1>
-      <p class="tagline">One call per week. Long, short, or flat. Published Sunday · resolved Friday close.
-        Full track record on this page. No cherry-picking.</p>
+      <p class="tagline">One directional call on gold, every week. Published Sunday 22:00 UTC · Resolved Friday close.
+        16-year backtest below, full track record accumulating live. Every call, every outcome, unedited.</p>
       <div class="status">
         <span id="signal-dot" class="dot dot-unknown"></span>
         <span id="signal-status">loading current call…</span>
@@ -34,25 +34,67 @@
       </div>
     </section>
 
-    <!-- Track record summary -->
+    <!-- Signal drivers + Live track record -->
     <section class="grid">
       <article class="card">
-        <h2>Live track record</h2>
-        <p class="hint">Resolved calls only · updates every Friday close</p>
-        <div id="track-summary" class="metrics"><span class="muted">loading…</span></div>
+        <h2>Signal drivers this week</h2>
+        <p class="hint">Raw inputs · no interpretation added</p>
+        <div id="signal-drivers" class="metrics"><span class="muted">loading…</span></div>
       </article>
 
       <article class="card">
-        <h2>Signal drivers</h2>
-        <p class="hint">This week's raw inputs · no interpretation</p>
-        <div id="signal-drivers" class="metrics"><span class="muted">loading…</span></div>
+        <h2>Live track record</h2>
+        <p class="hint">Only resolved calls · updates every Friday</p>
+        <div id="track-summary" class="metrics"><span class="muted">loading…</span></div>
       </article>
+    </section>
+
+    <!-- Equity curve chart -->
+    <section class="card">
+      <h2>Backtest equity curve · 2010–2026</h2>
+      <p class="hint">Pre-registered signal replayed on Dukascopy XAU/USD 5-min data. Y-axis = cumulative return (% per position).</p>
+      <div class="chart-wrap">
+        <canvas id="equity-chart" width="900" height="360"></canvas>
+      </div>
+      <div class="metrics" style="margin-top: 20px;">
+        <div class="metric">
+          <div class="metric-label">Total calls</div>
+          <div class="metric-value">363</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Win rate</div>
+          <div class="metric-value up">55.9%</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Sharpe (ann)</div>
+          <div class="metric-value up">0.77</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Positive years</div>
+          <div class="metric-value up">13 / 17</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Longest losing streak</div>
+          <div class="metric-value">6 calls</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Max drawdown</div>
+          <div class="metric-value down">31% of terminal</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Year-by-year table -->
+    <section class="card">
+      <h2>Year-by-year</h2>
+      <p class="hint">Each row = one calendar year of backtest calls</p>
+      <div id="year-table"><span class="muted">loading…</span></div>
     </section>
 
     <!-- Call history -->
     <section class="card">
       <h2>Every call, in order</h2>
-      <p class="hint">Append-only. Once published, never edited.</p>
+      <p class="hint">Live track record · append-only · never edited</p>
       <div id="call-history"><span class="muted">loading…</span></div>
     </section>
 
@@ -64,50 +106,31 @@
         <li><strong>12-week momentum.</strong> Same, 60 trading days. Both must agree with 4-week.</li>
         <li><strong>Moving-average filter.</strong> 10-day SMA vs 40-day SMA. Trend must match direction.</li>
         <li><strong>Real-yield conditioning.</strong> 10y TIPS yield 4-week change: falling supports LONG; rising supports SHORT.</li>
-        <li><strong>All four must agree.</strong> Otherwise the call is FLAT (no position).</li>
-        <li><strong>Position management.</strong> Entry Monday NY open. Stop = 2× ATR(20d). Exit = Friday close or stop, whichever first.</li>
+        <li><strong>All four must agree.</strong> Otherwise the call is FLAT (no position). Historically ~55% of weeks are FLAT.</li>
+        <li><strong>Position management.</strong> Entry Monday NY open. Stop = 2× ATR(20d). Exit = Friday 21:00 UTC close or stop hit, whichever first.</li>
+        <li><strong>Instrument.</strong> Any liquid gold: GC futures, MGC micro-futures, GLD ETF, IAU ETF.</li>
       </ul>
     </section>
 
-    <!-- Backtest -->
+    <!-- Pre-reg disclosure -->
     <section class="card">
-      <h2>Pre-registered backtest</h2>
-      <p class="hint">2015–2026 XAU/USD 5m data (Dukascopy) · pre-reg published 2026-07-22</p>
-      <div class="metrics">
-        <div class="metric">
-          <div class="metric-label">Total calls (16 yr)</div>
-          <div class="metric-value">363</div>
-        </div>
-        <div class="metric">
-          <div class="metric-label">Backtest win rate</div>
-          <div class="metric-value up">55.9%</div>
-        </div>
-        <div class="metric">
-          <div class="metric-label">Backtest Sharpe (ann)</div>
-          <div class="metric-value up">0.77</div>
-        </div>
-        <div class="metric">
-          <div class="metric-label">Positive years</div>
-          <div class="metric-value up">13 of 17</div>
-        </div>
-      </div>
-      <p class="hint" style="margin-top: 20px;">
-        BETA product. 16-year extended sample (2010–2026) clears the two originally-borderline
-        statistical gates: bootstrap 95% CI on mean weekly return is [+0.013%, +0.447%]
-        (clears zero) and PSR vs SR=0 is 0.9785 (above 0.95 threshold). One training-window
-        gate remains soft-failed (training-only Sharpe 0.478 vs 0.5 target). Live tracking on
-        this page is still the final validation. If 12 months of live results diverge from
-        backtest, the product retires publicly.
-      </p>
+      <h2>Pre-registered discipline</h2>
+      <p class="hint">The signal + parameters were fixed in a public pre-reg <em>before</em> any backtest results were seen.</p>
+      <ul class="how">
+        <li><strong>Signal frozen 2026-07-22 11:00 UTC.</strong> No post-hoc tuning of momentum periods, MA windows, ATR multiplier, or macro filter.</li>
+        <li><strong>Sample split fixed pre-backtest.</strong> Training 2015-2020, OOS 2021-2023, Hold-out 2024-2026 — decided before any test.</li>
+        <li><strong>Beta status.</strong> Training-window Sharpe (0.478) narrowly missed the 0.5 ship gate. Extended 16-year sample (added later as supplementary OOS) clears the 2 other borderline gates: bootstrap 95% CI on mean weekly return is [+0.013%, +0.447%] (clears zero), PSR vs SR=0 is 0.9785 (above 0.95).</li>
+        <li><strong>Retirement criteria.</strong> If 12 months of live results diverge from backtest (weekly return &gt; 0, WR ≥ 50%), the product retires publicly with full track record disclosed.</li>
+      </ul>
     </section>
 
     <!-- Disclaimer -->
     <section class="card muted-card">
       <h2>Disclaimer</h2>
-      <p class="muted">Not financial advice. Futures involve substantial risk of loss. Past
-        performance in backtests does not guarantee future results — especially given
-        the borderline pre-reg gates disclosed above. Position size per your risk
-        tolerance and consult a licensed advisor.</p>
+      <p class="muted">Not financial advice. Futures and derivatives involve substantial risk of loss.
+        Backtest performance does not guarantee future results — the 16-year backtest passes statistical significance
+        but 4 of 17 years were losing, worst year -$16k per contract, and drawdowns exceeding 30% of terminal profit
+        are historical. Position size per your own risk tolerance and consult a licensed advisor.</p>
     </section>
   </main>
 
