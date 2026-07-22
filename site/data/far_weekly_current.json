@@ -17,7 +17,7 @@
   "stop_price": 4211.29,
   "exit_type": "Friday close (time exit) or stop hit",
   "expected_atr_move": 98.52,
-  "published_utc": "2026-07-22T08:50:45.409557+00:00",
+  "published_utc": "2026-07-22T09:51:03.853233+00:00",
   "pre_reg_ref": "2026-07-22_far_weekly_gold_read_prereg.md",
   "confidence_disclaimer": "BETA \u2014 3 of 6 pre-reg gates borderline failed. Live-tracking is the final validation. Position size accordingly."
 }
