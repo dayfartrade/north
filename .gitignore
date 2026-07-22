@@ -48,3 +48,4 @@ research material/
 
 # External data sources (large; reproducible via scripts/fetch_*.py)
 data/external/
+backups/*.tar.gz
