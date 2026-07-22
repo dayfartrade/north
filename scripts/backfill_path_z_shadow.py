@@ -1,20 +1,20 @@
 """Path Z-specific shadow backfill.
 
-Runs the ORB pipeline on Dukascopy XAU/USD 5m using SESSION_CONFIGS_V9_Z
+Runs the ORB pipeline on a Dukascopy 5m CSV using SESSION_CONFIGS_V9_Z
 (no or_atr_max on NY), applies filter_path_z, and simulates outcomes for
 Path Z-taken entries.
 
-Output: data/shadow_equity_path_z.jsonl (separate from main shadow log).
+Default symbol: XAUUSD (canonical Path Z in-sample). Pass --symbol to
+run on silver / FX for cross-market confirmation of the NY-SHORT-Low-ER
+sub-edge. Output goes to data/shadow_equity_path_z_{SYMBOL}.jsonl
+(XAUUSD keeps the historical filename data/shadow_equity_path_z.jsonl).
 
-This is the CANONICAL in-sample validation of Path Z. The main shadow log
-(shadow_equity_since_halt.jsonl) will accumulate forward Path Z decisions
-via the shadow_orb_tracker independent path; this backfill provides the
-retrospective baseline the ship-gate report needs to see n=91.
-
-Usage: python scripts/backfill_path_z_shadow.py
+Usage:
+  python scripts/backfill_path_z_shadow.py [--symbol XAUUSD|XAGUSD|EURUSD|GBPUSD|USDJPY]
 """
 from __future__ import annotations
 
+import argparse
 import json
 import sys
 from datetime import datetime
@@ -34,22 +34,33 @@ from strategy_engine import (
     evaluate_session,
 )
 
-CSV_PATH = ROOT / "data" / "external" / "dukascopy" / "XAUUSD_5m.csv"
-OUT = ROOT / "data" / "shadow_equity_path_z.jsonl"
+# Per-market contract sizing + round-trip cost.
+# XAUUSD: GC-equivalent (100 oz × $1/point, ~$24 RT).
+# XAGUSD: SI-equivalent (5000 oz × $1/point, ~$16 RT).
+# FX: standard lot = 100,000 units of base currency. RT ~$7 (IB).
+# All values chosen so 1 "point" (1 unit of price) × contract_size = dollar P&L.
+# The absolute $ figures are approximate — the R-multiple report is the
+# apples-to-apples cross-market comparison. This is exploratory, not a
+# ship-gate rerun.
+MARKET_SPECS = {
+    "XAUUSD": {"contract_size": 100,    "rt_cost": 24.0},
+    "XAGUSD": {"contract_size": 5000,   "rt_cost": 16.0},
+    "EURUSD": {"contract_size": 100000, "rt_cost": 7.0},
+    "GBPUSD": {"contract_size": 100000, "rt_cost": 7.0},
+    "USDJPY": {"contract_size": 100000, "rt_cost": 7.0},
+}
 
 OR_BARS = 6
 WATCH_BARS = 12
 MAX_HOLD_BARS = 36
 ER_LOOKBACK = 20
-CONTRACT_SIZE = 100
-RT_COST = 24.0
 
 # Session UTC opens matching production
 SESSIONS_UTC = {"LON": 6, "NY": 13, "ASIA": 22}
 
 
-def load_bars() -> pd.DataFrame:
-    df = pd.read_csv(CSV_PATH, parse_dates=["ts"])
+def load_bars(csv_path: Path) -> pd.DataFrame:
+    df = pd.read_csv(csv_path, parse_dates=["ts"])
     df["ts"] = pd.to_datetime(df["ts"], utc=True)
     df = df.set_index("ts").sort_index()
     return df
@@ -64,7 +75,8 @@ def slope_5h(bars_1h: pd.Series, up_to_ts) -> float:
 
 
 def simulate(bars: pd.DataFrame, entry_idx: int, entry: float,
-             stop: float, target: float, direction: str) -> dict:
+             stop: float, target: float, direction: str,
+             contract_size: float, rt_cost: float) -> dict:
     dir_sign = 1 if direction == "LONG" else -1
     exit_price = None
     exit_reason = None
@@ -88,15 +100,31 @@ def simulate(bars: pd.DataFrame, entry_idx: int, entry: float,
         end_idx = min(entry_idx + MAX_HOLD_BARS, len(bars) - 1)
         exit_price = float(bars.iloc[end_idx]["close"])
         exit_reason = "time"
-    gross = (exit_price - entry) * dir_sign * CONTRACT_SIZE
-    net = gross - RT_COST
+    gross = (exit_price - entry) * dir_sign * contract_size
+    net = gross - rt_cost
     return {"kind": exit_reason, "exit_price": float(exit_price),
             "gross_pnl": float(gross), "net_pnl": float(net)}
 
 
 def main() -> None:
-    print(f"Loading bars from {CSV_PATH.name} ...")
-    bars = load_bars()
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--symbol", default="XAUUSD", choices=list(MARKET_SPECS))
+    args = ap.parse_args()
+    symbol = args.symbol
+    spec = MARKET_SPECS[symbol]
+    contract_size = spec["contract_size"]
+    rt_cost = spec["rt_cost"]
+
+    csv_path = ROOT / "data" / "external" / "dukascopy" / f"{symbol}_5m.csv"
+    # Preserve historical XAUUSD filename; new symbols get suffixed files.
+    if symbol == "XAUUSD":
+        out_path = ROOT / "data" / "shadow_equity_path_z.jsonl"
+    else:
+        out_path = ROOT / "data" / f"shadow_equity_path_z_{symbol}.jsonl"
+
+    print(f"Symbol: {symbol}  contract={contract_size} RT_cost=${rt_cost}")
+    print(f"Loading bars from {csv_path.name} ...")
+    bars = load_bars(csv_path)
     print(f"  {len(bars):,} bars {bars.index[0].date()} -> {bars.index[-1].date()}")
 
     atr = compute_atr(bars, 20)
@@ -174,10 +202,17 @@ def main() -> None:
 
         outcome = simulate(bars, entry_idx, entry_price,
                           decision.stop_price, decision.target_price,
-                          decision.direction.name)
+                          decision.direction.name,
+                          contract_size, rt_cost)
+
+        # R-multiple = net P&L expressed as fraction of initial risk (1×OR).
+        # Cross-market comparable. Positive R > 0.
+        risk_dollars = or_range * contract_size
+        r_multiple = outcome["net_pnl"] / risk_dollars if risk_dollars > 0 else 0.0
 
         row = {
             "ts_recorded_utc": datetime.utcnow().isoformat() + "Z",
+            "symbol": symbol,
             "session": sess_name,
             "or_open_utc": open_ts.isoformat(),
             "or_close_utc": or_close_actual.isoformat(),
@@ -192,6 +227,7 @@ def main() -> None:
             "target_price": decision.target_price,
             "stop_price": decision.stop_price,
             "outcome": outcome,
+            "r_multiple": r_multiple,
             "strategy_version": "v9-path-z-backfill",
             "candidate_shadows": {
                 "path_z": {
@@ -206,22 +242,26 @@ def main() -> None:
         all_rows.append(row)
         path_z_taken += 1
 
-    OUT.parent.mkdir(parents=True, exist_ok=True)
-    with open(OUT, "w", encoding="utf-8") as f:
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(out_path, "w", encoding="utf-8") as f:
         for r in all_rows:
             f.write(json.dumps(r, default=str) + "\n")
 
     print(f"\nPath Z taken:   {path_z_taken}")
     print(f"Path Z skipped: {path_z_skipped}")
-    print(f"Wrote {len(all_rows)} rows to {OUT.name}")
+    print(f"Wrote {len(all_rows)} rows to {out_path.name}")
 
     if all_rows:
         pnls = [r["outcome"]["net_pnl"] for r in all_rows]
+        rs = [r["r_multiple"] for r in all_rows]
         wins = sum(1 for p in pnls if p > 0)
         total = sum(pnls)
-        print(f"\nTotal P&L = ${total:+,.0f}")
-        print(f"Mean/trade = ${total/len(pnls):+,.2f}")
-        print(f"Win rate = {100*wins/len(pnls):.1f}%")
+        r_total = sum(rs)
+        print(f"\nTotal P&L    = ${total:+,.0f}")
+        print(f"Mean/trade   = ${total/len(pnls):+,.2f}")
+        print(f"Win rate     = {100*wins/len(pnls):.1f}%")
+        print(f"Total R      = {r_total:+.2f}")
+        print(f"Mean R/trade = {r_total/len(rs):+.3f}")
 
 
 if __name__ == "__main__":
