@@ -137,16 +137,76 @@ def _market_snapshot() -> str:
     return "\n".join(out)
 
 
+def _far_weekly_status() -> str:
+    """Show current FAR Weekly call + track record summary."""
+    out = []
+    curr_path = ROOT / "site" / "data" / "far_weekly_current.json"
+    hist_path = ROOT / "site" / "data" / "far_weekly_history.json"
+
+    if not curr_path.exists():
+        return "   _no active call yet_"
+
+    try:
+        curr = json.loads(curr_path.read_text(encoding="utf-8"))
+        direction = curr.get("direction", "?")
+        week_of = curr.get("week_of", "?")
+
+        dir_display = {
+            "LONG": "🟢 *LONG*",
+            "SHORT": "🔴 *SHORT*",
+            "FLAT": "⚪ *FLAT*",
+        }.get(direction, direction)
+
+        out.append(f"   {dir_display}  ·  _week of {week_of}_")
+
+        if direction != "FLAT":
+            entry = curr.get("entry_approx")
+            stop = curr.get("stop_price")
+            if entry and stop:
+                out.append(f"   Entry ${entry:,.2f}   Stop ${stop:,.2f}")
+    except Exception:
+        pass
+
+    if hist_path.exists():
+        try:
+            hist = json.loads(hist_path.read_text(encoding="utf-8"))
+            n = hist.get("resolved_calls", 0)
+            if n > 0:
+                wr = hist.get("win_rate_pct", 0)
+                cum = hist.get("cumulative_return_pct", 0)
+                out.append(f"   Live: {n} resolved  ·  WR {wr}%  ·  cum {cum:+.2f}%")
+            else:
+                out.append(f"   Live: _accumulating (first calls in progress)_")
+        except Exception:
+            pass
+
+    out.append(f"   Full: *faractionradar.com/weekly*")
+    return "\n".join(out)
+
+
+def _engine_a_status() -> str:
+    """Show Engine A halt status honestly."""
+    halt_path = ROOT / "data" / "halt_state.json"
+    if not halt_path.exists():
+        return "   _no halt state recorded_"
+    try:
+        h = json.loads(halt_path.read_text())
+        verdict = h.get("verdict", "?")
+        if verdict == "HALT":
+            return f"   🛑 *HALTED* since 2026-07-13  ·  SPRT rejected v7.2.1 at n=18"
+        return f"   Verdict: {verdict}"
+    except Exception:
+        return "   _halt state read error_"
+
+
 def build_public_brief() -> str:
     """Public daily brief — broadcast to subscribers (no account-specific data)."""
     now = pd.Timestamp.now(tz="UTC")
-    try:
-        from strategy_version import STRATEGY_VERSION
-        version = STRATEGY_VERSION
-    except Exception:
-        version = "v7"
     return "\n".join([
         f"☀️ *DAILY BRIEF* · _{now.strftime('%Y-%m-%d')} UTC_",
+        RULE,
+        "⭐ *FAR Weekly Gold Read* — current call",
+        _far_weekly_status(),
         RULE,
         "📅 *Today's top events (next 24h)*",
         _todays_events(),
@@ -157,7 +217,9 @@ def build_public_brief() -> str:
         "📊 *Market snapshot*",
         _market_snapshot(),
         RULE,
-        f"_{version} live  ·  stand-down enabled  ·  4-box audit gate_",
+        "*Engine A* (retired ORB, historical only)",
+        _engine_a_status(),
+        RULE,
         "",
         DISCLAIMER,
     ])

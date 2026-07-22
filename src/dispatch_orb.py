@@ -355,11 +355,28 @@ def _publish_postmortems(sent: set, actions: list) -> None:
 
 
 def _validation_gate() -> tuple[bool, str]:
-    """H3 kill-switch: check latest weekly_validation verdict.
+    """H3 kill-switch: check latest weekly_validation verdict AND halt_state.
 
-    Returns (allow_dispatch, reason). Bootstrap grace: if no validation file
-    exists yet (first week post-launch), allow but note it.
+    Returns (allow_dispatch, reason). Two ways to be blocked:
+    1. weekly_validation says NOT READY
+    2. halt_state.json says HALT (Engine A retired 2026-07-13, formal retire 2026-07-20)
+
+    Bootstrap grace: if no validation file exists yet, allow but note it.
     """
+    # First check halt_state (added 2026-07-22 to stop stale ORB alerts on
+    # Engine A while retired). Engine A HALT means dispatch_orb should NOT
+    # publicly alert — the ORB strategy is a retired legacy.
+    halt_path = Path(__file__).resolve().parent.parent / "data" / "halt_state.json"
+    if halt_path.exists():
+        try:
+            h = json.loads(halt_path.read_text())
+            if h.get("verdict") == "HALT":
+                return False, (f"Engine A halted "
+                               f"(SPRT rejected v7.2.1 at n=18; "
+                               f"formal retire 2026-07-20). No public ORB alerts.")
+        except Exception:
+            pass
+
     if not VALIDATION_STATE_FILE.exists():
         return True, "no validation state yet (bootstrap grace)"
     try:

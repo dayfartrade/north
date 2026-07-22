@@ -358,6 +358,59 @@ def main() -> None:
     if not args.dry_run:
         write_site_files(call, history)
         print(f"[wrote] {SITE_CURRENT.name}, {SITE_HISTORY.name}")
+
+    # === Telegram publishing ===
+    # Dedup via `telegram_sent`/`resolve_sent` fields on each history row.
+    # Publisher runs on dispatch (every 30min) but only sends ONCE per event.
+    if not args.dry_run:
+        try:
+            sys.path.insert(0, str(ROOT / "src"))
+            from far_weekly_telegram import (publish_weekly_call,
+                                              publish_weekly_resolve)
+
+            track = None
+            if SITE_HISTORY.exists():
+                try:
+                    track = json.loads(SITE_HISTORY.read_text(encoding="utf-8"))
+                except Exception:
+                    track = None
+
+            # (a) Send current call once per week
+            current_row = history[-1]
+            if not current_row.get("telegram_sent"):
+                try:
+                    r = publish_weekly_call(current_row, track=track,
+                                             audience="public")
+                    if r.get("ok"):
+                        current_row["telegram_sent"] = True
+                        print("[telegram] weekly call sent (public)")
+                    else:
+                        print(f"[telegram] send failed: {r}")
+                except Exception as e:
+                    print(f"[telegram] send exception: {e}")
+
+            # (b) Send resolve card for the most recent resolved week (once)
+            for row in reversed(history[:-1]):
+                outcome = row.get("outcome")
+                if outcome and outcome.get("result") == "resolved" and \
+                   not row.get("resolve_sent"):
+                    try:
+                        r = publish_weekly_resolve(row, outcome, audience="public")
+                        if r.get("ok"):
+                            row["resolve_sent"] = True
+                            print(f"[telegram] resolve card sent for {row.get('week_of')}")
+                    except Exception as e:
+                        print(f"[telegram] resolve failed: {e}")
+                    break
+
+            # Persist the sent flags by rewriting the CALLS_LOG
+            with open(CALLS_LOG, "w", encoding="utf-8") as f:
+                for row in history:
+                    f.write(json.dumps(row, default=str) + "\n")
+            # Re-write site files so the sent flag is preserved in history JSON too
+            write_site_files(current_row, history)
+        except Exception as e:
+            print(f"[telegram] publisher failed: {e}")
         # Best-effort git commit + push so website picks up the new call.
         # Silently no-op on failure (VPS may not have creds; log will show).
         import subprocess
