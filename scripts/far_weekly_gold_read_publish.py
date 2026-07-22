@@ -192,14 +192,72 @@ def write_site_files(current_call: dict, history: list[dict]) -> None:
         json.dump(summary, f, indent=2, default=str)
 
 
+def check_kill_switch() -> bool:
+    """Return True if publishing should be paused. Two ways to pause:
+
+    - Env var FAR_WEEKLY_PAUSED=1 (systemd/shell control)
+    - File data/far_weekly_paused (touch this file to pause)
+    """
+    import os
+    if os.environ.get("FAR_WEEKLY_PAUSED", "").strip() in ("1", "true", "yes", "on"):
+        return True
+    kill_file = ROOT / "data" / "far_weekly_paused"
+    if kill_file.exists():
+        return True
+    return False
+
+
+def check_data_freshness(max_lag_days: int = 3) -> tuple[bool, str]:
+    """Verify XAUUSD_5m.csv has recent data. Returns (fresh_ok, message)."""
+    live_csv = ROOT / "data" / "external" / "dukascopy" / "XAUUSD_5m.csv"
+    if not live_csv.exists():
+        return False, f"Live CSV missing: {live_csv}"
+    try:
+        # Read only the last line for speed
+        with open(live_csv, "rb") as f:
+            f.seek(0, 2)
+            file_size = f.tell()
+            offset = min(file_size, 4096)
+            f.seek(file_size - offset)
+            tail = f.read().decode("utf-8", errors="ignore")
+        last_line = [l for l in tail.strip().split("\n") if l][-1]
+        last_ts_str = last_line.split(",", 1)[0]
+        last_ts = pd.Timestamp(last_ts_str)
+        if last_ts.tz is None:
+            last_ts = last_ts.tz_localize("UTC")
+        age_days = (pd.Timestamp.now(tz="UTC") - last_ts).total_seconds() / 86400
+        if age_days > max_lag_days:
+            return False, f"Data stale by {age_days:.1f} days (last bar {last_ts})"
+        return True, f"Data fresh: last bar {last_ts} ({age_days:.1f}d ago)"
+    except Exception as e:
+        return False, f"Failed to check data freshness: {e}"
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--dry-run", action="store_true",
                     help="Compute + print but don't write to logs")
+    ap.add_argument("--force", action="store_true",
+                    help="Bypass kill switch and stale-data guard (use with care)")
     args = ap.parse_args()
 
     today = pd.Timestamp.now(tz="UTC")
     print(f"[FAR Weekly Gold Read] Running at {today.isoformat()}")
+
+    if not args.force:
+        # Kill switch check
+        if check_kill_switch():
+            print("[HALT] Kill switch active (FAR_WEEKLY_PAUSED env or "
+                  "data/far_weekly_paused file). Not publishing.")
+            sys.exit(0)
+
+        # Stale-data guard
+        ok, msg = check_data_freshness()
+        print(f"[data freshness] {msg}")
+        if not ok:
+            print("[HALT] Data too stale. Aborting to avoid publishing on old data. "
+                  "Rerun with --force after confirming data is intentional.")
+            sys.exit(2)
 
     # Compute current call
     call = compute_current_signal(today)
