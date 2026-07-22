@@ -275,18 +275,95 @@ function renderEquityChart(curve) {
   }
 }
 
+function updatePositionCalc(call) {
+  const out = document.getElementById('pos-output');
+  if (!out || !call) return;
+  const accountEl = document.getElementById('pos-account');
+  const riskEl = document.getElementById('pos-risk-pct');
+  if (!accountEl || !riskEl) return;
+  const account = parseFloat(accountEl.value) || 0;
+  const riskPct = parseFloat(riskEl.value) || 0;
+  const riskDollars = account * riskPct / 100;
+
+  if (call.direction === 'FLAT') {
+    out.innerHTML = '<span class="muted">FLAT call this week — no position to size.</span>';
+    return;
+  }
+  if (!call.entry_approx || !call.stop_price) {
+    out.innerHTML = '<span class="muted">Insufficient signal data.</span>';
+    return;
+  }
+  const entry = call.entry_approx;
+  const stop = call.stop_price;
+  const perOzRisk = Math.abs(entry - stop);
+  const gcRiskPerContract = perOzRisk * 100;
+  const mgcRiskPerContract = perOzRisk * 10;
+  const gldPricePerShare = entry / 10;  // ~$400/share at $4000 gold
+  const gldRiskPerShare = perOzRisk / 10;
+
+  const gcContracts = Math.floor(riskDollars / gcRiskPerContract);
+  const mgcContracts = Math.floor(riskDollars / mgcRiskPerContract);
+  const gldShares = Math.floor(riskDollars / gldRiskPerShare);
+  const gldCost = gldShares * gldPricePerShare;
+
+  const notionalGc = gcContracts * entry * 100;
+  const notionalMgc = mgcContracts * entry * 10;
+
+  out.innerHTML = `
+    <div class="metrics">
+      <div class="metric">
+        <div class="metric-label">Risk per oz</div>
+        <div class="metric-value">$${perOzRisk.toFixed(2)}</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Risk budget</div>
+        <div class="metric-value">$${riskDollars.toLocaleString(undefined, {maximumFractionDigits: 0})}</div>
+      </div>
+    </div>
+    <div style="margin-top: 20px;">
+      <div class="pos-row">
+        <span class="pos-inst">GC futures</span>
+        <span class="pos-count">${gcContracts} contract${gcContracts !== 1 ? 's' : ''}</span>
+        <span class="muted">notional $${notionalGc.toLocaleString(undefined, {maximumFractionDigits: 0})} · risk $${(gcContracts * gcRiskPerContract).toLocaleString(undefined, {maximumFractionDigits: 0})}</span>
+      </div>
+      <div class="pos-row">
+        <span class="pos-inst">MGC micro</span>
+        <span class="pos-count">${mgcContracts} contract${mgcContracts !== 1 ? 's' : ''}</span>
+        <span class="muted">notional $${notionalMgc.toLocaleString(undefined, {maximumFractionDigits: 0})} · risk $${(mgcContracts * mgcRiskPerContract).toLocaleString(undefined, {maximumFractionDigits: 0})}</span>
+      </div>
+      <div class="pos-row">
+        <span class="pos-inst">GLD ETF</span>
+        <span class="pos-count">${gldShares} share${gldShares !== 1 ? 's' : ''}</span>
+        <span class="muted">notional $${gldCost.toLocaleString(undefined, {maximumFractionDigits: 0})} · risk $${(gldShares * gldRiskPerShare).toLocaleString(undefined, {maximumFractionDigits: 0})}</span>
+      </div>
+    </div>
+    ${gcContracts < 1 && mgcContracts < 1 ? '<p class="hint" style="margin-top: 12px; color: var(--down);">Account too small even for MGC micro at this risk %. Consider GLD ETF or higher risk % (max 2% recommended).</p>' : ''}
+  `;
+}
+
+let _currentCall = null;
+function attachCalcListeners() {
+  ['pos-account', 'pos-risk-pct'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', () => updatePositionCalc(_currentCall));
+  });
+}
+
 async function init() {
   const [current, history, curve] = await Promise.all([
     loadJSON(CURRENT_URL),
     loadJSON(HISTORY_URL),
     loadJSON('./data/far_weekly_backtest_curve.json'),
   ]);
+  _currentCall = current;
   renderCurrentCall(current);
   renderSignalDrivers(current);
   renderTrackSummary(history);
   renderHistory(history);
   renderYearTable(curve);
   renderEquityChart(curve);
+  updatePositionCalc(current);
+  attachCalcListeners();
 }
 
 init();

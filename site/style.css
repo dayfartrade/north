@@ -138,3 +138,43 @@ canvas#equity-chart {
 }
 .year-bar-fill.up { background: var(--up); }
 .year-bar-fill.down { background: var(--down); }
+
+.pos-calc { margin-top: 4px; }
+.pos-input-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.pos-input-row label {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.pos-input-row input {
+  width: 100%;
+  margin-top: 6px;
+  padding: 10px 12px;
+  background: rgba(0,0,0,0.3);
+  color: var(--fg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 16px;
+  font-family: inherit;
+}
+.pos-input-row input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+.pos-row {
+  display: grid;
+  grid-template-columns: 120px 130px 1fr;
+  gap: 12px;
+  padding: 10px 0;
+  border-top: 1px solid var(--border);
+  font-size: 14px;
+  align-items: center;
+}
+.pos-row:first-child { border-top: none; }
+.pos-inst { font-weight: 600; color: var(--accent); }
+.pos-count { font-weight: 600; font-size: 15px; }
