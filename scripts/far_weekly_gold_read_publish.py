@@ -229,6 +229,31 @@ def main() -> None:
     if not args.dry_run:
         write_site_files(call, history)
         print(f"[wrote] {SITE_CURRENT.name}, {SITE_HISTORY.name}")
+        # Best-effort git commit + push so website picks up the new call.
+        # Silently no-op on failure (VPS may not have creds; log will show).
+        import subprocess
+        try:
+            subprocess.run(
+                ["git", "add", str(CALLS_LOG), str(SITE_CURRENT), str(SITE_HISTORY)],
+                cwd=str(ROOT), check=False, capture_output=True, timeout=30)
+            msg = f"FAR Weekly Gold Read: {call.get('direction', 'ERROR')} "\
+                  f"call for {call.get('week_of', 'unknown')}"
+            r = subprocess.run(
+                ["git", "commit", "-m", msg, "--author=Knox VPS <knox@golddaytrador.local>"],
+                cwd=str(ROOT), check=False, capture_output=True, timeout=30)
+            if r.returncode == 0:
+                push = subprocess.run(
+                    ["git", "push", "origin", "main"],
+                    cwd=str(ROOT), check=False, capture_output=True, timeout=60)
+                if push.returncode == 0:
+                    print("[git] committed + pushed")
+                else:
+                    print(f"[git] commit OK, push failed: {push.stderr.decode()[:200]}")
+            else:
+                # Empty commit or other benign
+                print(f"[git] no commit needed: {r.stdout.decode()[:100]}")
+        except Exception as e:
+            print(f"[git] skipped: {e}")
     else:
         print("\n[dry-run] no files written")
 
