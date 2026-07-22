@@ -71,3 +71,15 @@ tar xzf backups/memory_*.tar.gz -C /c/Users/farha/.claude/projects/C--golddaytra
 - Should automate weekly if project grows further
 - GitHub is the authoritative source for code; archives are for
   gitignored data + local state
+
+## Backup snapshots
+
+- **20260722-095745Z** — first backup after FAR Weekly v1 ship
+- **20260722-124027Z** — end-of-session backup after Telegram integration,
+  RSS/API endpoints, v2 shadow tracking, meta-labeling test, GSR test,
+  sensitivity analysis, seasonality scan, error handling.
+  Includes `far_weekly_v2_shadow.jsonl` (v2 candidate log).
+
+Latest backup is authoritative for restoring session state.
+Data archive (`dukascopy_data_*`) hasn't changed since the first backup
+(source data files were fetched only once).
