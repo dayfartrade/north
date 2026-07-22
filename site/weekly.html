@@ -124,6 +124,23 @@
       </ul>
     </section>
 
+    <!-- How to execute -->
+    <section class="card">
+      <h2>How to execute this call at your broker</h2>
+      <ol class="how">
+        <li><strong>Sunday evening (any time after 22:00 UTC):</strong> read this week's call above. Direction is LONG, SHORT, or FLAT.</li>
+        <li><strong>If FLAT:</strong> do nothing. Wait for next week.</li>
+        <li><strong>Monday NY session (13:00 UTC / 8:00 EST):</strong> place a market order at the open in the call's direction, sized per the calculator below.</li>
+        <li><strong>Immediately place a stop-loss order:</strong> at the stop price shown above. This is a HARD STOP, not a "watch and see".</li>
+        <li><strong>Do NOT set a profit target order.</strong> Exit is time-based, not price-based.</li>
+        <li><strong>Friday 21:00 UTC (16:00 EST):</strong> close the position at market, regardless of P&L. Unless already stopped out earlier.</li>
+        <li><strong>Log your outcome</strong> for the week. Repeat next Sunday.</li>
+      </ol>
+      <p class="hint" style="margin-top: 16px;">
+        Common mistakes to avoid: (1) skipping the stop order — one $30k unstopped loss ends the strategy; (2) adjusting the stop mid-week — the mechanical exit is the tested rule; (3) taking profits early — the backtest shows time exits are the biggest winners.
+      </p>
+    </section>
+
     <!-- Position calculator -->
     <section class="card">
       <h2>Position size calculator</h2>
