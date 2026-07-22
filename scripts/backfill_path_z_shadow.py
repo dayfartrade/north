@@ -109,15 +109,23 @@ def simulate(bars: pd.DataFrame, entry_idx: int, entry: float,
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--symbol", default="XAUUSD", choices=list(MARKET_SPECS))
+    ap.add_argument("--csv", default=None,
+                    help="Override CSV path (e.g. XAUUSD_5m_historical.csv)")
+    ap.add_argument("--out-suffix", default=None,
+                    help="Override output filename suffix (e.g. HISTORICAL)")
     args = ap.parse_args()
     symbol = args.symbol
     spec = MARKET_SPECS[symbol]
     contract_size = spec["contract_size"]
     rt_cost = spec["rt_cost"]
 
-    csv_path = ROOT / "data" / "external" / "dukascopy" / f"{symbol}_5m.csv"
-    # Preserve historical XAUUSD filename; new symbols get suffixed files.
-    if symbol == "XAUUSD":
+    csv_path = (ROOT / "data" / "external" / "dukascopy" / args.csv) if args.csv \
+        else (ROOT / "data" / "external" / "dukascopy" / f"{symbol}_5m.csv")
+
+    # Output path resolution
+    if args.out_suffix:
+        out_path = ROOT / "data" / f"shadow_equity_path_z_{args.out_suffix}.jsonl"
+    elif symbol == "XAUUSD":
         out_path = ROOT / "data" / "shadow_equity_path_z.jsonl"
     else:
         out_path = ROOT / "data" / f"shadow_equity_path_z_{symbol}.jsonl"

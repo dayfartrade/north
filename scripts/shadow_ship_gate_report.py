@@ -16,9 +16,18 @@ from __future__ import annotations
 import json
 import random
 import statistics
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT / "src"))
+
+try:
+    from deflated_sharpe import sr_stats, probabilistic_sharpe
+    _HAS_PSR = True
+except Exception:
+    _HAS_PSR = False
+
 SHADOW_LOG = ROOT / "data/shadow_equity_since_halt.jsonl"
 
 # Ship gates from candidate pre-reg docs
@@ -33,11 +42,14 @@ CANDIDATES: dict[str, dict] = {
     # Path Z: NY-SHORT + ER<0.30 + Mon-Wed. Restrictive-take filter.
     # Ship gate is different from dsc — measured on TAKEN trades, not skips.
     # See docs/experiments/2026-07-20_path_z_ny_short_prereg.md.
+    # Gate #5 amended 2026-07-22 (DSR -> PSR) — see
+    # docs/experiments/2026-07-22_path_z_ship_gate_amendment.md.
     "path_z": {
         "n_ship": 100,           # of TAKEN (would_take=True) trades
         "mean_ship": 0.0,        # mean per-trade P&L > 0 required
         "win_rate_ship": 0.55,   # of taken trades, >= 55% winners
         "ci_lo_ship": 0.0,       # bootstrap 95% CI lower bound clears zero
+        "psr_ship": 0.95,        # PSR vs SR=0 > 0.95 (gate #5, amended)
         "hard_stop_utc": "2026-10-13",
     },
 }
@@ -192,6 +204,15 @@ def _analyze_take_filter(rows: list[dict], name: str) -> dict:
     mean = total / n
     ci_lo, ci_hi = _bootstrap_ci(pnls)
 
+    # Ship-gate #5 (amended 2026-07-22): PSR vs SR=0 > 0.95
+    psr = float("nan")
+    if _HAS_PSR and n >= 5:
+        try:
+            s = sr_stats(pnls)
+            psr = probabilistic_sharpe(s, benchmark_sr=0.0)
+        except Exception:
+            pass
+
     return {
         "n": n,
         "n_wins": wins,
@@ -201,6 +222,7 @@ def _analyze_take_filter(rows: list[dict], name: str) -> dict:
         "mean_pnl_per_trade": mean,
         "ci95_lo": ci_lo,
         "ci95_hi": ci_hi,
+        "psr": psr,
     }
 
 
@@ -217,14 +239,19 @@ def gate_status(name: str, r: dict) -> str:
         wr = r.get("win_rate", 0.0)
         mean = r.get("mean_pnl_per_trade", 0.0)
         ci_lo = r.get("ci95_lo", 0.0)
+        psr = r.get("psr", float("nan"))
+        psr_ship = gates.get("psr_ship", 0.95)
         if n >= n_ship and mean <= gates["mean_ship"]:
             return "REJECT (mean P&L not positive)"
         if n >= n_ship and ci_lo <= gates["ci_lo_ship"]:
             return "REJECT (CI includes zero)"
+        if n >= n_ship and not (psr > psr_ship):
+            return f"REJECT (PSR {psr:.4f} <= {psr_ship} — amended gate #5)"
         if (n >= n_ship
                 and mean > gates["mean_ship"]
                 and wr >= gates["win_rate_ship"]
-                and ci_lo > gates["ci_lo_ship"]):
+                and ci_lo > gates["ci_lo_ship"]
+                and psr > psr_ship):
             return "READY-TO-SHIP"
         return f"IN-PROGRESS ({n}/{n_ship} taken)"
 
@@ -269,6 +296,12 @@ def main() -> None:
             print(f"  total P&L:                           ${r['total_pnl']:+,.0f}")
             print(f"  mean/trade:                          ${r['mean_pnl_per_trade']:+,.2f}")
             print(f"  Bootstrap 95% CI on mean:            [${r['ci95_lo']:+,.2f}, ${r['ci95_hi']:+,.2f}]")
+            psr_val = r.get("psr", float("nan"))
+            if psr_val == psr_val:  # not NaN
+                print(f"  PSR vs SR=0 (amended gate #5):       {psr_val:.4f}   "
+                      f"{'PASS' if psr_val > 0.95 else 'FAIL'}")
+            else:
+                print(f"  PSR vs SR=0 (amended gate #5):       n/a (need n>=5)")
             print()
             print(f"  GATE STATUS: {gate_status(name, r)}")
             continue
