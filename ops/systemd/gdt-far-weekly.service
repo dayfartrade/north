@@ -6,4 +6,5 @@ After=network-online.target
 Type=oneshot
 User=gdt
 WorkingDirectory=/home/gdt/golddaytrador
-ExecStart=/home/gdt/golddaytrador/.venv/bin/python3 /home/gdt/golddaytrador/scripts/far_weekly_gold_read_publish.py
+EnvironmentFile=/home/gdt/golddaytrador/.env.vps
+ExecStart=/home/gdt/golddaytrador/scripts/far_weekly_with_healthcheck.sh
