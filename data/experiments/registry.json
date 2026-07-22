@@ -270,10 +270,11 @@
       "id": "path_z_ny_short_shadow",
       "registered_utc": "2026-07-20T17:30:00Z",
       "layer": "strategy_engine",
-      "verdict": "pre_registered",
+      "verdict": "rejected_oos_test",
       "sr_per_period": null,
       "n_observations": 91,
-      "notes": "SHADOW pre-reg (v9 candidate #2): filter_path_z. Take-filter (restrictive) that takes ONLY when session=NY AND direction=SHORT AND ER_5m_20<0.30 AND dow in Mon-Tue-Wed. Discovered via scripts/deep_analysis_orb.py on Dukascopy XAU/USD 5m 2024-2026 (n=1018). Path Y overall lost -$25,249 but NY-SHORT+LowER+Mon-Wed subset (n=91) has mean +$409/trade, 62.6% win rate, bootstrap 95% CI [+$45,+$760] clears zero. Mechanism identified: winners come on 25% wider OR + asymmetric payoff (winner mean +$1,233 vs loser mean -$971 = 1.27:1). Real yield IDENTICAL across winners/losers (not macro-regime edge). Sign confirmed on real GC 5m yfinance n=31 (NY-SHORT +$36/trade, only positive quadrant). Concentration risk documented: top 5 trades = 64% of P&L. Ship gate: n>=100 shadow-taken AND mean>0 AND CI clears 0 AND win rate>=55% AND Bonferroni-adjusted DSR passes AND fresh Path Z-specific SPRT pre-reg. Reject gate: mean<=0, or CI includes 0 with mean<+$50, or win rate<55%, or hard-stop 2026-10-13. Fails 3-months-ago test (discovered from analyzing today's sample). Bonferroni-N increments +6-8 for today's segmentation multiplicity. Full pre-reg: docs/experiments/2026-07-20_path_z_ny_short_prereg.md. No live effect (require_path_z=False in all live configs). AMENDMENT 2026-07-22: ship-gate #5 changed from Bonferroni-DSR>0.95 (structurally infeasible for fat-tail Path Z; per-trade SR 0.222 vs SR* 1.485 at N=32 V=0.5) to PSR vs SR=0 > 0.95 on forward n>=100 sample. Full rationale: docs/experiments/2026-07-22_path_z_ship_gate_amendment.md. Current in-sample PSR = 0.9858 (clears)."
+      "notes": "SHADOW pre-reg (v9 candidate #2): filter_path_z. Take-filter (restrictive) that takes ONLY when session=NY AND direction=SHORT AND ER_5m_20<0.30 AND dow in Mon-Tue-Wed. Discovered via scripts/deep_analysis_orb.py on Dukascopy XAU/USD 5m 2024-2026 (n=1018). Path Y overall lost -$25,249 but NY-SHORT+LowER+Mon-Wed subset (n=91) has mean +$409/trade, 62.6% win rate, bootstrap 95% CI [+$45,+$760] clears zero. Mechanism identified: winners come on 25% wider OR + asymmetric payoff (winner mean +$1,233 vs loser mean -$971 = 1.27:1). Real yield IDENTICAL across winners/losers (not macro-regime edge). Sign confirmed on real GC 5m yfinance n=31 (NY-SHORT +$36/trade, only positive quadrant). Concentration risk documented: top 5 trades = 64% of P&L. Ship gate: n>=100 shadow-taken AND mean>0 AND CI clears 0 AND win rate>=55% AND Bonferroni-adjusted DSR passes AND fresh Path Z-specific SPRT pre-reg. Reject gate: mean<=0, or CI includes 0 with mean<+$50, or win rate<55%, or hard-stop 2026-10-13. Fails 3-months-ago test (discovered from analyzing today's sample). Bonferroni-N increments +6-8 for today's segmentation multiplicity. Full pre-reg: docs/experiments/2026-07-20_path_z_ny_short_prereg.md. No live effect (require_path_z=False in all live configs). AMENDMENT 2026-07-22: ship-gate #5 changed from Bonferroni-DSR>0.95 (structurally infeasible for fat-tail Path Z; per-trade SR 0.222 vs SR* 1.485 at N=32 V=0.5) to PSR vs SR=0 > 0.95 on forward n>=100 sample. Full rationale: docs/experiments/2026-07-22_path_z_ship_gate_amendment.md. Current in-sample PSR = 0.9858 (clears). FORMAL RETIREMENT 2026-07-22: 9-year OOS test on 2015-2023 Dukascopy XAUUSD (n=288) showed mean +$2.58/trade, WR 44.1% (below 55% gate), Sharpe R=-0.039. Path Z is a 2025-2026 gold-rally regime anomaly, not a persistent edge. 9 of 12 years near-flat/losing. Combined 12yr sample n=373 with mean +$107/week barely clears bootstrap CI. Retired per pre-reg reject gate: OOS mean/WR falls below thresholds when broader sample is tested. Full: memory/path_z_oos_result.md. Ship-gate 6 (Path Z SPRT pre-reg sprt_path_z_live) also becomes DEPRECATED as dependency chain is now dead.",
+      "resolved_utc": "2026-07-22T09:38:33.577744+00:00"
     },
     {
       "id": "knapp_er_stops_v9",
@@ -288,12 +289,12 @@
     {
       "id": "sprt_path_z_live",
       "registered_utc": "2026-07-22T09:00:00Z",
-      "resolved_utc": null,
+      "resolved_utc": "2026-07-22T09:38:33.577776+00:00",
       "layer": "halt_monitor",
-      "verdict": "pre_registered",
+      "verdict": "deprecated_by_dependency",
       "sr_per_period": null,
       "n_observations": 0,
-      "notes": "Path Z-specific SPRT halt framework. Pre-registered dormant; activates on first Path Z live trade. Satisfies Path Z ship-gate #6. Parameters: p0=0.541 (in-sample WR), p1=0.35 (broken threshold), alpha=beta=0.05, halt boundary +2.9444, safe boundary -2.9444, per-win LR -0.4355, per-loss LR +0.3479. Frozen sample window semantics; hard-stop 2026-10-13 aligned with Path C. Full doc: docs/experiments/2026-07-22_path_z_sprt_prereg.md."
+      "notes": "Path Z-specific SPRT halt framework. Pre-registered dormant; activates on first Path Z live trade. Satisfies Path Z ship-gate #6. Parameters: p0=0.541 (in-sample WR), p1=0.35 (broken threshold), alpha=beta=0.05, halt boundary +2.9444, safe boundary -2.9444, per-win LR -0.4355, per-loss LR +0.3479. Frozen sample window semantics; hard-stop 2026-10-13 aligned with Path C. Full doc: docs/experiments/2026-07-22_path_z_sprt_prereg.md. DEPRECATED 2026-07-22: parent Path Z candidate rejected on OOS. SPRT framework never activated (Path Z had 0 live trades)."
     },
     {
       "id": "far_weekly_gold_read_v1",

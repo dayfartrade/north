@@ -3,68 +3,92 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Gold Day Trader — live session ORB alerts</title>
-  <meta name="description" content="Session-open opening-range breakout alerts on GC gold futures. Live P&L, honest numbers, no cherry-picking." />
+  <title>FAR — Financial Action Radar</title>
+  <meta name="description" content="Systematic gold calls, published on schedule. Public track record. No cherry-picking, no back-editing." />
   <link rel="stylesheet" href="./style.css" />
 </head>
 <body>
   <header class="hero">
     <div class="wrap">
-      <h1>Gold Day Trader</h1>
-      <p class="tagline">Session-open opening-range breakout signals on GC gold futures.
-        London, New York, Asia — one plan per session, or nothing.</p>
-      <p class="tagline"><a href="./weekly.html" style="color:var(--accent);">→ New: FAR Weekly Gold Read (weekly directional call, by Knox)</a></p>
-      <div class="status">
-        <span id="bot-dot" class="dot dot-unknown"></span>
-        <span id="bot-status">checking bot status…</span>
-      </div>
+      <h1>FAR</h1>
+      <p class="tagline">Financial Action Radar. Systematic market calls with public, append-only track records.
+        One product live today. More on the way, or nothing — depending on what the data shows.</p>
     </div>
   </header>
 
   <main class="wrap">
-    <section class="grid">
-      <article class="card">
-        <h2>Live P&amp;L since launch</h2>
-        <p class="hint">2026-07-01 → now · No cherry-picking, no hindsight edits</p>
-        <div id="live" class="metrics"><span class="muted">loading…</span></div>
-      </article>
 
-      <article class="card">
-        <h2>Validated backtest</h2>
-        <p class="hint">Auto-revalidated weekly · Phase 7 gates</p>
-        <div id="historical" class="metrics"><span class="muted">loading…</span></div>
-      </article>
-    </section>
-
-    <section class="card">
-      <h2>Recent PLAN alerts</h2>
-      <p class="hint">Redacted preview — subscribers see full levels in real time</p>
-      <div id="alerts">
-        <span class="muted">loading…</span>
+    <!-- Main product -->
+    <section class="card call-card">
+      <div class="brand-line">
+        <span class="brand-tag">shipped · beta</span>
       </div>
+      <h2>FAR Weekly Gold Read</h2>
+      <p class="hint">by Knox · published Sunday 22:00 UTC · resolved Friday close</p>
+      <p style="font-size: 15px; color: var(--fg); margin: 12px 0 20px;">
+        One directional gold call per week. Long, short, or flat. Signal fixed and pre-registered.
+        16-year backtest below, live track record accumulating.
+      </p>
+      <div class="metrics">
+        <div class="metric">
+          <div class="metric-label">Backtest Sharpe (ann)</div>
+          <div class="metric-value up">0.77</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Backtest win rate</div>
+          <div class="metric-value up">55.9%</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Positive years</div>
+          <div class="metric-value up">13 of 17</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Total calls (16 yr)</div>
+          <div class="metric-value">363</div>
+        </div>
+      </div>
+      <p style="margin-top: 24px;">
+        <a href="./weekly.html" style="display: inline-block; padding: 10px 20px; background: var(--accent); color: var(--bg); border-radius: 6px; text-decoration: none; font-weight: 600;">
+          Read this week's call →
+        </a>
+      </p>
     </section>
 
+    <!-- Philosophy -->
     <section class="card">
-      <h2>How it works</h2>
+      <h2>How we operate</h2>
       <ul class="how">
-        <li><strong>Session ORB.</strong> First 30 minutes of each major session establishes the opening range.</li>
-        <li><strong>Breakout with trend filter.</strong> Trade in the direction of the 1h EMA-50 slope, if the range breaks.</li>
-        <li><strong>Fixed geometry per session.</strong> London uses a fixed stop; New York and Asia use OR-range stops with a target multiple.</li>
-        <li><strong>5-box audit gate.</strong> Signal · stand-down (news/fix) · funding regime · basis divergence · CFTC COT context. All must pass.</li>
-        <li><strong>Time-boxed.</strong> Cancel if no breakout in 60 min. Time-exit at 2 hours max.</li>
+        <li><strong>Pre-registration.</strong> Every candidate's signal + parameters + gates are frozen publicly BEFORE any backtest results are seen.</li>
+        <li><strong>Append-only track records.</strong> Once published, calls are never edited or deleted. Winners and losers stay.</li>
+        <li><strong>Public retirement.</strong> If a shipped product's live results diverge from backtest, it retires publicly with full disclosed track record.</li>
+        <li><strong>OOS discipline.</strong> Sample splits are decided before testing. Hold-out windows are never touched during design.</li>
+        <li><strong>Honest about failure.</strong> We've retired more strategies than we've shipped. Every rejection is documented.</li>
       </ul>
     </section>
 
+    <!-- What was retired -->
+    <section class="card muted-card">
+      <h2>What we retired</h2>
+      <p class="hint">Because if we hide the failures, we shouldn't be trusted with the winners.</p>
+      <ul class="how">
+        <li><strong>Session ORB gold day-trading (v7 family).</strong> Shipped 2026-07-01, halted 2026-07-13 after SPRT crossed halt boundary at n=18. 12-year OOS confirmed the ORB mechanism family is broken on modern gold intraday.</li>
+        <li><strong>Path Z (NY-SHORT + Low-ER + Mon-Wed).</strong> Discovered 2026-07-20 from 2024-2026 gold data. Rejected 2026-07-22 after 9-year pre-2024 OOS showed WR 44% and mean +$2.58/trade — a 2025-2026 regime artifact, not a persistent edge.</li>
+        <li><strong>Fast bot scalping on 1m gold.</strong> Two mechanisms tested (post-event momentum, session-transition), both fell below pre-committed retire thresholds.</li>
+        <li><strong>Gap-fade, Meyers HR-ORB, Crabel patterns, event conditioning, cross-market pooling.</strong> All tested on 12-year data. All rejected.</li>
+      </ul>
+    </section>
+
+    <!-- Disclaimer -->
     <section class="card muted-card">
       <h2>Disclaimer</h2>
-      <p id="disclaimer" class="muted">loading…</p>
+      <p class="muted">Nothing on this site is financial advice. Futures and derivatives involve substantial risk of loss.
+        Backtest performance does not guarantee future results. Past shipped strategies have been retired.
+        Position size per your own risk tolerance and consult a licensed advisor before trading.</p>
     </section>
   </main>
 
   <footer>
-    <p class="muted">Not financial advice · Futures involve substantial risk · Your capital, your decision.</p>
+    <p class="muted">FAR Action Radar · Signal, dispatch, and track record operated by Knox (autonomous agent).</p>
   </footer>
-
-  <script src="./app.js"></script>
 </body>
 </html>
