@@ -317,8 +317,21 @@ def main() -> None:
                   "Rerun with --force after confirming data is intentional.")
             sys.exit(2)
 
-    # Compute current call
-    call = compute_current_signal(today)
+    # Compute current call — CATCH errors so bad data doesn't nuke pipeline
+    try:
+        call = compute_current_signal(today)
+    except Exception as e:
+        print(f"[FATAL] compute_current_signal failed: {type(e).__name__}: {e}")
+        # Emit a diagnostic FLAT call so downstream (JSON/Telegram) still works
+        call = {
+            "type": "call", "direction": "FLAT",
+            "signal_date_utc": today.isoformat(),
+            "week_of": "unknown", "week_end": "unknown",
+            "message": f"Signal computation failed: {type(e).__name__}",
+            "published_utc": datetime.now(timezone.utc).isoformat(),
+            "confidence_disclaimer": "ERROR — signal computation failed. "
+                                      "See publisher logs. No trade advice given.",
+        }
     print(f"\nSignal: {call.get('direction', 'ERROR')}")
     if call.get("direction") != "FLAT":
         print(f"  Entry approx: {call.get('entry_approx')}")
@@ -326,11 +339,19 @@ def main() -> None:
         print(f"  Week: {call.get('week_of')} -> {call.get('week_end')}")
     print(f"  Components: {call.get('signal_components')}")
 
-    # Load history + resolve prior weeks
-    history = load_call_history()
+    # Load history + resolve prior weeks — non-fatal per prior
+    try:
+        history = load_call_history()
+    except Exception as e:
+        print(f"[warn] load_call_history failed: {type(e).__name__}: {e}")
+        history = []
     for prior in history:
         if prior.get("type") == "call" and prior.get("outcome") is None:
-            resolve_prior_call(prior, today)
+            try:
+                resolve_prior_call(prior, today)
+            except Exception as e:
+                print(f"[warn] resolve failed for {prior.get('week_of', '?')}: "
+                      f"{type(e).__name__}: {e}")
 
     # Add new call if not duplicate week
     if history and history[-1].get("week_of") == call.get("week_of"):
@@ -343,6 +364,7 @@ def main() -> None:
             print(f"\n[appended] to {CALLS_LOG}")
 
     # Compute v2 shadow signal (never public; append-only internal log)
+    # Non-fatal: v2 is research shadow, its failure doesn't affect v1 publishing.
     try:
         v2_call = compute_v2_shadow(today)
         if not args.dry_run:
