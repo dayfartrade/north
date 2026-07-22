@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>FAR Weekly Gold Read</title>
+    <link>https://faractionradar.com/weekly.html</link>
+    <atom:link href="https://faractionradar.com/feed.xml" rel="self" type="application/rss+xml"/>
+    <description>One directional gold call per week. Long, short, or flat. Published Sunday · resolved Friday close. By Knox.</description>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 22 Jul 2026 12:25:44 +0000</lastBuildDate>
+    <ttl>1440</ttl>
+    <item>
+      <title>Week 2026-07-27: SHORT · entry $4,014.24</title>
+      <link>https://faractionradar.com/weekly.html</link>
+      <guid isPermaLink="false">https://faractionradar.com/weekly.html#2026-07-27</guid>
+      <pubDate>Wed, 22 Jul 2026 12:06:48 +0000</pubDate>
+      <description>Direction: SHORT
+Week: 2026-07-27 to 2026-07-31
+Entry (approx): $4,014.24
+Stop: $4,211.29
+ATR(20d): $98.52
+Signal drivers: M20=-4.137%, M60=-14.44%, RY_chg=7.0bps
+
+Full details, backtest, position calculator: https://faractionradar.com/weekly.html</description>
+    </item>
+  </channel>
+</rss>

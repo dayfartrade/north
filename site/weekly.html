@@ -178,6 +178,20 @@
       </ul>
     </section>
 
+    <!-- Feeds / API -->
+    <section class="card">
+      <h2>Consume the feed</h2>
+      <p class="hint">Machine-readable outputs · updated every publish</p>
+      <ul class="how">
+        <li><strong>RSS 2.0:</strong> <a href="./feed.xml" style="color: var(--accent);">/feed.xml</a> — for RSS readers + Discord/Slack webhooks + IFTTT</li>
+        <li><strong>JSON API (all calls):</strong> <a href="./api/calls.json" style="color: var(--accent);">/api/calls.json</a> — full history + summary stats</li>
+        <li><strong>JSON latest (single call):</strong> <a href="./api/latest.json" style="color: var(--accent);">/api/latest.json</a> — just the current week's call</li>
+      </ul>
+      <p class="hint" style="margin-top: 16px;">
+        No API key. No rate limit. Static files, fetch as often as you like — new files appear only when a call is published (Sunday 22:00 UTC).
+      </p>
+    </section>
+
     <!-- Disclaimer -->
     <section class="card muted-card">
       <h2>Disclaimer</h2>
@@ -194,5 +208,10 @@
   </footer>
 
   <script src="./weekly.js"></script>
+
+  <!-- RSS feed autodiscovery -->
+  <link rel="alternate" type="application/rss+xml"
+        title="FAR Weekly Gold Read — RSS feed"
+        href="./feed.xml" />
 </body>
 </html>

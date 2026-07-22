@@ -359,6 +359,16 @@ def main() -> None:
         write_site_files(call, history)
         print(f"[wrote] {SITE_CURRENT.name}, {SITE_HISTORY.name}")
 
+    # Generate RSS + JSON API feeds (aggregators, bots)
+    if not args.dry_run:
+        try:
+            import subprocess as _sp
+            _sp.run(["python", str(ROOT / "scripts" / "far_weekly_generate_feeds.py")],
+                    cwd=str(ROOT), check=False, capture_output=True, timeout=30)
+            print("[wrote] feed.xml + api/calls.json + api/latest.json")
+        except Exception as e:
+            print(f"[feeds] gen failed: {e}")
+
     # === Telegram publishing ===
     # Dedup via `telegram_sent`/`resolve_sent` fields on each history row.
     # Publisher runs on dispatch (every 30min) but only sends ONCE per event.
