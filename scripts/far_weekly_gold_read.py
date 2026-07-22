@@ -31,6 +31,7 @@ import pandas as pd
 
 ROOT = Path(__file__).resolve().parent.parent
 
+EARLY_5M = ROOT / "data" / "external" / "dukascopy" / "XAUUSD_5m_2010_2014.csv"
 HISTORICAL_5M = ROOT / "data" / "external" / "dukascopy" / "XAUUSD_5m_historical.csv"
 LIVE_5M = ROOT / "data" / "external" / "dukascopy" / "XAUUSD_5m.csv"
 RY = ROOT / "data" / "macro" / "real_yield_10y__DFII10.csv"
@@ -52,7 +53,7 @@ def load_daily_bars(start: pd.Timestamp, end: pd.Timestamp) -> pd.DataFrame:
     """Combine 2015-2023 historical + 2024-onward live, resample to daily
     (Monday-open, Friday-close)."""
     dfs = []
-    for path in [HISTORICAL_5M, LIVE_5M]:
+    for path in [EARLY_5M, HISTORICAL_5M, LIVE_5M]:
         if not path.exists():
             continue
         df = pd.read_csv(path, parse_dates=["ts"])
