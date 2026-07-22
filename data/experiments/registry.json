@@ -171,7 +171,7 @@
       "verdict": "rejected_pre_apply",
       "sr_per_period": null,
       "n_observations": 24,
-      "notes": "REJECTED before apply (2026-07-13 11:00 UTC): OOS regime test on 20+ years fails. High-ry regimes historically produce HIGHER fwd gold returns (+2.28% 20d fwd at ry>=2.2 vs +0.81% at ry<2.2). 3 of 4 launch LONG losses lost on days GC closed UP 1-1.6% — failure mode is INTRADAY MICROSTRUCTURE (breakout failure while daily trend is intact), not macro-directional bet. Filter would suppress correct-direction days. Contributes to Bonferroni-N. New research direction: intraday-chop filters."
+      "notes": "REJECTED before apply (2026-07-13 11:00 UTC): OOS regime test on 20+ years fails. High-ry regimes historically produce HIGHER fwd gold returns (+2.28% 20d fwd at ry>=2.2 vs +0.81% at ry<2.2). 3 of 4 launch LONG losses lost on days GC closed UP 1-1.6% \u00e2\u20ac\u201d failure mode is INTRADAY MICROSTRUCTURE (breakout failure while daily trend is intact), not macro-directional bet. Filter would suppress correct-direction days. Contributes to Bonferroni-N. New research direction: intraday-chop filters."
     },
     {
       "id": "prior_day_range_gt_80_shadow",
@@ -284,6 +284,16 @@
       "sr_per_period": null,
       "n_observations": 1018,
       "notes": "REJECTED pre-apply on 2026-07-20 (same-day resolution): reproduction study failed on 3 non-gold markets + gold below ship gate. Gold (XAU/USD n=1018): paired lift +$2.35/trade (ship gate required +$50/trade). EUR/USD n=1216: +/-$0.00 lift. GBP/USD n=1203: +/-$0.00 lift. USD/JPY n=1226: +$0.20 lift, CI spans zero. Even at 100x scale correction for FX contract sizing, all three FX markets remain under +$50/trade. Higher-ER band on gold (ER>=0.60) showed +$12.81/trade lift (n=37) but sample too small to defend. Knapp asymmetric stop logic does not add measurable P&L when applied to Path Y-style ORB entries. Filed as v9 candidate #1; will be replaced by NY-SHORT sub-edge investigation as v9 candidate #2 (see docs/experiments/2026-07-20_deep_analysis_findings.md). Bonferroni-N increments. Original draft pre-reg: docs/experiments/2026-07-20_v9_knapp_er_stops_prereg.md."
+    },
+    {
+      "id": "sprt_path_z_live",
+      "registered_utc": "2026-07-22T09:00:00Z",
+      "resolved_utc": null,
+      "layer": "halt_monitor",
+      "verdict": "pre_registered",
+      "sr_per_period": null,
+      "n_observations": 0,
+      "notes": "Path Z-specific SPRT halt framework. Pre-registered dormant; activates on first Path Z live trade. Satisfies Path Z ship-gate #6. Parameters: p0=0.541 (in-sample WR), p1=0.35 (broken threshold), alpha=beta=0.05, halt boundary +2.9444, safe boundary -2.9444, per-win LR -0.4355, per-loss LR +0.3479. Frozen sample window semantics; hard-stop 2026-10-13 aligned with Path C. Full doc: docs/experiments/2026-07-22_path_z_sprt_prereg.md."
     }
   ]
 }
