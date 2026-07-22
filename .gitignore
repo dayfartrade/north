@@ -49,3 +49,6 @@ research material/
 # External data sources (large; reproducible via scripts/fetch_*.py)
 data/external/
 backups/*.tar.gz
+
+data/macro/cot_gold.csv
+data/macro/cot_gold_simplified.csv
