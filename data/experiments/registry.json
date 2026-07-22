@@ -315,6 +315,16 @@
       "sr_per_period": 0.1442,
       "n_observations": 270,
       "notes": "FAR Weekly v2: v1 signal AND DXY_chg agrees with direction. Pre-reg: docs/experiments/2026-07-22_far_weekly_v2_dxy_prereg.md. 16yr backtest (design-time comparison, NOT ship gate): n=270 trades vs v1 n=363. WR 58.5% vs v1 55.9%. Sharpe ann 1.042 vs v1 0.767. Total P&L +$187,570 vs v1 +$181,598. PSR 0.9903 vs v1 0.9785. Bootstrap 95% CI [+0.060%, +0.570%]. v2 filters ~11% of v1 non-flat signals (never opposite direction). Ship decision requires 26 weeks forward comparison. First live divergence: v1 SHORT for 2026-07-27, v2 FLAT (DXY not confirming)."
+    },
+    {
+      "id": "far_weekly_meta_labeling_v1",
+      "registered_utc": "2026-07-22T14:30:00Z",
+      "resolved_utc": "2026-07-22T14:45:00Z",
+      "layer": "strategy_engine_weekly_ml",
+      "verdict": "rejected_ship_gates",
+      "sr_per_period": 0.138,
+      "n_observations": 252,
+      "notes": "Prado AFML Ch 3.6 meta-labeling on FAR Weekly v1 primary signals. 15 features, RF (n=100, min_samples_leaf=3), 2010-2020 train / 2021-2026 hold-out. Result: 3 of 5 ship gates fail (mean, Sharpe, precision). Training precision 97% but hold-out 58% \u2014 classifier overfits despite regularization. 127 training samples too small for 15 features. Ship gates NOT relaxed post-hoc. Full: memory/far_weekly_meta_labeling_result.md."
     }
   ]
 }
