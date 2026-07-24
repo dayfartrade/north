@@ -375,6 +375,16 @@
       "sr_per_period": -0.0419,
       "n_observations": 379,
       "notes": "Options-selling income (BSM 5-delta puts on gold weekly, GVZ as IV). Fresh mechanism family. Primary spec (delta 0.05) OOS 2019-2026: Sharpe -0.30, total -$17,123, WR 96.6%, skew -8.51, max weekly loss -$22k. 2/7 gates pass. Kill switch on negative Sharpe. Sensitivity: delta 0.10 \u2192 3/7 gates (Sharpe -0.09), delta 0.15 \u2192 5/7 gates (Sharpe 0.09) \u2014 but choosing best delta post-hoc = curve fit. Skewness -8.5 to -6.4 across all delta variants = catastrophic left tail. Not shippable. Volatility risk premium on gold appears too small to justify tail exposure in modeled backtest. Real GLD/GC options may differ (skew premium) but pre-reg was pure BSM."
+    },
+    {
+      "id": "far_weekly_gold_ml_direction_v1",
+      "registered_utc": "2026-07-24T11:45:00Z",
+      "resolved_utc": "2026-07-24T12:00:00Z",
+      "layer": "strategy_engine_weekly",
+      "verdict": "rejected_ship_gates",
+      "sr_per_period": 0.0111,
+      "n_observations": 175,
+      "notes": "LogReg on 8 features (M20, M60, MA_ratio, ATR_pct, RY_chg, DXY_chg, GVZ_z, nc_z). 26-week walk-forward CV expanding window from 2019. 15 folds. OOS: 175 non-flat trades, WR 49.1%, total -$48,726, Sharpe 0.08, PSR 0.56. 2/7 gates pass (only n and folds count). Kill switch: worst fold Sharpe -9.16 in 2026 blowup (n=15, all LONG, -$85k in single fold). Model was directionally sensible in 2020-2022 (WR 60-77%) but couldn't adapt to 2026 regime shift. Third and final mechanism family from user brief tried and rejected."
     }
   ]
 }
