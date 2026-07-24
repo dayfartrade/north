@@ -395,6 +395,16 @@
       "sr_per_period": 0.0114,
       "n_observations": 379,
       "notes": "Put-spread variant of C1 (short 5-delta + long 2-delta). Improved over naked-put: max loss capped $6.6k (was $22k), Sharpe +0.08 (was -0.30), total +$2,563 (was -$17k). 4/7 gates pass. Kill switch triggered: skew -6.73 < -4. Cap helped but structural issue remains \u2014 weekly premium (~$50) is too small to survive individual assignments ($1000-$6000). Options mechanism family on gold weekly definitively closed."
+    },
+    {
+      "id": "far_weekly_gold_ensemble_v1",
+      "registered_utc": "2026-07-24T13:20:00Z",
+      "resolved_utc": "2026-07-24T13:30:00Z",
+      "layer": "strategy_engine_weekly",
+      "verdict": "pre_registered_shadow",
+      "sr_per_period": 0.1403,
+      "n_observations": 168,
+      "notes": "Ensemble voting: v1 + v2 + monthly M12 momentum, trade when >=2 agree. Pre-reg: docs/experiments/2026-07-24_ensemble_v1_v2_monthly_prereg.md. OOS 2019-2026: n=168, Sharpe 1.012, WR 59.5%, +$135,357. PSR 0.9622. Skew -0.17. All 5 ship gates PASS. Caveat: v1+v2 components tuned on same window; ensemble is new construction but has seen-data baggage. Verdict: pre_registered_shadow \u2014 requires 26-week forward validation like v2. First candidate today to pass all gates."
     }
   ]
 }
