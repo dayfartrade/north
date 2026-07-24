@@ -345,6 +345,16 @@
       "sr_per_period": -0.0169,
       "n_observations": 96,
       "notes": "FAR Weekly WTI v1 (M60 + DXY on WTI). Same fixed gold-inherited params, oil-native macro. Training 2015-2019: Sharpe 0.97, WR 59.3%, +$32,297. OOS 2020-2023: Sharpe -0.12 NEGATIVE (kill switch), PSR 0.434, WR 51%, skew -1.16 (left tail). Total P&L +$22,996 but 2022 alone was +$38,063 masking losses in 2020, 2021, 2023. 2 of 6 gates fail (Sharpe, PSR). Second cross-asset test rejection after BTC v1. Confirms fixed-parameter transfer from gold fails as pattern."
+    },
+    {
+      "id": "far_weekly_gold_cot_extreme_v1",
+      "registered_utc": "2026-07-24T09:40:00Z",
+      "resolved_utc": "2026-07-24T09:55:00Z",
+      "layer": "strategy_engine_weekly",
+      "verdict": "rejected_ship_gates",
+      "sr_per_period": 0.0628,
+      "n_observations": 80,
+      "notes": "Contrarian standalone signal on nc_net 52wk z-score (|z|>2). Different mechanism family from FAR Weekly (mean-reversion vs momentum). Pre-reg: docs/experiments/2026-07-24_cot_extreme_standalone_prereg.md. Full 2010-2023 n=80: Sharpe 0.453, WR 53.8%, +$17,352, PSR 0.713. Tail 2019-2023 n=27: Sharpe -0.613 (kill switch), WR 51.9%, -$4,222. 3 of 7 gates pass. 2019 alone was -$17,812 (specs kept adding during gold bull run; reversion failed). Positioning-based mean-reversion breaks in trending regimes."
     }
   ]
 }
