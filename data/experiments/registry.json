@@ -355,6 +355,16 @@
       "sr_per_period": 0.0628,
       "n_observations": 80,
       "notes": "Contrarian standalone signal on nc_net 52wk z-score (|z|>2). Different mechanism family from FAR Weekly (mean-reversion vs momentum). Pre-reg: docs/experiments/2026-07-24_cot_extreme_standalone_prereg.md. Full 2010-2023 n=80: Sharpe 0.453, WR 53.8%, +$17,352, PSR 0.713. Tail 2019-2023 n=27: Sharpe -0.613 (kill switch), WR 51.9%, -$4,222. 3 of 7 gates pass. 2019 alone was -$17,812 (specs kept adding during gold bull run; reversion failed). Positioning-based mean-reversion breaks in trending regimes."
+    },
+    {
+      "id": "gold_seasonality_v1",
+      "registered_utc": "2026-07-24T10:20:00Z",
+      "resolved_utc": "2026-07-24T10:25:00Z",
+      "layer": "strategy_engine_weekly",
+      "verdict": "rejected_ship_gates",
+      "sr_per_period": -0.0132,
+      "n_observations": 169,
+      "notes": "Seasonality signal: LONG in top-3 months by mean return (Aug, Jan, Feb from 2010-2019 discovery), SHORT in bottom-3 (Sep, Nov, May). In-sample 2010-2019 Sharpe 1.576, OOS 2020-2026 Sharpe -0.095 (kill switch), total -$24,900. Classic overfit collapse. Fourth session rejection."
     }
   ]
 }
