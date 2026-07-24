@@ -42,6 +42,11 @@ SITE_REGISTRY = ROOT / "site" / "data" / "registry.json"
 # v2 shadow tracking (NOT public; pre-reg says 6 months forward before decision)
 V2_SHADOW_LOG = ROOT / "data" / "far_weekly_v2_shadow.jsonl"
 
+# Ensemble shadow tracking (v1+v2+monthly-M12 voting, >=2 agree).
+# Pre-reg: docs/experiments/2026-07-24_ensemble_v1_v2_monthly_prereg.md
+# Registered as pre_registered_shadow; needs 26 weeks forward before ship.
+ENSEMBLE_SHADOW_LOG = ROOT / "data" / "far_weekly_ensemble_shadow.jsonl"
+
 
 def load_call_history() -> list[dict]:
     if not CALLS_LOG.exists():
@@ -107,6 +112,86 @@ def compute_v2_shadow(today: pd.Timestamp) -> dict:
         "v2_direction": v2_direction,
         "filtered_by_dxy": v1_direction != "FLAT" and v2_direction == "FLAT",
         "dxy_chg_20d": round(dxy_chg, 3) if dxy_chg is not None else None,
+        "computed_utc": datetime.now(timezone.utc).isoformat(),
+    }
+
+
+def compute_ensemble_shadow(today: pd.Timestamp) -> dict:
+    """Compute ensemble shadow signal (v1 + v2 + monthly-M12, >=2 agree).
+
+    Pre-reg: docs/experiments/2026-07-24_ensemble_v1_v2_monthly_prereg.md
+    NOT publicly published — appended to ENSEMBLE_SHADOW_LOG for forward
+    validation. Ship decision requires 26+ weeks of live comparison.
+    """
+    # Wide window so we can compute a 12-month (~252 daily bar) momentum
+    start = today - pd.Timedelta(days=560)
+    daily = far_backtest.load_daily_bars(start, today)
+    ry = far_backtest.load_macro_series(far_backtest.RY, "real_yield_10y")
+
+    dxy_path = far_backtest.ROOT / "data" / "macro" / "dxy_proxy__DTWEXBGS.csv"
+    dxy = far_backtest.load_macro_series(dxy_path, "dxy")
+
+    df = far_backtest.build_signals(daily, ry)
+    dxy_daily = dxy.reindex(df.index.tz_localize(None) if df.index.tz else df.index,
+                             method="ffill")
+    dxy_daily.index = df.index
+    df["DXY"] = dxy_daily
+    df["DXY_chg"] = df["DXY"].diff(far_backtest.RY_LAG)
+    df["M12"] = df["close"].pct_change(252)
+
+    if len(df) < 260:
+        return {"status": "INSUFFICIENT_DATA", "n_bars": len(df)}
+
+    latest = df.iloc[-1]
+    signal_date = df.index[-1]
+
+    v1_direction = str(latest["direction"])
+    dxy_chg = float(latest["DXY_chg"]) if pd.notna(latest["DXY_chg"]) else None
+    m12 = float(latest["M12"]) if pd.notna(latest["M12"]) else None
+
+    if v1_direction == "LONG" and dxy_chg is not None and dxy_chg < 0:
+        v2_direction = "LONG"
+    elif v1_direction == "SHORT" and dxy_chg is not None and dxy_chg > 0:
+        v2_direction = "SHORT"
+    else:
+        v2_direction = "FLAT"
+
+    if m12 is None:
+        monthly_direction = "FLAT"
+    elif m12 > 0:
+        monthly_direction = "LONG"
+    elif m12 < 0:
+        monthly_direction = "SHORT"
+    else:
+        monthly_direction = "FLAT"
+
+    votes_long = sum(1 for d in (v1_direction, v2_direction, monthly_direction) if d == "LONG")
+    votes_short = sum(1 for d in (v1_direction, v2_direction, monthly_direction) if d == "SHORT")
+    if votes_long >= 2:
+        ensemble_direction = "LONG"
+    elif votes_short >= 2:
+        ensemble_direction = "SHORT"
+    else:
+        ensemble_direction = "FLAT"
+
+    days_until_monday = (7 - signal_date.weekday()) % 7 or 7
+    next_monday = signal_date + pd.Timedelta(days=days_until_monday)
+    next_friday = next_monday + pd.Timedelta(days=4)
+
+    return {
+        "product_version": "ensemble_shadow",
+        "signal_date_utc": signal_date.isoformat(),
+        "week_of": next_monday.strftime("%Y-%m-%d"),
+        "week_end": next_friday.strftime("%Y-%m-%d"),
+        "v1_direction": v1_direction,
+        "v2_direction": v2_direction,
+        "monthly_direction": monthly_direction,
+        "ensemble_direction": ensemble_direction,
+        "votes_long": votes_long,
+        "votes_short": votes_short,
+        "unanimous": (votes_long == 3 or votes_short == 3),
+        "dxy_chg_20d": round(dxy_chg, 3) if dxy_chg is not None else None,
+        "m12_pct": round(100 * m12, 3) if m12 is not None else None,
         "computed_utc": datetime.now(timezone.utc).isoformat(),
     }
 
@@ -378,6 +463,22 @@ def main() -> None:
               + (" (filtered by DXY)" if v2_call.get("filtered_by_dxy") else ""))
     except Exception as e:
         print(f"[v2 shadow] failed: {e}")
+
+    # Compute ensemble shadow signal (v1+v2+monthly, >=2 agree).
+    # Non-fatal: research shadow, failure doesn't affect v1 publishing.
+    try:
+        ens_call = compute_ensemble_shadow(today)
+        if not args.dry_run:
+            ENSEMBLE_SHADOW_LOG.parent.mkdir(parents=True, exist_ok=True)
+            with open(ENSEMBLE_SHADOW_LOG, "a", encoding="utf-8") as f:
+                f.write(json.dumps(ens_call, default=str) + "\n")
+        print(f"[ensemble shadow] v1={ens_call.get('v1_direction', '?')} "
+              f"v2={ens_call.get('v2_direction', '?')} "
+              f"monthly={ens_call.get('monthly_direction', '?')} "
+              f"-> {ens_call.get('ensemble_direction', '?')}"
+              + (" (unanimous)" if ens_call.get("unanimous") else ""))
+    except Exception as e:
+        print(f"[ensemble shadow] failed: {e}")
 
     if not args.dry_run:
         write_site_files(call, history)
