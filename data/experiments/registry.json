@@ -325,6 +325,16 @@
       "sr_per_period": 0.138,
       "n_observations": 252,
       "notes": "Prado AFML Ch 3.6 meta-labeling on FAR Weekly v1 primary signals. 15 features, RF (n=100, min_samples_leaf=3), 2010-2020 train / 2021-2026 hold-out. Result: 3 of 5 ship gates fail (mean, Sharpe, precision). Training precision 97% but hold-out 58% \u2014 classifier overfits despite regularization. 127 training samples too small for 15 features. Ship gates NOT relaxed post-hoc. Full: memory/far_weekly_meta_labeling_result.md."
+    },
+    {
+      "id": "far_weekly_bitcoin_read_v1",
+      "registered_utc": "2026-07-24T06:00:00Z",
+      "resolved_utc": "2026-07-24T06:10:00Z",
+      "layer": "strategy_engine_weekly",
+      "verdict": "rejected_ship_gates",
+      "sr_per_period": -0.0708,
+      "n_observations": 89,
+      "notes": "FAR Weekly BTC v1 (M60 + DXY on BTC). Pre-reg: docs/experiments/2026-07-24_far_weekly_bitcoin_read_prereg.md. Training 2017-2020: Sharpe 1.04, WR 52.4%, but 77% of P&L from 2017 bull-run outlier; CI includes 0. OOS 2021-2023: Sharpe -0.51 (NEGATIVE), WR 48.3%, total -$4,507, mean -$51/trade, PSR 0.256. 5 of 6 ship gates fail. 2022 bear market drove failure (-$6,196). Cross-asset conditioning (gold->BTC) does NOT generalize with fixed gold parameters. Kill switch triggered on negative OOS Sharpe."
     }
   ]
 }
