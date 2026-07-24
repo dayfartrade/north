@@ -98,8 +98,14 @@ def main() -> None:
     # Find date column
     date_col = None
     for c in combined.columns:
-        if "As_of_Date" in c or c.endswith("Date_YYYY-MM-DD"):
+        cl = c.replace("_", " ")
+        if "As of Date" in cl and "YYYY-MM-DD" in cl:
             date_col = c; break
+    if not date_col:
+        for c in combined.columns:
+            cl = c.replace("_", " ")
+            if "As of Date" in cl:
+                date_col = c; break
     if not date_col:
         print("Warning: no date column found")
     else:
