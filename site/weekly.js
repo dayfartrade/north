@@ -113,13 +113,36 @@ function renderTrackSummary(history) {
   }
   container.innerHTML = '';
   const n = history.resolved_calls || 0;
+
+  // Pre-first-resolution state: show explicit "awaiting first outcome" instead of dashes
+  if (n === 0) {
+    // Find the earliest unresolved call to compute next-resolution date
+    const calls = (history.history || []).filter(h => h.type === 'call' && !h.outcome);
+    let firstWeekEnd = null;
+    if (calls.length > 0) {
+      // week_end is Friday of the trade week; resolution posts the following Sunday 22:00 UTC
+      const weekEnds = calls.map(c => c.week_end).filter(Boolean).sort();
+      if (weekEnds.length > 0) firstWeekEnd = weekEnds[0];
+    }
+    container.innerHTML = `
+      <div class="metric" style="grid-column: 1 / -1;">
+        <div class="metric-label">Live tracking status</div>
+        <div class="metric-value" style="font-size: 15px; font-weight: 400; color: var(--muted);">
+          Awaiting first live resolution${firstWeekEnd ? ` · week ending ${firstWeekEnd} (Friday close)` : ''}.
+          Every resolved outcome appears here on the following Sunday.
+          Zero editing, zero cherry-picking — the record starts empty and grows one call at a time.
+        </div>
+      </div>`;
+    return;
+  }
+
   container.appendChild(metric('Resolved calls', String(n)));
-  container.appendChild(metric('Win rate', n ? `${history.win_rate_pct}%` : '—',
-    (history.win_rate_pct >= 50) ? 'up' : (n ? 'down' : '')));
+  container.appendChild(metric('Win rate', `${history.win_rate_pct}%`,
+    (history.win_rate_pct >= 50) ? 'up' : 'down'));
   container.appendChild(metric('Cumulative return',
-    n ? `${history.cumulative_return_pct >= 0 ? '+' : ''}${history.cumulative_return_pct}%` : '—',
+    `${history.cumulative_return_pct >= 0 ? '+' : ''}${history.cumulative_return_pct}%`,
     (history.cumulative_return_pct >= 0) ? 'up' : 'down'));
-  container.appendChild(metric('Wins / Losses', n ? `${history.wins} / ${history.losses}` : '—'));
+  container.appendChild(metric('Wins / Losses', `${history.wins} / ${history.losses}`));
 }
 
 function renderHistory(history) {
