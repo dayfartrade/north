@@ -88,6 +88,19 @@ tar xzf backups/memory_*.tar.gz -C /c/Users/farha/.claude/projects/C--golddaytra
   pending). Registry N=40.
   New archive: `macro_data_20260724-080510Z.tar.gz` (gitignored COT
   raw + simplified + new macro CSVs already in git for redundancy).
+- **20260724-115741Z** — end-of-session backup after full 10-iteration
+  autonomous /loop. Total 15 commits pushed to origin (main
+  faff663..21f6e58). Session output: 6 formal mechanism-family
+  rejections (BTC v1, WTI v1, COT extreme v1, seasonality v1,
+  short-put income v1, ML direction v1) + 2 exploratory rejections
+  (COT fresh 2024+ n=7, pre-FOMC drift sign-flip). Site product
+  polish: v1 vs Buy-hold card + equity chart overlay + landing
+  callout + /research.html public research log (41 trials filterable)
+  + pre-first-resolution empty state UX. Publisher wired to auto-sync
+  registry.json to site on each dispatch. Registry N=41.
+  Only shipped product remains: FAR Weekly Gold Read v1 (BETA).
+  Next scheduled event: Sunday 2026-08-02 22:00 UTC first live
+  outcome resolves + week 2026-08-03 call publishes.
 
 Latest backup is authoritative for restoring session state.
 Data archive (`dukascopy_data_*`) hasn't changed since the first backup
