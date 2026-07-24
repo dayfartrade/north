@@ -365,6 +365,16 @@
       "sr_per_period": -0.0132,
       "n_observations": 169,
       "notes": "Seasonality signal: LONG in top-3 months by mean return (Aug, Jan, Feb from 2010-2019 discovery), SHORT in bottom-3 (Sep, Nov, May). In-sample 2010-2019 Sharpe 1.576, OOS 2020-2026 Sharpe -0.095 (kill switch), total -$24,900. Classic overfit collapse. Fourth session rejection."
+    },
+    {
+      "id": "far_weekly_gold_short_put_income_v1",
+      "registered_utc": "2026-07-24T11:15:00Z",
+      "resolved_utc": null,
+      "layer": "strategy_engine_weekly",
+      "verdict": "pre_registered",
+      "sr_per_period": null,
+      "n_observations": null,
+      "notes": "Options-selling income mechanism. Fresh family (income vs directional). Enabled by D3 GVZ IV data. Pre-reg: docs/experiments/2026-07-24_gold_short_put_income_prereg.md. Sell 1-week 5-delta OTM put weekly, priced via Black-Scholes with GVZ as IV. Backtest pending next iteration. Sample: 2010-2018 train, 2019-2026 OOS."
     }
   ]
 }
