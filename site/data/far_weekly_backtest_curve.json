@@ -7,2179 +7,3268 @@
       "date": "2010-04-05",
       "cum_pct": -2.775,
       "direction": "SHORT",
-      "pnl": -3117.0
+      "pnl": -3117.0,
+      "bh_cum_pct": 3.077,
+      "equity_dollars": -3117.0,
+      "bh_equity_dollars": 3373.0
     },
     {
       "date": "2010-04-19",
       "cum_pct": -1.034,
       "direction": "LONG",
-      "pnl": 1979.0
+      "pnl": 1979.0,
+      "bh_cum_pct": 3.521,
+      "equity_dollars": -1138.0,
+      "bh_equity_dollars": 3859.4
     },
     {
       "date": "2010-04-26",
       "cum_pct": 1.118,
       "direction": "LONG",
-      "pnl": 2482.0
+      "pnl": 2482.0,
+      "bh_cum_pct": 5.407,
+      "equity_dollars": 1344.0,
+      "bh_equity_dollars": 5926.5
     },
     {
       "date": "2010-05-03",
       "cum_pct": 3.697,
       "direction": "LONG",
-      "pnl": 3035.0
+      "pnl": 3035.0,
+      "bh_cum_pct": 7.898,
+      "equity_dollars": 4379.0,
+      "bh_equity_dollars": 8656.5
     },
     {
       "date": "2010-05-10",
       "cum_pct": 6.423,
       "direction": "LONG",
-      "pnl": 3270.0
+      "pnl": 3270.0,
+      "bh_cum_pct": 9.66,
+      "equity_dollars": 7649.0,
+      "bh_equity_dollars": 10587.9
     },
     {
       "date": "2010-05-17",
       "cum_pct": 3.282,
       "direction": "LONG",
-      "pnl": -3879.0
+      "pnl": -3879.0,
+      "bh_cum_pct": 11.817,
+      "equity_dollars": 3770.0,
+      "bh_equity_dollars": 12952.1
     },
     {
       "date": "2010-05-24",
       "cum_pct": 5.99,
       "direction": "LONG",
-      "pnl": 3199.0
+      "pnl": 3199.0,
+      "bh_cum_pct": 8.805,
+      "equity_dollars": 6969.0,
+      "bh_equity_dollars": 9651.5
     },
     {
       "date": "2010-06-07",
       "cum_pct": 6.801,
       "direction": "LONG",
-      "pnl": 986.0
+      "pnl": 986.0,
+      "bh_cum_pct": 13.012,
+      "equity_dollars": 7955.0,
+      "bh_equity_dollars": 14261.9
     },
     {
       "date": "2010-06-21",
       "cum_pct": 4.035,
       "direction": "LONG",
-      "pnl": -3483.0
+      "pnl": -3483.0,
+      "bh_cum_pct": 12.848,
+      "equity_dollars": 4472.0,
+      "bh_equity_dollars": 14082.0
     },
     {
       "date": "2010-06-28",
       "cum_pct": 1.089,
       "direction": "LONG",
-      "pnl": -3696.0
+      "pnl": -3696.0,
+      "bh_cum_pct": 13.085,
+      "equity_dollars": 776.0,
+      "bh_equity_dollars": 14342.0
     },
     {
       "date": "2010-08-23",
       "cum_pct": 2.038,
       "direction": "LONG",
-      "pnl": 1164.0
+      "pnl": 1164.0,
+      "bh_cum_pct": 11.558,
+      "equity_dollars": 1940.0,
+      "bh_equity_dollars": 12668.8
     },
     {
       "date": "2010-08-30",
       "cum_pct": 2.801,
       "direction": "LONG",
-      "pnl": 943.0
+      "pnl": 943.0,
+      "bh_cum_pct": 12.794,
+      "equity_dollars": 2883.0,
+      "bh_equity_dollars": 14023.3
     },
     {
       "date": "2010-09-20",
       "cum_pct": 4.348,
       "direction": "LONG",
-      "pnl": 1975.0
+      "pnl": 1975.0,
+      "bh_cum_pct": 16.633,
+      "equity_dollars": 4858.0,
+      "bh_equity_dollars": 18231.0
     },
     {
       "date": "2010-09-27",
       "cum_pct": 6.045,
       "direction": "LONG",
-      "pnl": 2199.0
+      "pnl": 2199.0,
+      "bh_cum_pct": 17.85,
+      "equity_dollars": 7057.0,
+      "bh_equity_dollars": 19565.1
     },
     {
       "date": "2010-10-04",
       "cum_pct": 8.333,
       "direction": "LONG",
-      "pnl": 3012.0
+      "pnl": 3012.0,
+      "bh_cum_pct": 19.9,
+      "equity_dollars": 10069.0,
+      "bh_equity_dollars": 21811.7
     },
     {
       "date": "2010-10-11",
       "cum_pct": 9.339,
       "direction": "LONG",
-      "pnl": 1362.0
+      "pnl": 1362.0,
+      "bh_cum_pct": 23.407,
+      "equity_dollars": 11431.0,
+      "bh_equity_dollars": 25656.6
     },
     {
       "date": "2010-10-18",
       "cum_pct": 6.904,
       "direction": "LONG",
-      "pnl": -3326.0
+      "pnl": -3326.0,
+      "bh_cum_pct": 24.779,
+      "equity_dollars": 8105.0,
+      "bh_equity_dollars": 27159.7
     },
     {
       "date": "2010-10-25",
       "cum_pct": 8.799,
       "direction": "LONG",
-      "pnl": 2527.0
+      "pnl": 2527.0,
+      "bh_cum_pct": 22.293,
+      "equity_dollars": 10632.0,
+      "bh_equity_dollars": 24435.0
     },
     {
       "date": "2010-11-01",
       "cum_pct": 11.043,
       "direction": "LONG",
-      "pnl": 3057.0
+      "pnl": 3057.0,
+      "bh_cum_pct": 23.475,
+      "equity_dollars": 13689.0,
+      "bh_equity_dollars": 25730.7
     },
     {
       "date": "2011-01-24",
       "cum_pct": 11.697,
       "direction": "SHORT",
-      "pnl": 880.0
+      "pnl": 880.0,
+      "bh_cum_pct": 21.995,
+      "equity_dollars": 14569.0,
+      "bh_equity_dollars": 24108.4
     },
     {
       "date": "2011-01-31",
       "cum_pct": 11.411,
       "direction": "SHORT",
-      "pnl": -385.0
+      "pnl": -385.0,
+      "bh_cum_pct": 21.579,
+      "equity_dollars": 14184.0,
+      "bh_equity_dollars": 23652.1
     },
     {
       "date": "2011-02-07",
       "cum_pct": 10.548,
       "direction": "SHORT",
-      "pnl": -1161.0
+      "pnl": -1161.0,
+      "bh_cum_pct": 23.224,
+      "equity_dollars": 13023.0,
+      "bh_equity_dollars": 25455.6
     },
     {
       "date": "2011-03-07",
       "cum_pct": 9.335,
       "direction": "LONG",
-      "pnl": -1740.0
+      "pnl": -1740.0,
+      "bh_cum_pct": 30.593,
+      "equity_dollars": 11283.0,
+      "bh_equity_dollars": 33532.5
     },
     {
       "date": "2011-03-14",
       "cum_pct": 6.919,
       "direction": "LONG",
-      "pnl": -3445.0
+      "pnl": -3445.0,
+      "bh_cum_pct": 30.103,
+      "equity_dollars": 7838.0,
+      "bh_equity_dollars": 32995.0
     },
     {
       "date": "2011-03-21",
       "cum_pct": 7.179,
       "direction": "LONG",
-      "pnl": 371.0
+      "pnl": 371.0,
+      "bh_cum_pct": 30.178,
+      "equity_dollars": 8209.0,
+      "bh_equity_dollars": 33077.8
     },
     {
       "date": "2011-04-11",
       "cum_pct": 7.919,
       "direction": "LONG",
-      "pnl": 1092.0
+      "pnl": 1092.0,
+      "bh_cum_pct": 33.451,
+      "equity_dollars": 9301.0,
+      "bh_equity_dollars": 36664.8
     },
     {
       "date": "2011-04-18",
       "cum_pct": 9.184,
       "direction": "LONG",
-      "pnl": 1882.0
+      "pnl": 1882.0,
+      "bh_cum_pct": 36.381,
+      "equity_dollars": 11183.0,
+      "bh_equity_dollars": 39876.8
     },
     {
       "date": "2011-04-25",
       "cum_pct": 12.53,
       "direction": "LONG",
-      "pnl": 5059.0
+      "pnl": 5059.0,
+      "bh_cum_pct": 37.457,
+      "equity_dollars": 16242.0,
+      "bh_equity_dollars": 41056.0
     },
     {
       "date": "2011-05-02",
       "cum_pct": 10.302,
       "direction": "LONG",
-      "pnl": -3460.0
+      "pnl": -3460.0,
+      "bh_cum_pct": 40.628,
+      "equity_dollars": 12782.0,
+      "bh_equity_dollars": 44531.4
     },
     {
       "date": "2011-05-09",
       "cum_pct": 10.317,
       "direction": "LONG",
-      "pnl": 23.0
+      "pnl": 23.0,
+      "bh_cum_pct": 37.914,
+      "equity_dollars": 12805.0,
+      "bh_equity_dollars": 41557.1
     },
     {
       "date": "2011-05-16",
       "cum_pct": 11.654,
       "direction": "LONG",
-      "pnl": 1995.0
+      "pnl": 1995.0,
+      "bh_cum_pct": 35.927,
+      "equity_dollars": 14800.0,
+      "bh_equity_dollars": 39379.1
     },
     {
       "date": "2011-06-20",
       "cum_pct": 9.605,
       "direction": "LONG",
-      "pnl": -3153.0
+      "pnl": -3153.0,
+      "bh_cum_pct": 40.448,
+      "equity_dollars": 11647.0,
+      "bh_equity_dollars": 44335.0
     },
     {
       "date": "2011-07-18",
       "cum_pct": 9.815,
       "direction": "LONG",
-      "pnl": 335.0
+      "pnl": 335.0,
+      "bh_cum_pct": 46.278,
+      "equity_dollars": 11982.0,
+      "bh_equity_dollars": 50725.2
     },
     {
       "date": "2011-07-25",
       "cum_pct": 10.476,
       "direction": "LONG",
-      "pnl": 1068.0
+      "pnl": 1068.0,
+      "bh_cum_pct": 47.231,
+      "equity_dollars": 13050.0,
+      "bh_equity_dollars": 51768.8
     },
     {
       "date": "2011-08-01",
       "cum_pct": 13.407,
       "direction": "LONG",
-      "pnl": 4734.0
+      "pnl": 4734.0,
+      "bh_cum_pct": 47.646,
+      "equity_dollars": 17784.0,
+      "bh_equity_dollars": 52224.4
     },
     {
       "date": "2011-08-08",
       "cum_pct": 16.797,
       "direction": "LONG",
-      "pnl": 5723.0
+      "pnl": 5723.0,
+      "bh_cum_pct": 57.069,
+      "equity_dollars": 23507.0,
+      "bh_equity_dollars": 62552.7
     },
     {
       "date": "2011-08-15",
       "cum_pct": 23.662,
       "direction": "LONG",
-      "pnl": 11895.0
+      "pnl": 11895.0,
+      "bh_cum_pct": 61.144,
+      "equity_dollars": 35402.0,
+      "bh_equity_dollars": 67018.9
     },
     {
       "date": "2011-08-22",
       "cum_pct": 19.679,
       "direction": "LONG",
-      "pnl": -7451.0
+      "pnl": -7451.0,
+      "bh_cum_pct": 74.172,
+      "equity_dollars": 27951.0,
+      "bh_equity_dollars": 81299.0
     },
     {
       "date": "2011-08-29",
       "cum_pct": 22.941,
       "direction": "LONG",
-      "pnl": 5947.0
+      "pnl": 5947.0,
+      "bh_cum_pct": 63.339,
+      "equity_dollars": 33898.0,
+      "bh_equity_dollars": 69425.2
     },
     {
       "date": "2011-09-05",
       "cum_pct": 21.415,
       "direction": "LONG",
-      "pnl": -2874.0
+      "pnl": -2874.0,
+      "bh_cum_pct": 73.141,
+      "equity_dollars": 31024.0,
+      "bh_equity_dollars": 80169.3
     },
     {
       "date": "2011-09-12",
       "cum_pct": 18.873,
       "direction": "LONG",
-      "pnl": -4724.0
+      "pnl": -4724.0,
+      "bh_cum_pct": 66.428,
+      "equity_dollars": 26300.0,
+      "bh_equity_dollars": 72810.5
     },
     {
       "date": "2011-11-07",
       "cum_pct": 20.68,
       "direction": "LONG",
-      "pnl": 3173.0
+      "pnl": 3173.0,
+      "bh_cum_pct": 63.6,
+      "equity_dollars": 29473.0,
+      "bh_equity_dollars": 69711.5
     },
     {
       "date": "2011-12-05",
       "cum_pct": 23.147,
       "direction": "SHORT",
-      "pnl": 4326.0
+      "pnl": 4326.0,
+      "bh_cum_pct": 57.043,
+      "equity_dollars": 33799.0,
+      "bh_equity_dollars": 62524.2
     },
     {
       "date": "2012-02-20",
       "cum_pct": 25.346,
       "direction": "LONG",
-      "pnl": 3812.0
+      "pnl": 3812.0,
+      "bh_cum_pct": 58.149,
+      "equity_dollars": 37611.0,
+      "bh_equity_dollars": 63735.9
     },
     {
       "date": "2012-02-27",
       "cum_pct": 22.703,
       "direction": "LONG",
-      "pnl": -4686.0
+      "pnl": -4686.0,
+      "bh_cum_pct": 61.226,
+      "equity_dollars": 32925.0,
+      "bh_equity_dollars": 67109.4
     },
     {
       "date": "2012-07-02",
       "cum_pct": 23.741,
       "direction": "SHORT",
-      "pnl": 1659.0
+      "pnl": 1659.0,
+      "bh_cum_pct": 45.541,
+      "equity_dollars": 34584.0,
+      "bh_equity_dollars": 49917.1
     },
     {
       "date": "2012-08-06",
       "cum_pct": 24.608,
       "direction": "LONG",
-      "pnl": 1392.0
+      "pnl": 1392.0,
+      "bh_cum_pct": 47.028,
+      "equity_dollars": 35976.0,
+      "bh_equity_dollars": 51546.4
     },
     {
       "date": "2012-08-13",
       "cum_pct": 24.241,
       "direction": "LONG",
-      "pnl": -595.0
+      "pnl": -595.0,
+      "bh_cum_pct": 46.936,
+      "equity_dollars": 35381.0,
+      "bh_equity_dollars": 51446.4
     },
     {
       "date": "2012-09-03",
       "cum_pct": 27.007,
       "direction": "LONG",
-      "pnl": 4672.0
+      "pnl": 4672.0,
+      "bh_cum_pct": 54.409,
+      "equity_dollars": 40053.0,
+      "bh_equity_dollars": 59637.0
     },
     {
       "date": "2012-09-10",
       "cum_pct": 28.924,
       "direction": "LONG",
-      "pnl": 3327.0
+      "pnl": 3327.0,
+      "bh_cum_pct": 57.649,
+      "equity_dollars": 43380.0,
+      "bh_equity_dollars": 63188.8
     },
     {
       "date": "2012-09-17",
       "cum_pct": 28.8,
       "direction": "LONG",
-      "pnl": -219.0
+      "pnl": -219.0,
+      "bh_cum_pct": 60.612,
+      "equity_dollars": 43161.0,
+      "bh_equity_dollars": 66436.4
     },
     {
       "date": "2012-09-24",
       "cum_pct": 28.891,
       "direction": "LONG",
-      "pnl": 160.0
+      "pnl": 160.0,
+      "bh_cum_pct": 60.981,
+      "equity_dollars": 43321.0,
+      "bh_equity_dollars": 66840.2
     },
     {
       "date": "2012-10-01",
       "cum_pct": 29.72,
       "direction": "LONG",
-      "pnl": 1464.0
+      "pnl": 1464.0,
+      "bh_cum_pct": 62.145,
+      "equity_dollars": 44785.0,
+      "bh_equity_dollars": 68116.4
     },
     {
       "date": "2012-10-08",
       "cum_pct": 28.283,
       "direction": "LONG",
-      "pnl": -2556.0
+      "pnl": -2556.0,
+      "bh_cum_pct": 62.163,
+      "equity_dollars": 42229.0,
+      "bh_equity_dollars": 68136.4
     },
     {
       "date": "2012-12-17",
       "cum_pct": 30.555,
       "direction": "SHORT",
-      "pnl": 3851.0
+      "pnl": 3851.0,
+      "bh_cum_pct": 54.838,
+      "equity_dollars": 46080.0,
+      "bh_equity_dollars": 60107.5
     },
     {
       "date": "2012-12-24",
       "cum_pct": 30.717,
       "direction": "SHORT",
-      "pnl": 270.0
+      "pnl": 270.0,
+      "bh_cum_pct": 51.266,
+      "equity_dollars": 46350.0,
+      "bh_equity_dollars": 56192.0
     },
     {
       "date": "2012-12-31",
       "cum_pct": 28.638,
       "direction": "SHORT",
-      "pnl": -3446.0
+      "pnl": -3446.0,
+      "bh_cum_pct": 52.795,
+      "equity_dollars": 42904.0,
+      "bh_equity_dollars": 57868.3
     },
     {
       "date": "2013-01-07",
       "cum_pct": 28.27,
       "direction": "SHORT",
-      "pnl": -610.0
+      "pnl": -610.0,
+      "bh_cum_pct": 50.522,
+      "equity_dollars": 42294.0,
+      "bh_equity_dollars": 55376.5
     },
     {
       "date": "2013-01-14",
       "cum_pct": 26.865,
       "direction": "SHORT",
-      "pnl": -2333.0
+      "pnl": -2333.0,
+      "bh_cum_pct": 52.16,
+      "equity_dollars": 39961.0,
+      "bh_equity_dollars": 57171.5
     },
     {
       "date": "2013-02-18",
       "cum_pct": 28.829,
       "direction": "SHORT",
-      "pnl": 3167.0
+      "pnl": 3167.0,
+      "bh_cum_pct": 47.257,
+      "equity_dollars": 43128.0,
+      "bh_equity_dollars": 51798.2
     },
     {
       "date": "2013-03-11",
       "cum_pct": 27.973,
       "direction": "SHORT",
-      "pnl": -1352.0
+      "pnl": -1352.0,
+      "bh_cum_pct": 44.332,
+      "equity_dollars": 41776.0,
+      "bh_equity_dollars": 48591.7
     },
     {
       "date": "2013-05-06",
       "cum_pct": 29.566,
       "direction": "SHORT",
-      "pnl": 2343.0
+      "pnl": 2343.0,
+      "bh_cum_pct": 33.862,
+      "equity_dollars": 44119.0,
+      "bh_equity_dollars": 37115.9
     },
     {
       "date": "2013-05-13",
       "cum_pct": 35.076,
       "direction": "SHORT",
-      "pnl": 7921.0
+      "pnl": 7921.0,
+      "bh_cum_pct": 30.952,
+      "equity_dollars": 52040.0,
+      "bh_equity_dollars": 33926.3
     },
     {
       "date": "2013-05-20",
       "cum_pct": 30.729,
       "direction": "SHORT",
-      "pnl": -5861.0
+      "pnl": -5861.0,
+      "bh_cum_pct": 26.705,
+      "equity_dollars": 46179.0,
+      "bh_equity_dollars": 29271.2
     },
     {
       "date": "2013-05-27",
       "cum_pct": 30.546,
       "direction": "SHORT",
-      "pnl": -253.0
+      "pnl": -253.0,
+      "bh_cum_pct": 27.377,
+      "equity_dollars": 45926.0,
+      "bh_equity_dollars": 30007.8
     },
     {
       "date": "2013-06-03",
       "cum_pct": 31.421,
       "direction": "SHORT",
-      "pnl": 1219.0
+      "pnl": 1219.0,
+      "bh_cum_pct": 28.859,
+      "equity_dollars": 47145.0,
+      "bh_equity_dollars": 31631.7
     },
     {
       "date": "2013-06-10",
       "cum_pct": 30.966,
       "direction": "SHORT",
-      "pnl": -630.0
+      "pnl": -630.0,
+      "bh_cum_pct": 26.271,
+      "equity_dollars": 46515.0,
+      "bh_equity_dollars": 28795.7
     },
     {
       "date": "2013-06-24",
       "cum_pct": 36.118,
       "direction": "SHORT",
-      "pnl": 6699.0
+      "pnl": 6699.0,
+      "bh_cum_pct": 17.139,
+      "equity_dollars": 53214.0,
+      "bh_equity_dollars": 18785.4
     },
     {
       "date": "2013-07-01",
       "cum_pct": 37.473,
       "direction": "SHORT",
-      "pnl": 1680.0
+      "pnl": 1680.0,
+      "bh_cum_pct": 14.265,
+      "equity_dollars": 54894.0,
+      "bh_equity_dollars": 15635.7
     },
     {
       "date": "2013-07-08",
       "cum_pct": 32.482,
       "direction": "SHORT",
-      "pnl": -6082.0
+      "pnl": -6082.0,
+      "bh_cum_pct": 12.555,
+      "equity_dollars": 48812.0,
+      "bh_equity_dollars": 13761.5
     },
     {
       "date": "2013-07-15",
       "cum_pct": 32.027,
       "direction": "SHORT",
-      "pnl": -586.0
+      "pnl": -586.0,
+      "bh_cum_pct": 16.993,
+      "equity_dollars": 48226.0,
+      "bh_equity_dollars": 18626.0
     },
     {
       "date": "2013-11-18",
       "cum_pct": 35.494,
       "direction": "SHORT",
-      "pnl": 4465.0
+      "pnl": 4465.0,
+      "bh_cum_pct": 16.246,
+      "equity_dollars": 52691.0,
+      "bh_equity_dollars": 17806.5
     },
     {
       "date": "2013-11-25",
       "cum_pct": 34.647,
       "direction": "SHORT",
-      "pnl": -1050.0
+      "pnl": -1050.0,
+      "bh_cum_pct": 14.304,
+      "equity_dollars": 51641.0,
+      "bh_equity_dollars": 15678.5
     },
     {
       "date": "2013-12-02",
       "cum_pct": 36.169,
       "direction": "SHORT",
-      "pnl": 1900.0
+      "pnl": 1900.0,
+      "bh_cum_pct": 11.584,
+      "equity_dollars": 53541.0,
+      "bh_equity_dollars": 12697.0
     },
     {
       "date": "2013-12-09",
       "cum_pct": 35.329,
       "direction": "SHORT",
-      "pnl": -1032.0
+      "pnl": -1032.0,
+      "bh_cum_pct": 13.024,
+      "equity_dollars": 52509.0,
+      "bh_equity_dollars": 14275.4
     },
     {
       "date": "2013-12-16",
       "cum_pct": 38.0,
       "direction": "SHORT",
-      "pnl": 3301.0
+      "pnl": 3301.0,
+      "bh_cum_pct": 13.143,
+      "equity_dollars": 55810.0,
+      "bh_equity_dollars": 14405.7
     },
     {
       "date": "2013-12-23",
       "cum_pct": 37.241,
       "direction": "SHORT",
-      "pnl": -914.0
+      "pnl": -914.0,
+      "bh_cum_pct": 9.32,
+      "equity_dollars": 54896.0,
+      "bh_equity_dollars": 10215.4
     },
     {
       "date": "2013-12-30",
       "cum_pct": 35.311,
       "direction": "SHORT",
-      "pnl": -2342.0
+      "pnl": -2342.0,
+      "bh_cum_pct": 9.343,
+      "equity_dollars": 52554.0,
+      "bh_equity_dollars": 10241.2
     },
     {
       "date": "2014-03-03",
       "cum_pct": 35.352,
       "direction": "LONG",
-      "pnl": 54.0
+      "pnl": 54.0,
+      "bh_cum_pct": 23.212,
+      "equity_dollars": 52608.0,
+      "bh_equity_dollars": 25442.9
     },
     {
       "date": "2014-03-17",
       "cum_pct": 32.829,
       "direction": "LONG",
-      "pnl": -3498.0
+      "pnl": -3498.0,
+      "bh_cum_pct": 24.667,
+      "equity_dollars": 49110.0,
+      "bh_equity_dollars": 27036.8
     },
     {
       "date": "2014-06-16",
       "cum_pct": 31.018,
       "direction": "SHORT",
-      "pnl": -2315.0
+      "pnl": -2315.0,
+      "bh_cum_pct": 16.05,
+      "equity_dollars": 46795.0,
+      "bh_equity_dollars": 17591.7
     },
     {
       "date": "2014-07-07",
       "cum_pct": 32.605,
       "direction": "LONG",
-      "pnl": 2091.0
+      "pnl": 2091.0,
+      "bh_cum_pct": 20.24,
+      "equity_dollars": 48886.0,
+      "bh_equity_dollars": 22185.2
     },
     {
       "date": "2014-07-14",
       "cum_pct": 30.5,
       "direction": "LONG",
-      "pnl": -2818.0
+      "pnl": -2818.0,
+      "bh_cum_pct": 19.436,
+      "equity_dollars": 46068.0,
+      "bh_equity_dollars": 21303.5
     },
     {
       "date": "2014-09-08",
       "cum_pct": 33.461,
       "direction": "SHORT",
-      "pnl": 3751.0
+      "pnl": 3751.0,
+      "bh_cum_pct": 14.595,
+      "equity_dollars": 49819.0,
+      "bh_equity_dollars": 15997.3
     },
     {
       "date": "2014-09-15",
       "cum_pct": 34.517,
       "direction": "SHORT",
-      "pnl": 1298.0
+      "pnl": 1298.0,
+      "bh_cum_pct": 12.513,
+      "equity_dollars": 51117.0,
+      "bh_equity_dollars": 13715.1
     },
     {
       "date": "2014-09-22",
       "cum_pct": 34.356,
       "direction": "SHORT",
-      "pnl": -196.0
+      "pnl": -196.0,
+      "bh_cum_pct": 10.842,
+      "equity_dollars": 50921.0,
+      "bh_equity_dollars": 11883.4
     },
     {
       "date": "2014-09-29",
       "cum_pct": 36.504,
       "direction": "SHORT",
-      "pnl": 2613.0
+      "pnl": 2613.0,
+      "bh_cum_pct": 10.979,
+      "equity_dollars": 53534.0,
+      "bh_equity_dollars": 12033.6
     },
     {
       "date": "2014-10-06",
       "cum_pct": 33.956,
       "direction": "SHORT",
-      "pnl": -3022.0
+      "pnl": -3022.0,
+      "bh_cum_pct": 10.086,
+      "equity_dollars": 50512.0,
+      "bh_equity_dollars": 11055.4
     },
     {
       "date": "2014-11-10",
       "cum_pct": 32.423,
       "direction": "SHORT",
-      "pnl": -1795.0
+      "pnl": -1795.0,
+      "bh_cum_pct": 5.404,
+      "equity_dollars": 48717.0,
+      "bh_equity_dollars": 5923.5
     },
     {
       "date": "2014-11-17",
       "cum_pct": 30.814,
       "direction": "SHORT",
-      "pnl": -1902.0
+      "pnl": -1902.0,
+      "bh_cum_pct": 8.222,
+      "equity_dollars": 46815.0,
+      "bh_equity_dollars": 9012.0
     },
     {
       "date": "2014-11-24",
       "cum_pct": 33.72,
       "direction": "SHORT",
-      "pnl": 3492.0
+      "pnl": 3492.0,
+      "bh_cum_pct": 9.216,
+      "equity_dollars": 50307.0,
+      "bh_equity_dollars": 10101.3
     },
     {
       "date": "2015-01-19",
       "cum_pct": 34.922,
       "direction": "LONG",
-      "pnl": 1537.0
+      "pnl": 1537.0,
+      "bh_cum_pct": 16.372,
+      "equity_dollars": 51844.0,
+      "bh_equity_dollars": 17945.3
     },
     {
       "date": "2015-01-26",
       "cum_pct": 31.858,
       "direction": "LONG",
-      "pnl": -3974.0
+      "pnl": -3974.0,
+      "bh_cum_pct": 16.767,
+      "equity_dollars": 47870.0,
+      "bh_equity_dollars": 18378.4
     },
     {
       "date": "2015-02-02",
       "cum_pct": 28.511,
       "direction": "LONG",
-      "pnl": -4287.0
+      "pnl": -4287.0,
+      "bh_cum_pct": 16.285,
+      "equity_dollars": 43583.0,
+      "bh_equity_dollars": 17850.2
     },
     {
       "date": "2015-02-09",
       "cum_pct": 27.82,
       "direction": "LONG",
-      "pnl": -855.0
+      "pnl": -855.0,
+      "bh_cum_pct": 13.008,
+      "equity_dollars": 42728.0,
+      "bh_equity_dollars": 14258.0
     },
     {
       "date": "2015-03-09",
       "cum_pct": 28.804,
       "direction": "SHORT",
-      "pnl": 1150.0
+      "pnl": 1150.0,
+      "bh_cum_pct": 6.432,
+      "equity_dollars": 43878.0,
+      "bh_equity_dollars": 7050.1
     },
     {
       "date": "2015-03-16",
       "cum_pct": 26.634,
       "direction": "SHORT",
-      "pnl": -2510.0
+      "pnl": -2510.0,
+      "bh_cum_pct": 5.499,
+      "equity_dollars": 41368.0,
+      "bh_equity_dollars": 6027.2
     },
     {
       "date": "2015-06-22",
       "cum_pct": 28.607,
       "direction": "SHORT",
-      "pnl": 2366.0
+      "pnl": 2366.0,
+      "bh_cum_pct": 8.181,
+      "equity_dollars": 43734.0,
+      "bh_equity_dollars": 8967.4
     },
     {
       "date": "2015-06-29",
       "cum_pct": 30.026,
       "direction": "SHORT",
-      "pnl": 1682.0
+      "pnl": 1682.0,
+      "bh_cum_pct": 7.566,
+      "equity_dollars": 45416.0,
+      "bh_equity_dollars": 8293.3
     },
     {
       "date": "2015-07-20",
       "cum_pct": 32.986,
       "direction": "SHORT",
-      "pnl": 3351.0
+      "pnl": 3351.0,
+      "bh_cum_pct": 0.297,
+      "equity_dollars": 48767.0,
+      "bh_equity_dollars": 325.4
     },
     {
       "date": "2015-08-17",
       "cum_pct": 29.707,
       "direction": "SHORT",
-      "pnl": -3654.0
+      "pnl": -3654.0,
+      "bh_cum_pct": 1.907,
+      "equity_dollars": 45113.0,
+      "bh_equity_dollars": 2090.0
     },
     {
       "date": "2015-10-12",
       "cum_pct": 31.52,
       "direction": "LONG",
-      "pnl": 2095.0
+      "pnl": 2095.0,
+      "bh_cum_pct": 5.979,
+      "equity_dollars": 47208.0,
+      "bh_equity_dollars": 6553.3
     },
     {
       "date": "2015-10-19",
       "cum_pct": 30.389,
       "direction": "LONG",
-      "pnl": -1331.0
+      "pnl": -1331.0,
+      "bh_cum_pct": 6.661,
+      "equity_dollars": 45877.0,
+      "bh_equity_dollars": 7301.2
     },
     {
       "date": "2015-10-26",
       "cum_pct": 28.476,
       "direction": "LONG",
-      "pnl": -2227.0
+      "pnl": -2227.0,
+      "bh_cum_pct": 6.171,
+      "equity_dollars": 43650.0,
+      "bh_equity_dollars": 6764.1
     },
     {
       "date": "2015-11-09",
       "cum_pct": 29.063,
       "direction": "SHORT",
-      "pnl": 640.0
+      "pnl": 640.0,
+      "bh_cum_pct": -0.298,
+      "equity_dollars": 44290.0,
+      "bh_equity_dollars": -327.0
     },
     {
       "date": "2015-11-16",
       "cum_pct": 30.126,
       "direction": "SHORT",
-      "pnl": 1158.0
+      "pnl": 1158.0,
+      "bh_cum_pct": -1.136,
+      "equity_dollars": 45448.0,
+      "bh_equity_dollars": -1244.9
     },
     {
       "date": "2015-11-23",
       "cum_pct": 31.827,
       "direction": "SHORT",
-      "pnl": 1829.0
+      "pnl": 1829.0,
+      "bh_cum_pct": -2.381,
+      "equity_dollars": 47277.0,
+      "bh_equity_dollars": -2609.7
     },
     {
       "date": "2016-02-01",
       "cum_pct": 36.819,
       "direction": "LONG",
-      "pnl": 5578.0
+      "pnl": 5578.0,
+      "bh_cum_pct": 2.932,
+      "equity_dollars": 52855.0,
+      "bh_equity_dollars": 3213.3
     },
     {
       "date": "2016-02-08",
       "cum_pct": 43.053,
       "direction": "LONG",
-      "pnl": 7261.0
+      "pnl": 7261.0,
+      "bh_cum_pct": 8.658,
+      "equity_dollars": 60116.0,
+      "bh_equity_dollars": 9490.2
     },
     {
       "date": "2016-02-15",
       "cum_pct": 40.129,
       "direction": "LONG",
-      "pnl": -3606.0
+      "pnl": -3606.0,
+      "bh_cum_pct": 10.197,
+      "equity_dollars": 56510.0,
+      "bh_equity_dollars": 11177.2
     },
     {
       "date": "2016-02-22",
       "cum_pct": 39.875,
       "direction": "LONG",
-      "pnl": -311.0
+      "pnl": -311.0,
+      "bh_cum_pct": 10.282,
+      "equity_dollars": 56199.0,
+      "bh_equity_dollars": 11270.2
     },
     {
       "date": "2016-02-29",
       "cum_pct": 42.962,
       "direction": "LONG",
-      "pnl": 3770.0
+      "pnl": 3770.0,
+      "bh_cum_pct": 13.161,
+      "equity_dollars": 59969.0,
+      "bh_equity_dollars": 14425.1
     },
     {
       "date": "2016-03-07",
       "cum_pct": 41.902,
       "direction": "LONG",
-      "pnl": -1340.0
+      "pnl": -1340.0,
+      "bh_cum_pct": 15.662,
+      "equity_dollars": 58629.0,
+      "bh_equity_dollars": 17167.2
     },
     {
       "date": "2016-03-14",
       "cum_pct": 42.058,
       "direction": "LONG",
-      "pnl": 195.0
+      "pnl": 195.0,
+      "bh_cum_pct": 12.776,
+      "equity_dollars": 58824.0,
+      "bh_equity_dollars": 14004.1
     },
     {
       "date": "2016-04-25",
       "cum_pct": 46.88,
       "direction": "LONG",
-      "pnl": 5945.0
+      "pnl": 5945.0,
+      "bh_cum_pct": 12.945,
+      "equity_dollars": 64769.0,
+      "bh_equity_dollars": 14189.4
     },
     {
       "date": "2016-05-02",
       "cum_pct": 46.269,
       "direction": "LONG",
-      "pnl": -791.0
+      "pnl": -791.0,
+      "bh_cum_pct": 17.667,
+      "equity_dollars": 63978.0,
+      "bh_equity_dollars": 19364.1
     },
     {
       "date": "2016-05-16",
       "cum_pct": 44.52,
       "direction": "LONG",
-      "pnl": -2228.0
+      "pnl": -2228.0,
+      "bh_cum_pct": 16.332,
+      "equity_dollars": 61750.0,
+      "bh_equity_dollars": 17901.3
     },
     {
       "date": "2016-05-30",
       "cum_pct": 41.617,
       "direction": "SHORT",
-      "pnl": -3505.0
+      "pnl": -3505.0,
+      "bh_cum_pct": 10.38,
+      "equity_dollars": 58245.0,
+      "bh_equity_dollars": 11377.2
     },
     {
       "date": "2016-06-06",
       "cum_pct": 39.634,
       "direction": "SHORT",
-      "pnl": -2476.0
+      "pnl": -2476.0,
+      "bh_cum_pct": 13.568,
+      "equity_dollars": 55769.0,
+      "bh_equity_dollars": 14871.4
     },
     {
       "date": "2016-06-20",
       "cum_pct": 36.899,
       "direction": "LONG",
-      "pnl": -3525.0
+      "pnl": -3525.0,
+      "bh_cum_pct": 17.499,
+      "equity_dollars": 52244.0,
+      "bh_equity_dollars": 19180.1
     },
     {
       "date": "2016-06-27",
       "cum_pct": 37.489,
       "direction": "LONG",
-      "pnl": 785.0
+      "pnl": 785.0,
+      "bh_cum_pct": 20.844,
+      "equity_dollars": 53029.0,
+      "bh_equity_dollars": 22847.4
     },
     {
       "date": "2016-07-04",
       "cum_pct": 39.196,
       "direction": "LONG",
-      "pnl": 2293.0
+      "pnl": 2293.0,
+      "bh_cum_pct": 23.119,
+      "equity_dollars": 55322.0,
+      "bh_equity_dollars": 25340.2
     },
     {
       "date": "2016-07-11",
       "cum_pct": 35.621,
       "direction": "LONG",
-      "pnl": -4897.0
+      "pnl": -4897.0,
+      "bh_cum_pct": 23.551,
+      "equity_dollars": 50425.0,
+      "bh_equity_dollars": 25814.0
     },
     {
       "date": "2016-07-18",
       "cum_pct": 34.783,
       "direction": "LONG",
-      "pnl": -1117.0
+      "pnl": -1117.0,
+      "bh_cum_pct": 21.23,
+      "equity_dollars": 49308.0,
+      "bh_equity_dollars": 23270.0
     },
     {
       "date": "2016-07-25",
       "cum_pct": 36.811,
       "direction": "LONG",
-      "pnl": 2684.0
+      "pnl": 2684.0,
+      "bh_cum_pct": 20.066,
+      "equity_dollars": 51992.0,
+      "bh_equity_dollars": 21994.1
     },
     {
       "date": "2016-08-01",
       "cum_pct": 35.777,
       "direction": "LONG",
-      "pnl": -1396.0
+      "pnl": -1396.0,
+      "bh_cum_pct": 23.413,
+      "equity_dollars": 50596.0,
+      "bh_equity_dollars": 25663.2
     },
     {
       "date": "2016-09-19",
       "cum_pct": 33.587,
       "direction": "SHORT",
-      "pnl": -2871.0
+      "pnl": -2871.0,
+      "bh_cum_pct": 19.873,
+      "equity_dollars": 47725.0,
+      "bh_equity_dollars": 21783.0
     },
     {
       "date": "2016-10-24",
       "cum_pct": 32.937,
       "direction": "SHORT",
-      "pnl": -823.0
+      "pnl": -823.0,
+      "bh_cum_pct": 15.265,
+      "equity_dollars": 46902.0,
+      "bh_equity_dollars": 16732.3
     },
     {
       "date": "2016-10-31",
       "cum_pct": 30.747,
       "direction": "SHORT",
-      "pnl": -2800.0
+      "pnl": -2800.0,
+      "bh_cum_pct": 16.422,
+      "equity_dollars": 44102.0,
+      "bh_equity_dollars": 18000.2
     },
     {
       "date": "2016-11-14",
       "cum_pct": 32.58,
       "direction": "SHORT",
-      "pnl": 2254.0
+      "pnl": 2254.0,
+      "bh_cum_pct": 11.635,
+      "equity_dollars": 46356.0,
+      "bh_equity_dollars": 12753.4
     },
     {
       "date": "2016-11-21",
       "cum_pct": 34.436,
       "direction": "SHORT",
-      "pnl": 2238.0
+      "pnl": 2238.0,
+      "bh_cum_pct": 10.946,
+      "equity_dollars": 48594.0,
+      "bh_equity_dollars": 11998.3
     },
     {
       "date": "2016-11-28",
       "cum_pct": 35.297,
       "direction": "SHORT",
-      "pnl": 1022.0
+      "pnl": 1022.0,
+      "bh_cum_pct": 8.989,
+      "equity_dollars": 49616.0,
+      "bh_equity_dollars": 9852.4
     },
     {
       "date": "2016-12-05",
       "cum_pct": 37.091,
       "direction": "SHORT",
-      "pnl": 2118.0
+      "pnl": 2118.0,
+      "bh_cum_pct": 6.753,
+      "equity_dollars": 51734.0,
+      "bh_equity_dollars": 7402.0
     },
     {
       "date": "2016-12-12",
       "cum_pct": 39.205,
       "direction": "SHORT",
-      "pnl": 2449.0
+      "pnl": 2449.0,
+      "bh_cum_pct": 6.103,
+      "equity_dollars": 54183.0,
+      "bh_equity_dollars": 6689.1
     },
     {
       "date": "2016-12-19",
       "cum_pct": 39.493,
       "direction": "SHORT",
-      "pnl": 326.0
+      "pnl": 326.0,
+      "bh_cum_pct": 3.878,
+      "equity_dollars": 54509.0,
+      "bh_equity_dollars": 4250.3
     },
     {
       "date": "2016-12-26",
       "cum_pct": 36.982,
       "direction": "SHORT",
-      "pnl": -2845.0
+      "pnl": -2845.0,
+      "bh_cum_pct": 3.396,
+      "equity_dollars": 51664.0,
+      "bh_equity_dollars": 3722.3
     },
     {
       "date": "2017-01-02",
       "cum_pct": 34.661,
       "direction": "SHORT",
-      "pnl": -2669.0
+      "pnl": -2669.0,
+      "bh_cum_pct": 4.952,
+      "equity_dollars": 48995.0,
+      "bh_equity_dollars": 5427.3
     },
     {
       "date": "2017-02-13",
       "cum_pct": 34.943,
       "direction": "LONG",
-      "pnl": 347.0
+      "pnl": 347.0,
+      "bh_cum_pct": 11.866,
+      "equity_dollars": 49342.0,
+      "bh_equity_dollars": 13006.4
     },
     {
       "date": "2017-02-20",
       "cum_pct": 36.582,
       "direction": "LONG",
-      "pnl": 2026.0
+      "pnl": 2026.0,
+      "bh_cum_pct": 12.857,
+      "equity_dollars": 51368.0,
+      "bh_equity_dollars": 14092.3
     },
     {
       "date": "2017-02-27",
       "cum_pct": 34.44,
       "direction": "LONG",
-      "pnl": -2689.0
+      "pnl": -2689.0,
+      "bh_cum_pct": 14.346,
+      "equity_dollars": 48679.0,
+      "bh_equity_dollars": 15724.0
     },
     {
       "date": "2017-04-03",
       "cum_pct": 34.88,
       "direction": "LONG",
-      "pnl": 548.0
+      "pnl": 548.0,
+      "bh_cum_pct": 14.545,
+      "equity_dollars": 49227.0,
+      "bh_equity_dollars": 15942.4
     },
     {
       "date": "2017-04-17",
       "cum_pct": 34.09,
       "direction": "LONG",
-      "pnl": -1022.0
+      "pnl": -1022.0,
+      "bh_cum_pct": 17.05,
+      "equity_dollars": 48205.0,
+      "bh_equity_dollars": 18688.4
     },
     {
       "date": "2017-04-24",
       "cum_pct": 33.504,
       "direction": "LONG",
-      "pnl": -746.0
+      "pnl": -746.0,
+      "bh_cum_pct": 16.546,
+      "equity_dollars": 47459.0,
+      "bh_equity_dollars": 18136.3
     },
     {
       "date": "2017-05-01",
       "cum_pct": 31.577,
       "direction": "LONG",
-      "pnl": -2449.0
+      "pnl": -2449.0,
+      "bh_cum_pct": 14.652,
+      "equity_dollars": 45010.0,
+      "bh_equity_dollars": 16060.1
     },
     {
       "date": "2017-05-15",
       "cum_pct": 29.662,
       "direction": "SHORT",
-      "pnl": -2355.0
+      "pnl": -2355.0,
+      "bh_cum_pct": 12.345,
+      "equity_dollars": 42655.0,
+      "bh_equity_dollars": 13531.4
     },
     {
       "date": "2017-06-05",
       "cum_pct": 28.6,
       "direction": "LONG",
-      "pnl": -1359.0
+      "pnl": -1359.0,
+      "bh_cum_pct": 16.82,
+      "equity_dollars": 41296.0,
+      "bh_equity_dollars": 18436.1
     },
     {
       "date": "2017-06-12",
       "cum_pct": 27.453,
       "direction": "LONG",
-      "pnl": -1455.0
+      "pnl": -1455.0,
+      "bh_cum_pct": 15.428,
+      "equity_dollars": 39841.0,
+      "bh_equity_dollars": 16910.3
     },
     {
       "date": "2017-07-03",
       "cum_pct": 29.826,
       "direction": "SHORT",
-      "pnl": 2948.0
+      "pnl": 2948.0,
+      "bh_cum_pct": 11.613,
+      "equity_dollars": 42789.0,
+      "bh_equity_dollars": 12728.4
     },
     {
       "date": "2017-07-10",
       "cum_pct": 28.572,
       "direction": "SHORT",
-      "pnl": -1522.0
+      "pnl": -1522.0,
+      "bh_cum_pct": 10.725,
+      "equity_dollars": 41267.0,
+      "bh_equity_dollars": 11756.0
     },
     {
       "date": "2017-07-17",
       "cum_pct": 26.629,
       "direction": "SHORT",
-      "pnl": -2392.0
+      "pnl": -2392.0,
+      "bh_cum_pct": 12.477,
+      "equity_dollars": 38875.0,
+      "bh_equity_dollars": 13676.4
     },
     {
       "date": "2017-07-24",
       "cum_pct": 25.617,
       "direction": "SHORT",
-      "pnl": -1271.0
+      "pnl": -1271.0,
+      "bh_cum_pct": 14.372,
+      "equity_dollars": 37604.0,
+      "bh_equity_dollars": 15753.3
     },
     {
       "date": "2017-07-31",
       "cum_pct": 24.656,
       "direction": "LONG",
-      "pnl": -1221.0
+      "pnl": -1221.0,
+      "bh_cum_pct": 15.637,
+      "equity_dollars": 36383.0,
+      "bh_equity_dollars": 17139.3
     },
     {
       "date": "2017-08-07",
       "cum_pct": 27.113,
       "direction": "LONG",
-      "pnl": 3089.0
+      "pnl": 3089.0,
+      "bh_cum_pct": 14.737,
+      "equity_dollars": 39472.0,
+      "bh_equity_dollars": 16153.4
     },
     {
       "date": "2017-08-14",
       "cum_pct": 26.704,
       "direction": "LONG",
-      "pnl": -526.0
+      "pnl": -526.0,
+      "bh_cum_pct": 16.699,
+      "equity_dollars": 38946.0,
+      "bh_equity_dollars": 18303.4
     },
     {
       "date": "2017-08-21",
       "cum_pct": 27.252,
       "direction": "LONG",
-      "pnl": 703.0
+      "pnl": 703.0,
+      "bh_cum_pct": 17.84,
+      "equity_dollars": 39649.0,
+      "bh_equity_dollars": 19554.0
     },
     {
       "date": "2017-08-28",
       "cum_pct": 29.654,
       "direction": "LONG",
-      "pnl": 3105.0
+      "pnl": 3105.0,
+      "bh_cum_pct": 20.195,
+      "equity_dollars": 42754.0,
+      "bh_equity_dollars": 22135.3
     },
     {
       "date": "2017-09-04",
       "cum_pct": 30.401,
       "direction": "LONG",
-      "pnl": 998.0
+      "pnl": 998.0,
+      "bh_cum_pct": 21.601,
+      "equity_dollars": 43752.0,
+      "bh_equity_dollars": 23676.9
     },
     {
       "date": "2017-09-11",
       "cum_pct": 29.051,
       "direction": "LONG",
-      "pnl": -1806.0
+      "pnl": -1806.0,
+      "bh_cum_pct": 21.083,
+      "equity_dollars": 41946.0,
+      "bh_equity_dollars": 23108.3
     },
     {
       "date": "2017-09-18",
       "cum_pct": 27.595,
       "direction": "LONG",
-      "pnl": -1917.0
+      "pnl": -1917.0,
+      "bh_cum_pct": 19.411,
+      "equity_dollars": 40029.0,
+      "bh_equity_dollars": 21276.0
     },
     {
       "date": "2017-11-13",
       "cum_pct": 26.108,
       "direction": "SHORT",
-      "pnl": -1895.0
+      "pnl": -1895.0,
+      "bh_cum_pct": 16.578,
+      "equity_dollars": 38134.0,
+      "bh_equity_dollars": 18170.4
     },
     {
       "date": "2017-12-25",
       "cum_pct": 24.355,
       "direction": "SHORT",
-      "pnl": -2235.0
+      "pnl": -2235.0,
+      "bh_cum_pct": 16.192,
+      "equity_dollars": 35899.0,
+      "bh_equity_dollars": 17748.4
     },
     {
       "date": "2018-01-01",
       "cum_pct": 25.602,
       "direction": "LONG",
-      "pnl": 1625.0
+      "pnl": 1625.0,
+      "bh_cum_pct": 19.216,
+      "equity_dollars": 37524.0,
+      "bh_equity_dollars": 21062.3
     },
     {
       "date": "2018-01-08",
       "cum_pct": 26.964,
       "direction": "LONG",
-      "pnl": 1797.0
+      "pnl": 1797.0,
+      "bh_cum_pct": 20.244,
+      "equity_dollars": 39321.0,
+      "bh_equity_dollars": 22189.3
     },
     {
       "date": "2018-04-02",
       "cum_pct": 27.44,
       "direction": "LONG",
-      "pnl": 632.0
+      "pnl": 632.0,
+      "bh_cum_pct": 22.395,
+      "equity_dollars": 39953.0,
+      "bh_equity_dollars": 24547.4
     },
     {
       "date": "2018-04-09",
       "cum_pct": 28.395,
       "direction": "LONG",
-      "pnl": 1272.0
+      "pnl": 1272.0,
+      "bh_cum_pct": 21.927,
+      "equity_dollars": 41225.0,
+      "bh_equity_dollars": 24034.4
     },
     {
       "date": "2018-04-16",
       "cum_pct": 27.747,
       "direction": "LONG",
-      "pnl": -871.0
+      "pnl": -871.0,
+      "bh_cum_pct": 22.989,
+      "equity_dollars": 40354.0,
+      "bh_equity_dollars": 25198.0
     },
     {
       "date": "2018-05-07",
       "cum_pct": 27.496,
       "direction": "SHORT",
-      "pnl": -330.0
+      "pnl": -330.0,
+      "bh_cum_pct": 20.043,
+      "equity_dollars": 40024.0,
+      "bh_equity_dollars": 21969.4
     },
     {
       "date": "2018-05-14",
       "cum_pct": 29.554,
       "direction": "SHORT",
-      "pnl": 2717.0
+      "pnl": 2717.0,
+      "bh_cum_pct": 19.858,
+      "equity_dollars": 42741.0,
+      "bh_equity_dollars": 21766.0
     },
     {
       "date": "2018-05-21",
       "cum_pct": 28.749,
       "direction": "SHORT",
-      "pnl": -1039.0
+      "pnl": -1039.0,
+      "bh_cum_pct": 17.914,
+      "equity_dollars": 41702.0,
+      "bh_equity_dollars": 19635.3
     },
     {
       "date": "2018-05-28",
       "cum_pct": 29.205,
       "direction": "SHORT",
-      "pnl": 592.0
+      "pnl": 592.0,
+      "bh_cum_pct": 18.42,
+      "equity_dollars": 42294.0,
+      "bh_equity_dollars": 20190.1
     },
     {
       "date": "2018-06-04",
       "cum_pct": 28.756,
       "direction": "SHORT",
-      "pnl": -580.0
+      "pnl": -580.0,
+      "bh_cum_pct": 17.832,
+      "equity_dollars": 41714.0,
+      "bh_equity_dollars": 19545.1
     },
     {
       "date": "2018-07-30",
       "cum_pct": 29.507,
       "direction": "SHORT",
-      "pnl": 918.0
+      "pnl": 918.0,
+      "bh_cum_pct": 11.532,
+      "equity_dollars": 42632.0,
+      "bh_equity_dollars": 12640.1
     },
     {
       "date": "2018-08-06",
       "cum_pct": 29.821,
       "direction": "SHORT",
-      "pnl": 381.0
+      "pnl": 381.0,
+      "bh_cum_pct": 10.274,
+      "equity_dollars": 43013.0,
+      "bh_equity_dollars": 11261.1
     },
     {
       "date": "2018-08-13",
       "cum_pct": 32.097,
       "direction": "SHORT",
-      "pnl": 2759.0
+      "pnl": 2759.0,
+      "bh_cum_pct": 8.821,
+      "equity_dollars": 45772.0,
+      "bh_equity_dollars": 9669.0
     },
     {
       "date": "2018-08-20",
       "cum_pct": 29.989,
       "direction": "SHORT",
-      "pnl": -2495.0
+      "pnl": -2495.0,
+      "bh_cum_pct": 8.674,
+      "equity_dollars": 43277.0,
+      "bh_equity_dollars": 9507.3
     },
     {
       "date": "2018-09-10",
       "cum_pct": 30.222,
       "direction": "SHORT",
-      "pnl": 279.0
+      "pnl": 279.0,
+      "bh_cum_pct": 9.024,
+      "equity_dollars": 43556.0,
+      "bh_equity_dollars": 9891.0
     },
     {
       "date": "2018-09-24",
       "cum_pct": 30.732,
       "direction": "SHORT",
-      "pnl": 611.0
+      "pnl": 611.0,
+      "bh_cum_pct": 9.417,
+      "equity_dollars": 44167.0,
+      "bh_equity_dollars": 10322.1
     },
     {
       "date": "2018-10-01",
       "cum_pct": 29.736,
       "direction": "SHORT",
-      "pnl": -1186.0
+      "pnl": -1186.0,
+      "bh_cum_pct": 8.476,
+      "equity_dollars": 42981.0,
+      "bh_equity_dollars": 9290.1
     },
     {
       "date": "2018-12-10",
       "cum_pct": 28.864,
       "direction": "LONG",
-      "pnl": -1089.0
+      "pnl": -1089.0,
+      "bh_cum_pct": 13.5,
+      "equity_dollars": 41892.0,
+      "bh_equity_dollars": 14797.7
     },
     {
       "date": "2018-12-24",
       "cum_pct": 30.587,
       "direction": "LONG",
-      "pnl": 2169.0
+      "pnl": 2169.0,
+      "bh_cum_pct": 15.769,
+      "equity_dollars": 44061.0,
+      "bh_equity_dollars": 17284.7
     },
     {
       "date": "2018-12-31",
       "cum_pct": 30.994,
       "direction": "LONG",
-      "pnl": 521.0
+      "pnl": 521.0,
+      "bh_cum_pct": 16.978,
+      "equity_dollars": 44582.0,
+      "bh_equity_dollars": 18609.7
     },
     {
       "date": "2019-01-07",
       "cum_pct": 31.225,
       "direction": "LONG",
-      "pnl": 297.0
+      "pnl": 297.0,
+      "bh_cum_pct": 17.583,
+      "equity_dollars": 44879.0,
+      "bh_equity_dollars": 19272.7
     },
     {
       "date": "2019-01-14",
       "cum_pct": 30.694,
       "direction": "LONG",
-      "pnl": -684.0
+      "pnl": -684.0,
+      "bh_cum_pct": 17.82,
+      "equity_dollars": 44195.0,
+      "bh_equity_dollars": 19532.0
     },
     {
       "date": "2019-01-21",
       "cum_pct": 32.282,
       "direction": "LONG",
-      "pnl": 2036.0
+      "pnl": 2036.0,
+      "bh_cum_pct": 16.744,
+      "equity_dollars": 46231.0,
+      "bh_equity_dollars": 18352.7
     },
     {
       "date": "2019-01-28",
       "cum_pct": 33.608,
       "direction": "LONG",
-      "pnl": 1725.0
+      "pnl": 1725.0,
+      "bh_cum_pct": 18.948,
+      "equity_dollars": 47956.0,
+      "bh_equity_dollars": 20769.0
     },
     {
       "date": "2019-02-04",
       "cum_pct": 33.367,
       "direction": "LONG",
-      "pnl": -318.0
+      "pnl": -318.0,
+      "bh_cum_pct": 19.669,
+      "equity_dollars": 47638.0,
+      "bh_equity_dollars": 21559.0
     },
     {
       "date": "2019-02-11",
       "cum_pct": 33.929,
       "direction": "LONG",
-      "pnl": 739.0
+      "pnl": 739.0,
+      "bh_cum_pct": 19.306,
+      "equity_dollars": 48377.0,
+      "bh_equity_dollars": 21160.7
     },
     {
       "date": "2019-02-18",
       "cum_pct": 34.44,
       "direction": "LONG",
-      "pnl": 675.0
+      "pnl": 675.0,
+      "bh_cum_pct": 21.009,
+      "equity_dollars": 49052.0,
+      "bh_equity_dollars": 23028.0
     },
     {
       "date": "2019-02-25",
       "cum_pct": 32.835,
       "direction": "LONG",
-      "pnl": -2131.0
+      "pnl": -2131.0,
+      "bh_cum_pct": 21.108,
+      "equity_dollars": 46921.0,
+      "bh_equity_dollars": 23136.7
     },
     {
       "date": "2019-04-22",
       "cum_pct": 32.129,
       "direction": "SHORT",
-      "pnl": -902.0
+      "pnl": -902.0,
+      "bh_cum_pct": 16.286,
+      "equity_dollars": 46019.0,
+      "bh_equity_dollars": 17851.0
     },
     {
       "date": "2019-05-06",
       "cum_pct": 32.02,
       "direction": "SHORT",
-      "pnl": -140.0
+      "pnl": -140.0,
+      "bh_cum_pct": 17.037,
+      "equity_dollars": 45879.0,
+      "bh_equity_dollars": 18673.7
     },
     {
       "date": "2019-05-13",
       "cum_pct": 32.765,
       "direction": "SHORT",
-      "pnl": 959.0
+      "pnl": 959.0,
+      "bh_cum_pct": 18.757,
+      "equity_dollars": 46838.0,
+      "bh_equity_dollars": 20559.7
     },
     {
       "date": "2019-06-10",
       "cum_pct": 33.204,
       "direction": "LONG",
-      "pnl": 585.0
+      "pnl": 585.0,
+      "bh_cum_pct": 21.269,
+      "equity_dollars": 47423.0,
+      "bh_equity_dollars": 23313.0
     },
     {
       "date": "2019-06-17",
       "cum_pct": 37.731,
       "direction": "LONG",
-      "pnl": 6060.0
+      "pnl": 6060.0,
+      "bh_cum_pct": 22.22,
+      "equity_dollars": 53483.0,
+      "bh_equity_dollars": 24354.7
     },
     {
       "date": "2019-06-24",
       "cum_pct": 37.914,
       "direction": "LONG",
-      "pnl": 257.0
+      "pnl": 257.0,
+      "bh_cum_pct": 30.026,
+      "equity_dollars": 53740.0,
+      "bh_equity_dollars": 32910.7
     },
     {
       "date": "2019-07-01",
       "cum_pct": 38.381,
       "direction": "LONG",
-      "pnl": 651.0
+      "pnl": 651.0,
+      "bh_cum_pct": 26.399,
+      "equity_dollars": 54391.0,
+      "bh_equity_dollars": 28935.7
     },
     {
       "date": "2019-07-15",
       "cum_pct": 39.01,
       "direction": "LONG",
-      "pnl": 891.0
+      "pnl": 891.0,
+      "bh_cum_pct": 29.132,
+      "equity_dollars": 55282.0,
+      "bh_equity_dollars": 31931.0
     },
     {
       "date": "2019-07-22",
       "cum_pct": 38.518,
       "direction": "LONG",
-      "pnl": -702.0
+      "pnl": -702.0,
+      "bh_cum_pct": 29.882,
+      "equity_dollars": 54580.0,
+      "bh_equity_dollars": 32753.7
     },
     {
       "date": "2019-07-29",
       "cum_pct": 39.958,
       "direction": "LONG",
-      "pnl": 2045.0
+      "pnl": 2045.0,
+      "bh_cum_pct": 29.957,
+      "equity_dollars": 56625.0,
+      "bh_equity_dollars": 32836.0
     },
     {
       "date": "2019-08-05",
       "cum_pct": 43.94,
       "direction": "LONG",
-      "pnl": 5732.0
+      "pnl": 5732.0,
+      "bh_cum_pct": 34.47,
+      "equity_dollars": 62357.0,
+      "bh_equity_dollars": 37781.7
     },
     {
       "date": "2019-08-12",
       "cum_pct": 44.716,
       "direction": "LONG",
-      "pnl": 1165.0
+      "pnl": 1165.0,
+      "bh_cum_pct": 37.947,
+      "equity_dollars": 63522.0,
+      "bh_equity_dollars": 41593.7
     },
     {
       "date": "2019-08-19",
       "cum_pct": 45.859,
       "direction": "LONG",
-      "pnl": 1724.0
+      "pnl": 1724.0,
+      "bh_cum_pct": 36.489,
+      "equity_dollars": 65246.0,
+      "bh_equity_dollars": 39994.7
     },
     {
       "date": "2019-08-26",
       "cum_pct": 44.094,
       "direction": "LONG",
-      "pnl": -2730.0
+      "pnl": -2730.0,
+      "bh_cum_pct": 39.451,
+      "equity_dollars": 62516.0,
+      "bh_equity_dollars": 43241.7
     },
     {
       "date": "2019-09-02",
       "cum_pct": 42.607,
       "direction": "LONG",
-      "pnl": -2275.0
+      "pnl": -2275.0,
+      "bh_cum_pct": 39.242,
+      "equity_dollars": 60241.0,
+      "bh_equity_dollars": 43012.7
     },
     {
       "date": "2019-09-09",
       "cum_pct": 41.457,
       "direction": "LONG",
-      "pnl": -1732.0
+      "pnl": -1732.0,
+      "bh_cum_pct": 36.501,
+      "equity_dollars": 58509.0,
+      "bh_equity_dollars": 40008.0
     },
     {
       "date": "2019-11-11",
       "cum_pct": 40.983,
       "direction": "SHORT",
-      "pnl": -693.0
+      "pnl": -693.0,
+      "bh_cum_pct": 32.796,
+      "equity_dollars": 57816.0,
+      "bh_equity_dollars": 35947.0
     },
     {
       "date": "2019-11-18",
       "cum_pct": 41.472,
       "direction": "SHORT",
-      "pnl": 719.0
+      "pnl": 719.0,
+      "bh_cum_pct": 34.267,
+      "equity_dollars": 58535.0,
+      "bh_equity_dollars": 37560.0
     },
     {
       "date": "2019-12-02",
       "cum_pct": 41.604,
       "direction": "SHORT",
-      "pnl": 193.0
+      "pnl": 193.0,
+      "bh_cum_pct": 33.437,
+      "equity_dollars": 58728.0,
+      "bh_equity_dollars": 36649.7
     },
     {
       "date": "2019-12-30",
       "cum_pct": 44.118,
       "direction": "LONG",
-      "pnl": 3804.0
+      "pnl": 3804.0,
+      "bh_cum_pct": 38.203,
+      "equity_dollars": 62532.0,
+      "bh_equity_dollars": 41873.7
     },
     {
       "date": "2020-01-06",
       "cum_pct": 42.748,
       "direction": "LONG",
-      "pnl": -2149.0
+      "pnl": -2149.0,
+      "bh_cum_pct": 42.66,
+      "equity_dollars": 60383.0,
+      "bh_equity_dollars": 46759.0
     },
     {
       "date": "2020-01-13",
       "cum_pct": 42.605,
       "direction": "LONG",
-      "pnl": -224.0
+      "pnl": -224.0,
+      "bh_cum_pct": 40.972,
+      "equity_dollars": 60159.0,
+      "bh_equity_dollars": 44908.7
     },
     {
       "date": "2020-01-20",
       "cum_pct": 43.533,
       "direction": "LONG",
-      "pnl": 1445.0
+      "pnl": 1445.0,
+      "bh_cum_pct": 42.43,
+      "equity_dollars": 61604.0,
+      "bh_equity_dollars": 46506.7
     },
     {
       "date": "2020-01-27",
       "cum_pct": 43.951,
       "direction": "LONG",
-      "pnl": 662.0
+      "pnl": 662.0,
+      "bh_cum_pct": 44.245,
+      "equity_dollars": 62266.0,
+      "bh_equity_dollars": 48496.7
     },
     {
       "date": "2020-02-03",
       "cum_pct": 41.485,
       "direction": "LONG",
-      "pnl": -3920.0
+      "pnl": -3920.0,
+      "bh_cum_pct": 44.033,
+      "equity_dollars": 58346.0,
+      "bh_equity_dollars": 48263.7
     },
     {
       "date": "2020-02-10",
       "cum_pct": 42.047,
       "direction": "LONG",
-      "pnl": 885.0
+      "pnl": 885.0,
+      "bh_cum_pct": 43.41,
+      "equity_dollars": 59231.0,
+      "bh_equity_dollars": 47580.7
     },
     {
       "date": "2020-02-17",
       "cum_pct": 45.845,
       "direction": "LONG",
-      "pnl": 6013.0
+      "pnl": 6013.0,
+      "bh_cum_pct": 44.533,
+      "equity_dollars": 65244.0,
+      "bh_equity_dollars": 48811.7
     },
     {
       "date": "2020-02-24",
       "cum_pct": 43.924,
       "direction": "LONG",
-      "pnl": -3200.0
+      "pnl": -3200.0,
+      "bh_cum_pct": 50.884,
+      "equity_dollars": 62044.0,
+      "bh_equity_dollars": 55773.7
     },
     {
       "date": "2020-03-09",
       "cum_pct": 40.612,
       "direction": "LONG",
-      "pnl": -5630.0
+      "pnl": -5630.0,
+      "bh_cum_pct": 52.033,
+      "equity_dollars": 56414.0,
+      "bh_equity_dollars": 57032.7
     },
     {
       "date": "2020-03-23",
       "cum_pct": 33.431,
       "direction": "SHORT",
-      "pnl": -10710.0
+      "pnl": -10710.0,
+      "bh_cum_pct": 42.946,
+      "equity_dollars": 45704.0,
+      "bh_equity_dollars": 47072.7
     },
     {
       "date": "2020-04-13",
       "cum_pct": 33.208,
       "direction": "LONG",
-      "pnl": -377.0
+      "pnl": -377.0,
+      "bh_cum_pct": 56.649,
+      "equity_dollars": 45327.0,
+      "bh_equity_dollars": 62092.0
     },
     {
       "date": "2020-04-20",
       "cum_pct": 36.323,
       "direction": "LONG",
-      "pnl": 5220.0
+      "pnl": 5220.0,
+      "bh_cum_pct": 54.264,
+      "equity_dollars": 50547.0,
+      "bh_equity_dollars": 59478.0
     },
     {
       "date": "2020-04-27",
       "cum_pct": 34.805,
       "direction": "LONG",
-      "pnl": -2618.0
+      "pnl": -2618.0,
+      "bh_cum_pct": 55.955,
+      "equity_dollars": 47929.0,
+      "bh_equity_dollars": 61332.0
     },
     {
       "date": "2020-05-04",
       "cum_pct": 34.924,
       "direction": "LONG",
-      "pnl": 201.0
+      "pnl": 201.0,
+      "bh_cum_pct": 55.418,
+      "equity_dollars": 48130.0,
+      "bh_equity_dollars": 60742.7
     },
     {
       "date": "2020-05-18",
       "cum_pct": 33.532,
       "direction": "LONG",
-      "pnl": -2448.0
+      "pnl": -2448.0,
+      "bh_cum_pct": 58.258,
+      "equity_dollars": 45682.0,
+      "bh_equity_dollars": 63855.7
     },
     {
       "date": "2020-06-01",
       "cum_pct": 30.913,
       "direction": "LONG",
-      "pnl": -4555.0
+      "pnl": -4555.0,
+      "bh_cum_pct": 58.896,
+      "equity_dollars": 41127.0,
+      "bh_equity_dollars": 64555.0
     },
     {
       "date": "2020-06-22",
       "cum_pct": 32.161,
       "direction": "LONG",
-      "pnl": 2183.0
+      "pnl": 2183.0,
+      "bh_cum_pct": 60.148,
+      "equity_dollars": 43310.0,
+      "bh_equity_dollars": 65927.0
     },
     {
       "date": "2020-06-29",
       "cum_pct": 32.362,
       "direction": "LONG",
-      "pnl": 356.0
+      "pnl": 356.0,
+      "bh_cum_pct": 61.758,
+      "equity_dollars": 43666.0,
+      "bh_equity_dollars": 67692.0
     },
     {
       "date": "2020-07-06",
       "cum_pct": 33.646,
       "direction": "LONG",
-      "pnl": 2278.0
+      "pnl": 2278.0,
+      "bh_cum_pct": 62.92,
+      "equity_dollars": 45944.0,
+      "bh_equity_dollars": 68966.0
     },
     {
       "date": "2020-07-13",
       "cum_pct": 34.162,
       "direction": "LONG",
-      "pnl": 929.0
+      "pnl": 929.0,
+      "bh_cum_pct": 64.422,
+      "equity_dollars": 46873.0,
+      "bh_equity_dollars": 70612.0
     },
     {
       "date": "2020-07-20",
       "cum_pct": 39.261,
       "direction": "LONG",
-      "pnl": 9224.0
+      "pnl": 9224.0,
+      "bh_cum_pct": 65.845,
+      "equity_dollars": 56097.0,
+      "bh_equity_dollars": 72172.0
     },
     {
       "date": "2020-07-27",
       "cum_pct": 42.502,
       "direction": "LONG",
-      "pnl": 6200.0
+      "pnl": 6200.0,
+      "bh_cum_pct": 79.266,
+      "equity_dollars": 62297.0,
+      "bh_equity_dollars": 86882.7
     },
     {
       "date": "2020-08-03",
       "cum_pct": 45.147,
       "direction": "LONG",
-      "pnl": 5242.0
+      "pnl": 5242.0,
+      "bh_cum_pct": 80.199,
+      "equity_dollars": 67539.0,
+      "bh_equity_dollars": 87905.0
     },
     {
       "date": "2020-08-10",
       "cum_pct": 41.739,
       "direction": "LONG",
-      "pnl": -6907.0
+      "pnl": -6907.0,
+      "bh_cum_pct": 85.031,
+      "equity_dollars": 60632.0,
+      "bh_equity_dollars": 93202.0
     },
     {
       "date": "2020-08-17",
       "cum_pct": 42.11,
       "direction": "LONG",
-      "pnl": 715.0
+      "pnl": 715.0,
+      "bh_cum_pct": 80.982,
+      "equity_dollars": 61347.0,
+      "bh_equity_dollars": 88763.7
     },
     {
       "date": "2020-08-24",
       "cum_pct": 43.627,
       "direction": "LONG",
-      "pnl": 2935.0
+      "pnl": 2935.0,
+      "bh_cum_pct": 76.043,
+      "equity_dollars": 64282.0,
+      "bh_equity_dollars": 83349.7
     },
     {
       "date": "2020-10-19",
       "cum_pct": 43.594,
       "direction": "SHORT",
-      "pnl": -61.0
+      "pnl": -61.0,
+      "bh_cum_pct": 73.611,
+      "equity_dollars": 64221.0,
+      "bh_equity_dollars": 80683.7
     },
     {
       "date": "2020-11-02",
       "cum_pct": 40.903,
       "direction": "SHORT",
-      "pnl": -5052.0
+      "pnl": -5052.0,
+      "bh_cum_pct": 72.863,
+      "equity_dollars": 59169.0,
+      "bh_equity_dollars": 79864.0
     },
     {
       "date": "2020-11-23",
       "cum_pct": 45.457,
       "direction": "SHORT",
-      "pnl": 8526.0
+      "pnl": 8526.0,
+      "bh_cum_pct": 67.456,
+      "equity_dollars": 67695.0,
+      "bh_equity_dollars": 73937.7
     },
     {
       "date": "2021-01-04",
       "cum_pct": 42.828,
       "direction": "LONG",
-      "pnl": -5031.0
+      "pnl": -5031.0,
+      "bh_cum_pct": 77.145,
+      "equity_dollars": 62664.0,
+      "bh_equity_dollars": 84558.0
     },
     {
       "date": "2021-01-25",
       "cum_pct": 43.351,
       "direction": "SHORT",
-      "pnl": 971.0
+      "pnl": 971.0,
+      "bh_cum_pct": 69.274,
+      "equity_dollars": 63635.0,
+      "bh_equity_dollars": 75930.7
     },
     {
       "date": "2021-02-01",
       "cum_pct": 45.603,
       "direction": "SHORT",
-      "pnl": 4180.0
+      "pnl": 4180.0,
+      "bh_cum_pct": 69.474,
+      "equity_dollars": 67815.0,
+      "bh_equity_dollars": 76149.7
     },
     {
       "date": "2021-02-22",
       "cum_pct": 48.404,
       "direction": "SHORT",
-      "pnl": 4994.0
+      "pnl": 4994.0,
+      "bh_cum_pct": 65.163,
+      "equity_dollars": 72809.0,
+      "bh_equity_dollars": 71424.7
     },
     {
       "date": "2021-03-01",
       "cum_pct": 50.683,
       "direction": "SHORT",
-      "pnl": 3964.0
+      "pnl": 3964.0,
+      "bh_cum_pct": 57.369,
+      "equity_dollars": 76773.0,
+      "bh_equity_dollars": 62881.7
     },
     {
       "date": "2021-03-08",
       "cum_pct": 49.551,
       "direction": "SHORT",
-      "pnl": -1932.0
+      "pnl": -1932.0,
+      "bh_cum_pct": 53.688,
+      "equity_dollars": 74841.0,
+      "bh_equity_dollars": 58846.6
     },
     {
       "date": "2021-03-15",
       "cum_pct": 48.411,
       "direction": "SHORT",
-      "pnl": -1967.0
+      "pnl": -1967.0,
+      "bh_cum_pct": 57.89,
+      "equity_dollars": 72874.0,
+      "bh_equity_dollars": 63453.0
     },
     {
       "date": "2021-03-22",
       "cum_pct": 48.769,
       "direction": "SHORT",
-      "pnl": 622.0
+      "pnl": 622.0,
+      "bh_cum_pct": 58.673,
+      "equity_dollars": 73496.0,
+      "bh_equity_dollars": 64311.0
     },
     {
       "date": "2021-05-10",
       "cum_pct": 49.121,
       "direction": "LONG",
-      "pnl": 646.0
+      "pnl": 646.0,
+      "bh_cum_pct": 67.513,
+      "equity_dollars": 74142.0,
+      "bh_equity_dollars": 73999.7
     },
     {
       "date": "2021-05-17",
       "cum_pct": 50.953,
       "direction": "LONG",
-      "pnl": 3384.0
+      "pnl": 3384.0,
+      "bh_cum_pct": 70.504,
+      "equity_dollars": 77526.0,
+      "bh_equity_dollars": 77278.7
     },
     {
       "date": "2021-05-24",
       "cum_pct": 51.973,
       "direction": "LONG",
-      "pnl": 1920.0
+      "pnl": 1920.0,
+      "bh_cum_pct": 71.277,
+      "equity_dollars": 79446.0,
+      "bh_equity_dollars": 78126.0
     },
     {
       "date": "2021-05-31",
       "cum_pct": 49.478,
       "direction": "LONG",
-      "pnl": -4748.0
+      "pnl": -4748.0,
+      "bh_cum_pct": 74.073,
+      "equity_dollars": 74698.0,
+      "bh_equity_dollars": 81191.0
     },
     {
       "date": "2021-08-23",
       "cum_pct": 47.362,
       "direction": "SHORT",
-      "pnl": -3764.0
+      "pnl": -3764.0,
+      "bh_cum_pct": 64.652,
+      "equity_dollars": 70934.0,
+      "bh_equity_dollars": 70864.0
     },
     {
       "date": "2021-09-20",
       "cum_pct": 47.596,
       "direction": "SHORT",
-      "pnl": 410.0
+      "pnl": 410.0,
+      "bh_cum_pct": 61.016,
+      "equity_dollars": 71344.0,
+      "bh_equity_dollars": 66879.0
     },
     {
       "date": "2021-09-27",
       "cum_pct": 46.984,
       "direction": "SHORT",
-      "pnl": -1070.0
+      "pnl": -1070.0,
+      "bh_cum_pct": 59.769,
+      "equity_dollars": 70274.0,
+      "bh_equity_dollars": 65511.6
     },
     {
       "date": "2021-10-04",
       "cum_pct": 47.347,
       "direction": "SHORT",
-      "pnl": 640.0
+      "pnl": 640.0,
+      "bh_cum_pct": 61.297,
+      "equity_dollars": 70914.0,
+      "bh_equity_dollars": 67186.7
     },
     {
       "date": "2021-10-11",
       "cum_pct": 46.616,
       "direction": "SHORT",
-      "pnl": -1282.0
+      "pnl": -1282.0,
+      "bh_cum_pct": 59.95,
+      "equity_dollars": 69632.0,
+      "bh_equity_dollars": 65711.0
     },
     {
       "date": "2021-11-01",
       "cum_pct": 48.728,
       "direction": "LONG",
-      "pnl": 3759.0
+      "pnl": 3759.0,
+      "bh_cum_pct": 63.489,
+      "equity_dollars": 73391.0,
+      "bh_equity_dollars": 69589.0
     },
     {
       "date": "2021-11-08",
       "cum_pct": 51.409,
       "direction": "LONG",
-      "pnl": 4869.0
+      "pnl": 4869.0,
+      "bh_cum_pct": 66.456,
+      "equity_dollars": 78260.0,
+      "bh_equity_dollars": 72842.0
     },
     {
       "date": "2021-11-15",
       "cum_pct": 50.319,
       "direction": "LONG",
-      "pnl": -2032.0
+      "pnl": -2032.0,
+      "bh_cum_pct": 69.9,
+      "equity_dollars": 76228.0,
+      "bh_equity_dollars": 76617.0
     },
     {
       "date": "2021-11-22",
       "cum_pct": 47.924,
       "direction": "LONG",
-      "pnl": -4420.0
+      "pnl": -4420.0,
+      "bh_cum_pct": 65.035,
+      "equity_dollars": 71808.0,
+      "bh_equity_dollars": 71284.0
     },
     {
       "date": "2021-12-06",
       "cum_pct": 47.948,
       "direction": "SHORT",
-      "pnl": 43.0
+      "pnl": 43.0,
+      "bh_cum_pct": 62.471,
+      "equity_dollars": 71851.0,
+      "bh_equity_dollars": 68473.7
     },
     {
       "date": "2022-03-07",
       "cum_pct": 47.927,
       "direction": "LONG",
-      "pnl": -41.0
+      "pnl": -41.0,
+      "bh_cum_pct": 82.34,
+      "equity_dollars": 71810.0,
+      "bh_equity_dollars": 90252.0
     },
     {
       "date": "2022-03-14",
       "cum_pct": 45.242,
       "direction": "LONG",
-      "pnl": -5300.0
+      "pnl": -5300.0,
+      "bh_cum_pct": 78.093,
+      "equity_dollars": 66510.0,
+      "bh_equity_dollars": 85597.0
     },
     {
       "date": "2022-03-21",
       "cum_pct": 47.26,
       "direction": "LONG",
-      "pnl": 3871.0
+      "pnl": 3871.0,
+      "bh_cum_pct": 76.581,
+      "equity_dollars": 70381.0,
+      "bh_equity_dollars": 83940.0
     },
     {
       "date": "2022-05-16",
       "cum_pct": 45.454,
       "direction": "SHORT",
-      "pnl": -3274.0
+      "pnl": -3274.0,
+      "bh_cum_pct": 66.616,
+      "equity_dollars": 67107.0,
+      "bh_equity_dollars": 73016.6
     },
     {
       "date": "2022-05-23",
       "cum_pct": 45.093,
       "direction": "SHORT",
-      "pnl": -667.0
+      "pnl": -667.0,
+      "bh_cum_pct": 69.125,
+      "equity_dollars": 66440.0,
+      "bh_equity_dollars": 75767.0
     },
     {
       "date": "2022-05-30",
       "cum_pct": 45.058,
       "direction": "SHORT",
-      "pnl": -64.0
+      "pnl": -64.0,
+      "bh_cum_pct": 68.997,
+      "equity_dollars": 66376.0,
+      "bh_equity_dollars": 75627.0
     },
     {
       "date": "2022-06-20",
       "cum_pct": 45.733,
       "direction": "SHORT",
-      "pnl": 1241.0
+      "pnl": 1241.0,
+      "bh_cum_pct": 67.777,
+      "equity_dollars": 67617.0,
+      "bh_equity_dollars": 74290.0
     },
     {
       "date": "2022-06-27",
       "cum_pct": 46.84,
       "direction": "SHORT",
-      "pnl": 2027.0
+      "pnl": 2027.0,
+      "bh_cum_pct": 66.359,
+      "equity_dollars": 69644.0,
+      "bh_equity_dollars": 72735.5
     },
     {
       "date": "2022-07-04",
       "cum_pct": 50.508,
       "direction": "SHORT",
-      "pnl": 6633.0
+      "pnl": 6633.0,
+      "bh_cum_pct": 65.051,
+      "equity_dollars": 76277.0,
+      "bh_equity_dollars": 71302.0
     },
     {
       "date": "2022-07-11",
       "cum_pct": 52.459,
       "direction": "SHORT",
-      "pnl": 3398.0
+      "pnl": 3398.0,
+      "bh_cum_pct": 58.117,
+      "equity_dollars": 79675.0,
+      "bh_equity_dollars": 63701.6
     },
     {
       "date": "2022-09-05",
       "cum_pct": 51.991,
       "direction": "SHORT",
-      "pnl": -799.0
+      "pnl": -799.0,
+      "bh_cum_pct": 56.368,
+      "equity_dollars": 78876.0,
+      "bh_equity_dollars": 61784.0
     },
     {
       "date": "2022-09-12",
       "cum_pct": 54.574,
       "direction": "SHORT",
-      "pnl": 4439.0
+      "pnl": 4439.0,
+      "bh_cum_pct": 57.392,
+      "equity_dollars": 83315.0,
+      "bh_equity_dollars": 62906.7
     },
     {
       "date": "2022-09-19",
       "cum_pct": 56.611,
       "direction": "SHORT",
-      "pnl": 3417.0
+      "pnl": 3417.0,
+      "bh_cum_pct": 52.874,
+      "equity_dollars": 86732.0,
+      "bh_equity_dollars": 57954.7
     },
     {
       "date": "2022-09-26",
       "cum_pct": 55.632,
       "direction": "SHORT",
-      "pnl": -1609.0
+      "pnl": -1609.0,
+      "bh_cum_pct": 48.483,
+      "equity_dollars": 85123.0,
+      "bh_equity_dollars": 53142.0
     },
     {
       "date": "2022-10-03",
       "cum_pct": 52.55,
       "direction": "SHORT",
-      "pnl": -5129.0
+      "pnl": -5129.0,
+      "bh_cum_pct": 55.181,
+      "equity_dollars": 79994.0,
+      "bh_equity_dollars": 60483.0
     },
     {
       "date": "2022-10-10",
       "cum_pct": 55.669,
       "direction": "SHORT",
-      "pnl": 5292.0
+      "pnl": 5292.0,
+      "bh_cum_pct": 52.36,
+      "equity_dollars": 85286.0,
+      "bh_equity_dollars": 57391.0
     },
     {
       "date": "2022-10-17",
       "cum_pct": 55.061,
       "direction": "SHORT",
-      "pnl": -1000.0
+      "pnl": -1000.0,
+      "bh_cum_pct": 50.587,
+      "equity_dollars": 84286.0,
+      "bh_equity_dollars": 55448.0
     },
     {
       "date": "2022-11-07",
       "cum_pct": 51.817,
       "direction": "SHORT",
-      "pnl": -5427.0
+      "pnl": -5427.0,
+      "bh_cum_pct": 52.717,
+      "equity_dollars": 78859.0,
+      "bh_equity_dollars": 57783.0
     },
     {
       "date": "2022-11-14",
       "cum_pct": 51.083,
       "direction": "LONG",
-      "pnl": -1295.0
+      "pnl": -1295.0,
+      "bh_cum_pct": 61.419,
+      "equity_dollars": 77564.0,
+      "bh_equity_dollars": 67321.0
     },
     {
       "date": "2022-11-21",
       "cum_pct": 51.209,
       "direction": "LONG",
-      "pnl": 222.0
+      "pnl": 222.0,
+      "bh_cum_pct": 58.597,
+      "equity_dollars": 77786.0,
+      "bh_equity_dollars": 64227.0
     },
     {
       "date": "2022-11-28",
       "cum_pct": 53.866,
       "direction": "LONG",
-      "pnl": 4650.0
+      "pnl": 4650.0,
+      "bh_cum_pct": 58.847,
+      "equity_dollars": 82436.0,
+      "bh_equity_dollars": 64502.0
     },
     {
       "date": "2022-12-05",
       "cum_pct": 53.675,
       "direction": "LONG",
-      "pnl": -342.0
+      "pnl": -342.0,
+      "bh_cum_pct": 61.406,
+      "equity_dollars": 82094.0,
+      "bh_equity_dollars": 67306.9
     },
     {
       "date": "2022-12-12",
       "cum_pct": 53.553,
       "direction": "LONG",
-      "pnl": -220.0
+      "pnl": -220.0,
+      "bh_cum_pct": 62.57,
+      "equity_dollars": 81874.0,
+      "bh_equity_dollars": 68582.7
     },
     {
       "date": "2022-12-19",
       "cum_pct": 53.956,
       "direction": "LONG",
-      "pnl": 722.0
+      "pnl": 722.0,
+      "bh_cum_pct": 63.046,
+      "equity_dollars": 82596.0,
+      "bh_equity_dollars": 69103.7
     },
     {
       "date": "2023-01-16",
       "cum_pct": 54.393,
       "direction": "LONG",
-      "pnl": 838.0
+      "pnl": 838.0,
+      "bh_cum_pct": 74.972,
+      "equity_dollars": 83434.0,
+      "bh_equity_dollars": 82175.7
     },
     {
       "date": "2023-01-23",
       "cum_pct": 54.413,
       "direction": "LONG",
-      "pnl": 37.0
+      "pnl": 37.0,
+      "bh_cum_pct": 76.193,
+      "equity_dollars": 83471.0,
+      "bh_equity_dollars": 83513.7
     },
     {
       "date": "2023-01-30",
       "cum_pct": 51.926,
       "direction": "LONG",
-      "pnl": -4796.0
+      "pnl": -4796.0,
+      "bh_cum_pct": 75.35,
+      "equity_dollars": 78675.0,
+      "bh_equity_dollars": 82589.7
     },
     {
       "date": "2023-03-20",
       "cum_pct": 51.978,
       "direction": "LONG",
-      "pnl": 101.0
+      "pnl": 101.0,
+      "bh_cum_pct": 80.325,
+      "equity_dollars": 78776.0,
+      "bh_equity_dollars": 88043.7
     },
     {
       "date": "2023-03-27",
       "cum_pct": 51.626,
       "direction": "LONG",
-      "pnl": -695.0
+      "pnl": -695.0,
+      "bh_cum_pct": 78.638,
+      "equity_dollars": 78081.0,
+      "bh_equity_dollars": 86194.7
     },
     {
       "date": "2023-04-10",
       "cum_pct": 51.528,
       "direction": "LONG",
-      "pnl": -197.0
+      "pnl": -197.0,
+      "bh_cum_pct": 81.762,
+      "equity_dollars": 77884.0,
+      "bh_equity_dollars": 89618.7
     },
     {
       "date": "2023-04-17",
       "cum_pct": 50.498,
       "direction": "LONG",
-      "pnl": -2062.0
+      "pnl": -2062.0,
+      "bh_cum_pct": 81.911,
+      "equity_dollars": 75822.0,
+      "bh_equity_dollars": 89781.7
     },
     {
       "date": "2023-06-19",
       "cum_pct": 52.37,
       "direction": "SHORT",
-      "pnl": 3663.0
+      "pnl": 3663.0,
+      "bh_cum_pct": 78.123,
+      "equity_dollars": 79485.0,
+      "bh_equity_dollars": 85629.7
     },
     {
       "date": "2023-07-03",
       "cum_pct": 52.07,
       "direction": "SHORT",
-      "pnl": -576.0
+      "pnl": -576.0,
+      "bh_cum_pct": 75.274,
+      "equity_dollars": 78909.0,
+      "bh_equity_dollars": 82506.7
     },
     {
       "date": "2023-07-10",
       "cum_pct": 50.512,
       "direction": "SHORT",
-      "pnl": -2997.0
+      "pnl": -2997.0,
+      "bh_cum_pct": 75.6,
+      "equity_dollars": 75912.0,
+      "bh_equity_dollars": 82864.7
     },
     {
       "date": "2023-07-17",
       "cum_pct": 50.091,
       "direction": "SHORT",
-      "pnl": -822.0
+      "pnl": -822.0,
+      "bh_cum_pct": 78.394,
+      "equity_dollars": 75090.0,
+      "bh_equity_dollars": 85926.7
     },
     {
       "date": "2023-08-14",
       "cum_pct": 51.36,
       "direction": "SHORT",
-      "pnl": 2427.0
+      "pnl": 2427.0,
+      "bh_cum_pct": 74.028,
+      "equity_dollars": 77517.0,
+      "bh_equity_dollars": 81141.7
     },
     {
       "date": "2023-08-21",
       "cum_pct": 50.043,
       "direction": "SHORT",
-      "pnl": -2487.0
+      "pnl": -2487.0,
+      "bh_cum_pct": 72.856,
+      "equity_dollars": 75030.0,
+      "bh_equity_dollars": 79856.7
     },
     {
       "date": "2023-08-28",
       "cum_pct": 48.327,
       "direction": "SHORT",
-      "pnl": -3288.0
+      "pnl": -3288.0,
+      "bh_cum_pct": 75.274,
+      "equity_dollars": 71742.0,
+      "bh_equity_dollars": 82506.7
     },
     {
       "date": "2023-09-04",
       "cum_pct": 49.466,
       "direction": "SHORT",
-      "pnl": 2212.0
+      "pnl": 2212.0,
+      "bh_cum_pct": 76.766,
+      "equity_dollars": 73954.0,
+      "bh_equity_dollars": 84142.7
     },
     {
       "date": "2023-10-02",
       "cum_pct": 50.308,
       "direction": "SHORT",
-      "pnl": 1555.0
+      "pnl": 1555.0,
+      "bh_cum_pct": 66.487,
+      "equity_dollars": 75509.0,
+      "bh_equity_dollars": 72875.7
     },
     {
       "date": "2023-10-09",
       "cum_pct": 48.398,
       "direction": "SHORT",
-      "pnl": -3529.0
+      "pnl": -3529.0,
+      "bh_cum_pct": 69.915,
+      "equity_dollars": 71980.0,
+      "bh_equity_dollars": 76633.0
     },
     {
       "date": "2023-11-06",
       "cum_pct": 45.826,
       "direction": "LONG",
-      "pnl": -5113.0
+      "pnl": -5113.0,
+      "bh_cum_pct": 80.338,
+      "equity_dollars": 66867.0,
+      "bh_equity_dollars": 88057.7
     },
     {
       "date": "2023-12-04",
       "cum_pct": 43.755,
       "direction": "LONG",
-      "pnl": -4386.0
+      "pnl": -4386.0,
+      "bh_cum_pct": 85.565,
+      "equity_dollars": 62481.0,
+      "bh_equity_dollars": 93786.7
     },
     {
       "date": "2023-12-11",
       "cum_pct": 44.377,
       "direction": "LONG",
-      "pnl": 1247.0
+      "pnl": 1247.0,
+      "bh_cum_pct": 80.907,
+      "equity_dollars": 63728.0,
+      "bh_equity_dollars": 88680.7
     },
     {
       "date": "2023-12-18",
       "cum_pct": 46.137,
       "direction": "LONG",
-      "pnl": 3551.0
+      "pnl": 3551.0,
+      "bh_cum_pct": 84.979,
+      "equity_dollars": 67279.0,
+      "bh_equity_dollars": 93144.7
     },
     {
       "date": "2023-12-25",
       "cum_pct": 46.605,
       "direction": "LONG",
-      "pnl": 961.0
+      "pnl": 961.0,
+      "bh_cum_pct": 87.464,
+      "equity_dollars": 68240.0,
+      "bh_equity_dollars": 95868.7
     },
     {
       "date": "2024-01-08",
       "cum_pct": 46.82,
       "direction": "LONG",
-      "pnl": 439.0
+      "pnl": 439.0,
+      "bh_cum_pct": 85.265,
+      "equity_dollars": 68679.0,
+      "bh_equity_dollars": 93457.7
     },
     {
       "date": "2024-03-11",
       "cum_pct": 45.628,
       "direction": "LONG",
-      "pnl": -2601.0
+      "pnl": -2601.0,
+      "bh_cum_pct": 99.213,
+      "equity_dollars": 66078.0,
+      "bh_equity_dollars": 108746.7
     },
     {
       "date": "2024-04-01",
       "cum_pct": 49.288,
       "direction": "LONG",
-      "pnl": 8221.0
+      "pnl": 8221.0,
+      "bh_cum_pct": 105.174,
+      "equity_dollars": 74299.0,
+      "bh_equity_dollars": 115279.7
     },
     {
       "date": "2024-05-20",
       "cum_pct": 46.253,
       "direction": "LONG",
-      "pnl": -7346.0
+      "pnl": -7346.0,
+      "bh_cum_pct": 121.342,
+      "equity_dollars": 66953.0,
+      "bh_equity_dollars": 133001.7
     },
     {
       "date": "2024-07-15",
       "cum_pct": 45.915,
       "direction": "LONG",
-      "pnl": -814.0
+      "pnl": -814.0,
+      "bh_cum_pct": 121.007,
+      "equity_dollars": 66139.0,
+      "bh_equity_dollars": 132634.7
     },
     {
       "date": "2024-07-22",
       "cum_pct": 44.89,
       "direction": "LONG",
-      "pnl": -2472.0
+      "pnl": -2472.0,
+      "bh_cum_pct": 118.556,
+      "equity_dollars": 63667.0,
+      "bh_equity_dollars": 129947.7
     },
     {
       "date": "2024-07-29",
       "cum_pct": 46.812,
       "direction": "LONG",
-      "pnl": 4607.0
+      "pnl": 4607.0,
+      "bh_cum_pct": 117.226,
+      "equity_dollars": 68274.0,
+      "bh_equity_dollars": 128490.0
     },
     {
       "date": "2024-08-05",
       "cum_pct": 43.713,
       "direction": "LONG",
-      "pnl": -7565.0
+      "pnl": -7565.0,
+      "bh_cum_pct": 119.387,
+      "equity_dollars": 60709.0,
+      "bh_equity_dollars": 130858.7
     },
     {
       "date": "2024-08-12",
       "cum_pct": 46.965,
       "direction": "LONG",
-      "pnl": 7896.0
+      "pnl": 7896.0,
+      "bh_cum_pct": 125.842,
+      "equity_dollars": 68605.0,
+      "bh_equity_dollars": 137933.7
     },
     {
       "date": "2024-08-19",
       "cum_pct": 47.199,
       "direction": "LONG",
-      "pnl": 586.0
+      "pnl": 586.0,
+      "bh_cum_pct": 128.405,
+      "equity_dollars": 69191.0,
+      "bh_equity_dollars": 140742.7
     },
     {
       "date": "2024-08-26",
       "cum_pct": 46.685,
       "direction": "LONG",
-      "pnl": -1292.0
+      "pnl": -1292.0,
+      "bh_cum_pct": 129.483,
+      "equity_dollars": 67899.0,
+      "bh_equity_dollars": 141924.7
     },
     {
       "date": "2024-09-09",
       "cum_pct": 49.921,
       "direction": "LONG",
-      "pnl": 8079.0
+      "pnl": 8079.0,
+      "bh_cum_pct": 128.688,
+      "equity_dollars": 75978.0,
+      "bh_equity_dollars": 141053.7
     },
     {
       "date": "2024-09-16",
       "cum_pct": 51.566,
       "direction": "LONG",
-      "pnl": 4244.0
+      "pnl": 4244.0,
+      "bh_cum_pct": 135.706,
+      "equity_dollars": 80222.0,
+      "bh_equity_dollars": 148745.7
     },
     {
       "date": "2024-09-23",
       "cum_pct": 53.007,
       "direction": "LONG",
-      "pnl": 3775.0
+      "pnl": 3775.0,
+      "bh_cum_pct": 139.598,
+      "equity_dollars": 83997.0,
+      "bh_equity_dollars": 153011.7
     },
     {
       "date": "2024-09-30",
       "cum_pct": 52.635,
       "direction": "LONG",
-      "pnl": -992.0
+      "pnl": -992.0,
+      "bh_cum_pct": 140.455,
+      "equity_dollars": 83005.0,
+      "bh_equity_dollars": 153950.7
     },
     {
       "date": "2024-12-23",
       "cum_pct": 52.743,
       "direction": "SHORT",
-      "pnl": 285.0
+      "pnl": 285.0,
+      "bh_cum_pct": 138.607,
+      "equity_dollars": 83290.0,
+      "bh_equity_dollars": 151926.0
     },
     {
       "date": "2024-12-30",
       "cum_pct": 52.132,
       "direction": "SHORT",
-      "pnl": -1604.0
+      "pnl": -1604.0,
+      "bh_cum_pct": 137.805,
+      "equity_dollars": 81686.0,
+      "bh_equity_dollars": 151046.0
     },
     {
       "date": "2025-01-27",
       "cum_pct": 53.243,
       "direction": "LONG",
-      "pnl": 3076.0
+      "pnl": 3076.0,
+      "bh_cum_pct": 150.127,
+      "equity_dollars": 84762.0,
+      "bh_equity_dollars": 164552.7
     },
     {
       "date": "2025-02-03",
       "cum_pct": 55.678,
       "direction": "LONG",
-      "pnl": 6798.0
+      "pnl": 6798.0,
+      "bh_cum_pct": 156.69,
+      "equity_dollars": 91560.0,
+      "bh_equity_dollars": 171746.0
     },
     {
       "date": "2025-02-10",
       "cum_pct": 56.195,
       "direction": "LONG",
-      "pnl": 1484.0
+      "pnl": 1484.0,
+      "bh_cum_pct": 166.188,
+      "equity_dollars": 93044.0,
+      "bh_equity_dollars": 182156.7
     },
     {
       "date": "2025-02-17",
       "cum_pct": 58.134,
       "direction": "LONG",
-      "pnl": 5581.0
+      "pnl": 5581.0,
+      "bh_cum_pct": 164.502,
+      "equity_dollars": 98625.0,
+      "bh_equity_dollars": 180308.7
     },
     {
       "date": "2025-02-24",
       "cum_pct": 55.413,
       "direction": "LONG",
-      "pnl": -7990.0
+      "pnl": -7990.0,
+      "bh_cum_pct": 169.12,
+      "equity_dollars": 90635.0,
+      "bh_equity_dollars": 185370.7
     },
     {
       "date": "2025-03-03",
       "cum_pct": 56.761,
       "direction": "LONG",
-      "pnl": 3870.0
+      "pnl": 3870.0,
+      "bh_cum_pct": 163.722,
+      "equity_dollars": 94505.0,
+      "bh_equity_dollars": 179453.7
     },
     {
       "date": "2025-03-10",
       "cum_pct": 59.087,
       "direction": "LONG",
-      "pnl": 6784.0
+      "pnl": 6784.0,
+      "bh_cum_pct": 163.155,
+      "equity_dollars": 101289.0,
+      "bh_equity_dollars": 178831.7
     },
     {
       "date": "2025-03-17",
       "cum_pct": 60.182,
       "direction": "LONG",
-      "pnl": 3274.0
+      "pnl": 3274.0,
+      "bh_cum_pct": 173.657,
+      "equity_dollars": 104563.0,
+      "bh_equity_dollars": 190343.0
     },
     {
       "date": "2025-03-24",
       "cum_pct": 62.146,
       "direction": "LONG",
-      "pnl": 5940.0
+      "pnl": 5940.0,
+      "bh_cum_pct": 174.576,
+      "equity_dollars": 110503.0,
+      "bh_equity_dollars": 191350.7
     },
     {
       "date": "2025-04-07",
       "cum_pct": 70.04,
       "direction": "LONG",
-      "pnl": 23678.0
+      "pnl": 23678.0,
+      "bh_cum_pct": 171.974,
+      "equity_dollars": 134181.0,
+      "bh_equity_dollars": 188498.7
     },
     {
       "date": "2025-05-12",
       "cum_pct": 67.455,
       "direction": "LONG",
-      "pnl": -8496.0
+      "pnl": -8496.0,
+      "bh_cum_pct": 195.285,
+      "equity_dollars": 125685.0,
+      "bh_equity_dollars": 214049.7
     },
     {
       "date": "2025-06-23",
       "cum_pct": 64.123,
       "direction": "LONG",
-      "pnl": -11237.0
+      "pnl": -11237.0,
+      "bh_cum_pct": 205.076,
+      "equity_dollars": 114448.0,
+      "bh_equity_dollars": 224781.0
     },
     {
       "date": "2025-07-07",
       "cum_pct": 64.904,
       "direction": "LONG",
-      "pnl": 2599.0
+      "pnl": 2599.0,
+      "bh_cum_pct": 204.209,
+      "equity_dollars": 117047.0,
+      "bh_equity_dollars": 223831.0
     },
     {
       "date": "2025-07-28",
       "cum_pct": 65.774,
       "direction": "LONG",
-      "pnl": 2898.0
+      "pnl": 2898.0,
+      "bh_cum_pct": 202.202,
+      "equity_dollars": 119945.0,
+      "bh_equity_dollars": 221631.7
     },
     {
       "date": "2025-08-04",
       "cum_pct": 66.867,
       "direction": "LONG",
-      "pnl": 3674.0
+      "pnl": 3674.0,
+      "bh_cum_pct": 208.114,
+      "equity_dollars": 123619.0,
+      "bh_equity_dollars": 228111.0
     },
     {
       "date": "2025-08-11",
       "cum_pct": 65.195,
       "direction": "LONG",
-      "pnl": -5668.0
+      "pnl": -5668.0,
+      "bh_cum_pct": 205.527,
+      "equity_dollars": 117951.0,
+      "bh_equity_dollars": 225276.0
     },
     {
       "date": "2025-09-01",
       "cum_pct": 69.182,
       "direction": "LONG",
-      "pnl": 13746.0
+      "pnl": 13746.0,
+      "bh_cum_pct": 217.398,
+      "equity_dollars": 131697.0,
+      "bh_equity_dollars": 238287.7
     },
     {
       "date": "2025-09-08",
       "cum_pct": 70.624,
       "direction": "LONG",
-      "pnl": 5179.0
+      "pnl": 5179.0,
+      "bh_cum_pct": 231.61,
+      "equity_dollars": 136876.0,
+      "bh_equity_dollars": 253864.7
     },
     {
       "date": "2025-09-15",
       "cum_pct": 71.902,
       "direction": "LONG",
-      "pnl": 4648.0
+      "pnl": 4648.0,
+      "bh_cum_pct": 235.429,
+      "equity_dollars": 141524.0,
+      "bh_equity_dollars": 258051.0
     },
     {
       "date": "2025-09-22",
       "cum_pct": 73.879,
       "direction": "LONG",
-      "pnl": 7287.0
+      "pnl": 7287.0,
+      "bh_cum_pct": 241.907,
+      "equity_dollars": 148811.0,
+      "bh_equity_dollars": 265151.0
     },
     {
       "date": "2025-10-27",
       "cum_pct": 72.333,
       "direction": "LONG",
-      "pnl": -6282.0
+      "pnl": -6282.0,
+      "bh_cum_pct": 264.77,
+      "equity_dollars": 142529.0,
+      "bh_equity_dollars": 290211.7
     },
     {
       "date": "2025-12-01",
       "cum_pct": 71.76,
       "direction": "LONG",
-      "pnl": -2422.0
+      "pnl": -2422.0,
+      "bh_cum_pct": 285.667,
+      "equity_dollars": 140107.0,
+      "bh_equity_dollars": 313116.0
     },
     {
       "date": "2026-01-12",
       "cum_pct": 72.986,
       "direction": "LONG",
-      "pnl": 5569.0
+      "pnl": 5569.0,
+      "bh_cum_pct": 319.592,
+      "equity_dollars": 145676.0,
+      "bh_equity_dollars": 350300.7
     },
     {
       "date": "2026-01-19",
       "cum_pct": 79.65,
       "direction": "LONG",
-      "pnl": 31136.0
+      "pnl": 31136.0,
+      "bh_cum_pct": 325.617,
+      "equity_dollars": 176812.0,
+      "bh_equity_dollars": 356904.7
     },
     {
       "date": "2026-02-02",
       "cum_pct": 72.473,
       "direction": "LONG",
-      "pnl": -34032.0
+      "pnl": -34032.0,
+      "bh_cum_pct": 335.543,
+      "equity_dollars": 142780.0,
+      "bh_equity_dollars": 367784.7
     },
     {
       "date": "2026-02-09",
       "cum_pct": 72.568,
       "direction": "LONG",
-      "pnl": 476.0
+      "pnl": 476.0,
+      "bh_cum_pct": 359.018,
+      "equity_dollars": 143256.0,
+      "bh_equity_dollars": 393515.7
     },
     {
       "date": "2026-02-16",
       "cum_pct": 74.29,
       "direction": "LONG",
-      "pnl": 8646.0
+      "pnl": 8646.0,
+      "bh_cum_pct": 355.204,
+      "equity_dollars": 151902.0,
+      "bh_equity_dollars": 389334.7
     },
     {
       "date": "2026-02-23",
       "cum_pct": 76.48,
       "direction": "LONG",
-      "pnl": 11311.0
+      "pnl": 11311.0,
+      "bh_cum_pct": 377.639,
+      "equity_dollars": 163213.0,
+      "bh_equity_dollars": 413925.7
     },
     {
       "date": "2026-03-02",
       "cum_pct": 70.183,
       "direction": "LONG",
-      "pnl": -33921.0
+      "pnl": -33921.0,
+      "bh_cum_pct": 387.707,
+      "equity_dollars": 129292.0,
+      "bh_equity_dollars": 424960.7
     },
     {
       "date": "2026-03-09",
       "cum_pct": 69.055,
       "direction": "LONG",
-      "pnl": -5725.0
+      "pnl": -5725.0,
+      "bh_cum_pct": 368.893,
+      "equity_dollars": 123567.0,
+      "bh_equity_dollars": 404338.7
     },
     {
       "date": "2026-03-23",
       "cum_pct": 68.428,
       "direction": "SHORT",
-      "pnl": -2799.0
+      "pnl": -2799.0,
+      "bh_cum_pct": 305.16,
+      "equity_dollars": 120768.0,
+      "bh_equity_dollars": 334482.7
     },
     {
       "date": "2026-05-18",
       "cum_pct": 69.054,
       "direction": "SHORT",
-      "pnl": 2838.0
+      "pnl": 2838.0,
+      "bh_cum_pct": 317.997,
+      "equity_dollars": 123606.0,
+      "bh_equity_dollars": 348552.7
     },
     {
       "date": "2026-05-25",
       "cum_pct": 69.694,
       "direction": "SHORT",
-      "pnl": 2922.0
+      "pnl": 2922.0,
+      "bh_cum_pct": 315.973,
+      "equity_dollars": 126528.0,
+      "bh_equity_dollars": 346333.7
     },
     {
       "date": "2026-06-01",
       "cum_pct": 74.376,
       "direction": "SHORT",
-      "pnl": 21254.0
+      "pnl": 21254.0,
+      "bh_cum_pct": 309.115,
+      "equity_dollars": 147782.0,
+      "bh_equity_dollars": 338817.7
     },
     {
       "date": "2026-06-08",
       "cum_pct": 77.277,
       "direction": "SHORT",
-      "pnl": 12602.0
+      "pnl": 12602.0,
+      "bh_cum_pct": 293.911,
+      "equity_dollars": 160384.0,
+      "bh_equity_dollars": 322152.7
     },
     {
       "date": "2026-06-15",
       "cum_pct": 80.525,
       "direction": "SHORT",
-      "pnl": 13945.0
+      "pnl": 13945.0,
+      "bh_cum_pct": 293.709,
+      "equity_dollars": 174329.0,
+      "bh_equity_dollars": 321930.7
     },
     {
       "date": "2026-06-22",
       "cum_pct": 81.782,
       "direction": "SHORT",
-      "pnl": 5205.0
+      "pnl": 5205.0,
+      "bh_cum_pct": 282.038,
+      "equity_dollars": 179534.0,
+      "bh_equity_dollars": 309138.7
     },
     {
       "date": "2026-06-29",
       "cum_pct": 79.007,
       "direction": "SHORT",
-      "pnl": -11274.0
+      "pnl": -11274.0,
+      "bh_cum_pct": 266.27,
+      "equity_dollars": 168260.0,
+      "bh_equity_dollars": 291855.7
     },
     {
       "date": "2026-07-06",
       "cum_pct": 80.518,
       "direction": "SHORT",
-      "pnl": 6322.0
+      "pnl": 6322.0,
+      "bh_cum_pct": 279.256,
+      "equity_dollars": 174582.0,
+      "bh_equity_dollars": 306088.7
     },
     {
       "date": "2026-07-13",
       "cum_pct": 82.235,
       "direction": "SHORT",
-      "pnl": 7013.0
+      "pnl": 7013.0,
+      "bh_cum_pct": 265.007,
+      "equity_dollars": 181595.0,
+      "bh_equity_dollars": 290470.7
     }
   ],
   "year_stats": [
@@ -2336,5 +3425,11 @@
       "total_pnl": 41489.0,
       "mean_pnl": 2305.0
     }
-  ]
+  ],
+  "buy_hold": {
+    "entry_price": 1096.09,
+    "final_cum_pct": 265.007,
+    "note": "Buy 1 GC contract at first day open, mark-to-market at each backtest trade date.",
+    "final_equity_dollars": 290470.7
+  }
 }

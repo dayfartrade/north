@@ -210,10 +210,14 @@ function renderEquityChart(curve) {
   const H = 360;
 
   const eq = curve.equity_curve;
-  const cums = eq.map(p => p.cum_pct);
-  const minY = Math.min(...cums, 0);
-  const maxY = Math.max(...cums, 0);
+  const hasBH = eq.length > 0 && eq[0].bh_equity_dollars !== undefined;
+  const v1Vals = eq.map(p => p.equity_dollars !== undefined ? p.equity_dollars : p.cum_pct);
+  const bhVals = hasBH ? eq.map(p => p.bh_equity_dollars) : [];
+  const allVals = v1Vals.concat(bhVals);
+  const minY = Math.min(...allVals, 0);
+  const maxY = Math.max(...allVals, 0);
   const rangeY = maxY - minY || 1;
+  const useDollarAxis = eq.length > 0 && eq[0].equity_dollars !== undefined;
 
   // Grid lines
   ctx.strokeStyle = 'rgba(255,255,255,0.05)';
@@ -236,34 +240,67 @@ function renderEquityChart(curve) {
   ctx.stroke();
   ctx.setLineDash([]);
 
-  // Equity line
+  const chartW = W - padding.left - padding.right;
+  const chartH = H - padding.top - padding.bottom;
+
+  // Buy-and-Hold line (drawn first, behind v1)
+  if (hasBH) {
+    ctx.strokeStyle = 'rgba(255,255,255,0.35)';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([6, 4]);
+    ctx.beginPath();
+    for (let i = 0; i < eq.length; i++) {
+      const x = padding.left + (i / (eq.length - 1)) * chartW;
+      const y = padding.top + ((maxY - bhVals[i]) / rangeY) * chartH;
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  // FAR Weekly (v1) equity line — drawn on top
   ctx.strokeStyle = '#f2c94c';
   ctx.lineWidth = 2;
   ctx.beginPath();
-  const chartW = W - padding.left - padding.right;
-  const chartH = H - padding.top - padding.bottom;
   for (let i = 0; i < eq.length; i++) {
     const x = padding.left + (i / (eq.length - 1)) * chartW;
-    const y = padding.top + ((maxY - eq[i].cum_pct) / rangeY) * chartH;
+    const y = padding.top + ((maxY - v1Vals[i]) / rangeY) * chartH;
     if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
   }
   ctx.stroke();
 
-  // Fill under line
+  // Fill under v1 line
   ctx.lineTo(padding.left + chartW, zeroY);
   ctx.lineTo(padding.left, zeroY);
   ctx.closePath();
   ctx.fillStyle = 'rgba(242,201,76,0.08)';
   ctx.fill();
 
+  // Legend
+  if (hasBH) {
+    const legX = padding.left + 10;
+    const legY = padding.top + 14;
+    ctx.font = '12px system-ui';
+    ctx.textAlign = 'left';
+    ctx.fillStyle = '#f2c94c';
+    ctx.fillRect(legX, legY - 8, 14, 3);
+    ctx.fillText('FAR Weekly (active)', legX + 22, legY);
+    ctx.fillStyle = 'rgba(255,255,255,0.6)';
+    ctx.fillRect(legX + 170, legY - 8, 14, 3);
+    ctx.fillText('Buy-and-Hold gold (passive)', legX + 192, legY);
+  }
+
   // Y-axis labels
   ctx.fillStyle = '#8a8f99';
   ctx.font = '12px system-ui';
   ctx.textAlign = 'right';
+  const fmt = v => useDollarAxis
+    ? `${v >= 0 ? '+' : '-'}$${Math.abs(v/1000).toFixed(0)}k`
+    : `${v >= 0 ? '+' : ''}${v.toFixed(1)}%`;
   for (let g = 0; g <= 4; g++) {
     const v = maxY - (rangeY * g / 4);
     const y = padding.top + (H - padding.top - padding.bottom) * g / 4;
-    ctx.fillText(`${v >= 0 ? '+' : ''}${v.toFixed(1)}%`, padding.left - 8, y + 4);
+    ctx.fillText(fmt(v), padding.left - 8, y + 4);
   }
 
   // X-axis labels — first, middle, last year
