@@ -101,6 +101,18 @@ tar xzf backups/memory_*.tar.gz -C /c/Users/farha/.claude/projects/C--golddaytra
   Only shipped product remains: FAR Weekly Gold Read v1 (BETA).
   Next scheduled event: Sunday 2026-08-02 22:00 UTC first live
   outcome resolves + week 2026-08-03 call publishes.
+- **20260724-142614Z** — final session close backup. 20 commits
+  pushed total (main faff663..5f16d2a). Additional session output
+  after 11:57 backup: codebase audit fix (session_config_hash
+  TODO replaced with real sha1[:12] hash), put-spread income v1
+  REJECTED (kill switch on skew -6.73), ensemble v1+v2+monthly
+  PASSES all 5 gates (first pass of session; registered
+  pre_registered_shadow, wired into publisher for forward log),
+  Davey book pre-reg seeds filed (3 mean-reversion candidates
+  for future work), soft-launch discussion memory prepped as
+  next-session top priority with 9-point walkthrough agenda.
+  Registry N=43. Tests: 107 passed, 3 skipped.
+  Next scheduled event unchanged: Sunday 2026-08-02 22:00 UTC.
 
 Latest backup is authoritative for restoring session state.
 Data archive (`dukascopy_data_*`) hasn't changed since the first backup
