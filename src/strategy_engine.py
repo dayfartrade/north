@@ -509,8 +509,22 @@ def evaluate_session(cfg: SessionConfig, ctx: OrContext, regime: RegimeContext) 
         target_price=target,
         stop_price=stop,
         regime=regime,
-        session_config_hash="TODO-hash-cfg-here",
+        session_config_hash=_config_hash(cfg),
     )
+
+
+def _config_hash(cfg) -> str:
+    """Stable short hash of session config, so a decision record can be tied
+    back to the exact parameter set that produced it."""
+    import hashlib
+    fields = [
+        cfg.name, cfg.or_bars, cfg.watch_bars, cfg.max_hold_bars,
+        cfg.or_atr_max, cfg.or_atr_min, cfg.or_atr_deadzone,
+        cfg.stop_mode, cfg.fixed_stop_dollars, cfg.target_mode, cfg.tp_mult,
+        cfg.require_daily_slope_alignment, cfg.require_path_z,
+    ]
+    payload = "|".join(str(f) for f in fields).encode()
+    return hashlib.sha1(payload).hexdigest()[:12]
 
 
 # ---------------------------------------------------------------------------
