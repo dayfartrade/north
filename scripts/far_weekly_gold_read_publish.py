@@ -36,6 +36,8 @@ spec.loader.exec_module(far_backtest)
 CALLS_LOG = ROOT / "data" / "far_weekly_calls.jsonl"
 SITE_CURRENT = ROOT / "site" / "data" / "far_weekly_current.json"
 SITE_HISTORY = ROOT / "site" / "data" / "far_weekly_history.json"
+REGISTRY_SRC = ROOT / "data" / "experiments" / "registry.json"
+SITE_REGISTRY = ROOT / "site" / "data" / "registry.json"
 
 # v2 shadow tracking (NOT public; pre-reg says 6 months forward before decision)
 V2_SHADOW_LOG = ROOT / "data" / "far_weekly_v2_shadow.jsonl"
@@ -380,6 +382,16 @@ def main() -> None:
     if not args.dry_run:
         write_site_files(call, history)
         print(f"[wrote] {SITE_CURRENT.name}, {SITE_HISTORY.name}")
+
+    # Sync registry to site (for public research log at /research.html)
+    if not args.dry_run:
+        try:
+            import shutil
+            if REGISTRY_SRC.exists():
+                shutil.copyfile(REGISTRY_SRC, SITE_REGISTRY)
+                print(f"[wrote] {SITE_REGISTRY.name} (registry snapshot)")
+        except Exception as e:
+            print(f"[registry sync] failed: {e}")
 
     # Generate RSS + JSON API feeds (aggregators, bots)
     if not args.dry_run:

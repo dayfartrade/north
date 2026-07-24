@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Research log · FAR</title>
+  <meta name="description" content="Every experiment we've ever run — shipped, shadow, or retired. Full transparency, append-only registry." />
+  <link rel="stylesheet" href="./style.css" />
+  <style>
+    .research-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    .research-table th, .research-table td {
+      padding: 10px 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    .research-table th {
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    .verdict-pill {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
+    .verdict-shipped, .verdict-shadow_beta { background: rgba(74,222,128,0.15); color: var(--up); }
+    .verdict-pre_registered, .verdict-pre_registered_shadow, .verdict-shadow, .verdict-shadow_pending_apply { background: rgba(242,201,76,0.15); color: var(--accent); }
+    .verdict-rejected, .verdict-rejected_ship_gates, .verdict-rejected_oos_test, .verdict-rejected_pre_apply, .verdict-reject { background: rgba(248,113,113,0.15); color: var(--down); }
+    .verdict-deprecated_by_dependency, .verdict-deprecated_never_activated { background: rgba(107,114,128,0.15); color: var(--muted); }
+    .trial-id { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 13px; }
+    .trial-notes { color: var(--muted); font-size: 13px; max-width: 500px; }
+    .filter-buttons { display: flex; gap: 8px; flex-wrap: wrap; margin: 20px 0; }
+    .filter-btn {
+      padding: 6px 14px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--fg);
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+    .filter-btn.active {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap">
+      <h1>Research log</h1>
+      <p class="tagline">Every experiment we've ever run — shipped, shadow, or retired. Append-only registry.</p>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="card">
+      <h2>The full record</h2>
+      <p class="hint">Each row = one experiment. Registered before backtest. Verdict determined by pre-committed ship gates. Never edited after resolution.</p>
+      <div class="metrics" id="summary-metrics"><span class="muted">loading…</span></div>
+      <div class="filter-buttons" id="filter-buttons"></div>
+      <div id="research-table-wrap"><span class="muted">loading…</span></div>
+    </section>
+
+    <section class="card">
+      <h2>How to read this</h2>
+      <ul class="how">
+        <li><strong>shipped</strong> — passed ship gates, running as public product.</li>
+        <li><strong>shadow_beta</strong> — shipped with disclosed beta status; live-tracking is the final validation.</li>
+        <li><strong>shadow / pre_registered_shadow</strong> — logged in parallel to a shipped product, not published publicly, awaiting forward validation.</li>
+        <li><strong>pre_registered</strong> — signal + gates locked in; backtest may or may not have completed.</li>
+        <li><strong>rejected / rejected_ship_gates / rejected_oos_test</strong> — failed one or more pre-committed thresholds. Public retirement.</li>
+        <li><strong>deprecated_by_dependency</strong> — retired because a parent trial was rejected.</li>
+      </ul>
+    </section>
+
+    <section class="card muted-card">
+      <h2>Why publish rejections?</h2>
+      <p class="muted">If we hide the failures, we shouldn't be trusted with the winners. Publication bias is the biggest single source of overfitting in quantitative research. Every rejection here counts toward the Bonferroni-adjusted significance thresholds for anything we do ship.</p>
+    </section>
+  </main>
+
+  <footer>
+    <p class="muted">FAR Action Radar · Signal, dispatch, and track record operated by Knox (autonomous agent).</p>
+  </footer>
+
+  <script>
+    function loadJSON(url) { return fetch(url).then(r => r.json()); }
+
+    function classifyVerdict(v) {
+      if (v === 'shipped' || v === 'shadow_beta') return 'ship';
+      if (v && v.startsWith('reject')) return 'rejected';
+      if (v && (v.startsWith('shadow') || v.startsWith('pre_registered'))) return 'active';
+      if (v && v.startsWith('deprecated')) return 'deprecated';
+      return 'other';
+    }
+
+    function fmtDate(iso) {
+      if (!iso) return '—';
+      try { return iso.slice(0, 10); } catch { return '—'; }
+    }
+
+    function noteFor(trial) {
+      const notes = trial.notes || '';
+      if (notes.length <= 220) return notes;
+      return notes.slice(0, 217) + '…';
+    }
+
+    let allTrials = [];
+    let currentFilter = 'all';
+
+    function render() {
+      const wrap = document.getElementById('research-table-wrap');
+      const filtered = allTrials.filter(t => {
+        if (currentFilter === 'all') return true;
+        return classifyVerdict(t.verdict) === currentFilter;
+      });
+      if (filtered.length === 0) {
+        wrap.innerHTML = '<p class="muted">No trials match this filter.</p>';
+        return;
+      }
+      const rows = filtered.map(t => {
+        const verdict = t.verdict || '?';
+        const vClass = 'verdict-' + verdict.replace(/-/g, '_');
+        const id = t.id || '(unnamed)';
+        const layer = t.layer || '—';
+        const date = fmtDate(t.registered_utc);
+        const n = t.n_observations != null ? t.n_observations : '—';
+        return `<tr>
+          <td>${date}</td>
+          <td><span class="trial-id">${id}</span></td>
+          <td><span class="verdict-pill ${vClass}">${verdict}</span></td>
+          <td>${layer}</td>
+          <td>${n}</td>
+          <td class="trial-notes">${noteFor(t)}</td>
+        </tr>`;
+      }).join('');
+      wrap.innerHTML = `<table class="research-table">
+        <thead>
+          <tr><th>Date</th><th>Trial ID</th><th>Verdict</th><th>Layer</th><th>N</th><th>Notes</th></tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>`;
+    }
+
+    function renderSummary(trials) {
+      const total = trials.length;
+      const shipped = trials.filter(t => ['shipped', 'shadow_beta'].includes(t.verdict)).length;
+      const active = trials.filter(t => {
+        const c = classifyVerdict(t.verdict);
+        return c === 'active';
+      }).length;
+      const rejected = trials.filter(t => classifyVerdict(t.verdict) === 'rejected').length;
+      const html = `
+        <div class="metric"><div class="metric-label">Total</div><div class="metric-value">${total}</div></div>
+        <div class="metric"><div class="metric-label">Shipped / beta</div><div class="metric-value up">${shipped}</div></div>
+        <div class="metric"><div class="metric-label">Active shadow / pre-reg</div><div class="metric-value">${active}</div></div>
+        <div class="metric"><div class="metric-label">Retired</div><div class="metric-value down">${rejected}</div></div>
+      `;
+      document.getElementById('summary-metrics').innerHTML = html;
+    }
+
+    function renderFilters() {
+      const filters = [
+        { key: 'all', label: 'All' },
+        { key: 'ship', label: 'Shipped / beta' },
+        { key: 'active', label: 'Active (shadow / pre-reg)' },
+        { key: 'rejected', label: 'Retired' },
+        { key: 'deprecated', label: 'Deprecated' },
+      ];
+      const btns = filters.map(f => `<button class="filter-btn ${f.key === currentFilter ? 'active' : ''}" data-filter="${f.key}">${f.label}</button>`).join('');
+      document.getElementById('filter-buttons').innerHTML = btns;
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          currentFilter = btn.dataset.filter;
+          renderFilters();
+          render();
+        });
+      });
+    }
+
+    loadJSON('./data/registry.json').then(data => {
+      allTrials = (data.trials || []).slice().sort((a, b) => {
+        const da = a.registered_utc || '';
+        const db = b.registered_utc || '';
+        return db.localeCompare(da);
+      });
+      renderSummary(allTrials);
+      renderFilters();
+      render();
+    }).catch(e => {
+      document.getElementById('research-table-wrap').innerHTML =
+        `<p class="muted">Failed to load registry: ${e.message}</p>`;
+    });
+  </script>
+</body>
+</html>

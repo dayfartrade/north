@@ -1,0 +1,390 @@
+{
+  "schema_version": 1,
+  "notes": "One row per trial ever tested. sr_per_period is the observed per-trade Sharpe on the trial's evaluation sample. When >=2 rows have sr_per_period recorded, V[SR_n] is computed from them; otherwise the LdP default 0.5 is used and a warning printed.",
+  "trials": [
+    {
+      "id": "backfill_2026_07_07_v7",
+      "registered_utc": "2026-07-07T20:00:00Z",
+      "layer": "session_config",
+      "verdict": "shipped",
+      "sr_per_period": null,
+      "n_observations": null,
+      "notes": "Backfilled from 2026-07-07 DSR audit \u2014 per-variant SR not recorded at test time. Counts toward N; does not contribute to measured V[SR_n]."
+    },
+    {
+      "id": "backfill_2026_07_07_v7.1",
+      "registered_utc": "2026-07-07T20:00:00Z",
+      "layer": "session_config",
+      "verdict": "shipped",
+      "sr_per_period": null,
+      "n_observations": null,
+      "notes": "Backfilled from 2026-07-07 DSR audit \u2014 per-variant SR not recorded at test time. Counts toward N; does not contribute to measured V[SR_n]."
+    },
+    {
+      "id": "backfill_2026_07_07_v7.2.1",
+      "registered_utc": "2026-07-07T20:00:00Z",
+      "layer": "session_config",
+      "verdict": "shipped",
+      "sr_per_period": null,
+      "n_observations": null,
+      "notes": "Backfilled from 2026-07-07 DSR audit \u2014 per-variant SR not recorded at test time. Counts toward N; does not contribute to measured V[SR_n]."
+    },
+    {
+      "id": "backfill_2026_07_07_rejected_01",
+      "registered_utc": "2026-07-07T20:00:00Z",
+      "layer": "session_config",
+      "verdict": "rejected",
+      "sr_per_period": null,
+      "n_observations": null,
+      "notes": "Backfilled from 2026-07-07 sweep \u2014 12 hypotheses tested and rejected without per-variant SR recording. Contributes to Bonferroni N, not V[SR_n]."
+    },
+    {
+      "id": "backfill_2026_07_07_rejected_02",
+      "registered_utc": "2026-07-07T20:00:00Z",
+      "layer": "session_config",
+      "verdict": "rejected",
+      "sr_per_period": null,
+      "n_observations": null,
+      "notes": "Backfilled from 2026-07-07 sweep \u2014 12 hypotheses tested and rejected without per-variant SR recording. Contributes to Bonferroni N, not V[SR_n]."
+    },
+    {
+      "id": "backfill_2026_07_07_rejected_03",
+      "registered_utc": "2026-07-07T20:00:00Z",
+      "layer": "session_config",
+      "verdict": "rejected",
+      "sr_per_period": null,
+      "n_observations": null,
+      "notes": "Backfilled from 2026-07-07 sweep \u2014 12 hypotheses tested and rejected without per-variant SR recording. Contributes to Bonferroni N, not V[SR_n]."
+    },
+    {
+      "id": "backfill_2026_07_07_rejected_04",
+      "registered_utc": "2026-07-07T20:00:00Z",
+      "layer": "session_config",
+      "verdict": "rejected",
+      "sr_per_period": null,
+      "n_observations": null,
+      "notes": "Backfilled from 2026-07-07 sweep \u2014 12 hypotheses tested and rejected without per-variant SR recording. Contributes to Bonferroni N, not V[SR_n]."
+    },
+    {
+      "id": "backfill_2026_07_07_rejected_05",
+      "registered_utc": "2026-07-07T20:00:00Z",
+      "layer": "session_config",
+      "verdict": "rejected",
+      "sr_per_period": null,
+      "n_observations": null,
+      "notes": "Backfilled from 2026-07-07 sweep \u2014 12 hypotheses tested and rejected without per-variant SR recording. Contributes to Bonferroni N, not V[SR_n]."
+    },
+    {
+      "id": "backfill_2026_07_07_rejected_06",
+      "registered_utc": "2026-07-07T20:00:00Z",
+      "layer": "session_config",
+      "verdict": "rejected",
+      "sr_per_period": null,
+      "n_observations": null,
+      "notes": "Backfilled from 2026-07-07 sweep \u2014 12 hypotheses tested and rejected without per-variant SR recording. Contributes to Bonferroni N, not V[SR_n]."
+    },
+    {
+      "id": "backfill_2026_07_07_rejected_07",
+      "registered_utc": "2026-07-07T20:00:00Z",
+      "layer": "session_config",
+      "verdict": "rejected",
+      "sr_per_period": null,
+      "n_observations": null,
+      "notes": "Backfilled from 2026-07-07 sweep \u2014 12 hypotheses tested and rejected without per-variant SR recording. Contributes to Bonferroni N, not V[SR_n]."
+    },
+    {
+      "id": "backfill_2026_07_07_rejected_08",
+      "registered_utc": "2026-07-07T20:00:00Z",
+      "layer": "session_config",
+      "verdict": "rejected",
+      "sr_per_period": null,
+      "n_observations": null,
+      "notes": "Backfilled from 2026-07-07 sweep \u2014 12 hypotheses tested and rejected without per-variant SR recording. Contributes to Bonferroni N, not V[SR_n]."
+    },
+    {
+      "id": "backfill_2026_07_07_rejected_09",
+      "registered_utc": "2026-07-07T20:00:00Z",
+      "layer": "session_config",
+      "verdict": "rejected",
+      "sr_per_period": null,
+      "n_observations": null,
+      "notes": "Backfilled from 2026-07-07 sweep \u2014 12 hypotheses tested and rejected without per-variant SR recording. Contributes to Bonferroni N, not V[SR_n]."
+    },
+    {
+      "id": "backfill_2026_07_07_rejected_10",
+      "registered_utc": "2026-07-07T20:00:00Z",
+      "layer": "session_config",
+      "verdict": "rejected",
+      "sr_per_period": null,
+      "n_observations": null,
+      "notes": "Backfilled from 2026-07-07 sweep \u2014 12 hypotheses tested and rejected without per-variant SR recording. Contributes to Bonferroni N, not V[SR_n]."
+    },
+    {
+      "id": "backfill_2026_07_07_rejected_11",
+      "registered_utc": "2026-07-07T20:00:00Z",
+      "layer": "session_config",
+      "verdict": "rejected",
+      "sr_per_period": null,
+      "n_observations": null,
+      "notes": "Backfilled from 2026-07-07 sweep \u2014 12 hypotheses tested and rejected without per-variant SR recording. Contributes to Bonferroni N, not V[SR_n]."
+    },
+    {
+      "id": "backfill_2026_07_07_rejected_12",
+      "registered_utc": "2026-07-07T20:00:00Z",
+      "layer": "session_config",
+      "verdict": "rejected",
+      "sr_per_period": null,
+      "n_observations": null,
+      "notes": "Backfilled from 2026-07-07 sweep \u2014 12 hypotheses tested and rejected without per-variant SR recording. Contributes to Bonferroni N, not V[SR_n]."
+    },
+    {
+      "id": "janus_q4_trailing_stop",
+      "registered_utc": "2026-07-07T19:12:29.028746Z",
+      "layer": "strategy_engine",
+      "verdict": "rejected",
+      "sr_per_period": null,
+      "n_observations": null,
+      "notes": "REJECTED per pre-reg (docs/experiments/2026-07-07_janus_q4_trailing_stop.md). Matched-pair OOS mean lift -$145, permutation p=0.6543, all 4 gates fail. Trailing schedule cut winner tails."
+    },
+    {
+      "id": "meta_labeling_v72_1",
+      "registered_utc": "2026-07-07T21:50:16.034095Z",
+      "layer": "session_config",
+      "verdict": "reject",
+      "sr_per_period": 0.4205047502775455,
+      "n_observations": 50,
+      "notes": "3-feature logistic (session, or_atr_ratio, trend_slope_abs). Purged 5-fold, embargo=1%, threshold=0.5. kept_win=68.0% mean=$+773 keep_frac=96.15% DSR=0.0000 PSR=0.9944"
+    },
+    {
+      "id": "slope_gt_8_shadow",
+      "registered_utc": "2026-07-13T10:15:00Z",
+      "layer": "session_config",
+      "verdict": "shadow",
+      "sr_per_period": null,
+      "n_observations": 24,
+      "notes": "SHADOW: skip LONG if trend_slope>8. From 07-13 post-mortem. In-sample lift +$8,145 skipping 5 losses/0 wins on n=24 forward log; in-sample-of-in-sample overfit risk noted. Bonferroni-N incremented."
+    },
+    {
+      "id": "real_yield_gt_2_2_shadow",
+      "registered_utc": "2026-07-13T10:15:00Z",
+      "layer": "session_config",
+      "verdict": "rejected_pre_apply",
+      "sr_per_period": null,
+      "n_observations": 24,
+      "notes": "REJECTED before apply (2026-07-13 11:00 UTC): OOS regime test on 20+ years fails. High-ry regimes historically produce HIGHER fwd gold returns (+2.28% 20d fwd at ry>=2.2 vs +0.81% at ry<2.2). 3 of 4 launch LONG losses lost on days GC closed UP 1-1.6% \u00e2\u20ac\u201d failure mode is INTRADAY MICROSTRUCTURE (breakout failure while daily trend is intact), not macro-directional bet. Filter would suppress correct-direction days. Contributes to Bonferroni-N. New research direction: intraday-chop filters."
+    },
+    {
+      "id": "prior_day_range_gt_80_shadow",
+      "registered_utc": "2026-07-13T10:15:00Z",
+      "layer": "session_config",
+      "verdict": "shadow_pending_apply",
+      "sr_per_period": null,
+      "n_observations": 24,
+      "notes": "SHADOW (design; apply post-CPI): skip PLAN if prior-day GC range>80 pt. Whipsaw filter from 07-13 post-mortem. Weaker candidate (skips 3 winners for 6 losses). Fails 3-months-ago test."
+    },
+    {
+      "id": "gap_after_down_day_shadow",
+      "registered_utc": "2026-07-13T10:15:00Z",
+      "layer": "session_config",
+      "verdict": "shadow_pending_apply",
+      "sr_per_period": null,
+      "n_observations": 24,
+      "notes": "SHADOW (design; apply post-CPI): skip LONG if prior-day close change<=-30 pt. Dead-cat bounce filter. Weakest candidate (n=2 skips, high overfit). Fails 3-months-ago test."
+    },
+    {
+      "id": "sprt_v72_1_launch",
+      "registered_utc": "2026-07-13T11:00:00Z",
+      "layer": "operational_halt",
+      "verdict": "pre_registered",
+      "sr_per_period": null,
+      "n_observations": 10,
+      "notes": "SPRT pre-reg: H0=p_win=0.57 (backtest), H1=p_win=0.35 (broken), alpha=beta=0.05. Boundaries +/-2.944. Sample window = live trades since 2026-07-01 launch. Frozen: no re-run without new pre-reg. Reading at pre-reg time: log-LR=+3.229 crosses HALT boundary. See docs/experiments/2026-07-13_sprt_prereg.md."
+    },
+    {
+      "id": "sprt_v72_1_reentry_prereg",
+      "registered_utc": "2026-07-13T11:05:00Z",
+      "layer": "operational_halt",
+      "verdict": "pre_registered",
+      "sr_per_period": null,
+      "n_observations": null,
+      "notes": "Re-entry conditions for sprt_v72_1_launch halt. Path A (shadow-recovery): shadow +>=$27,390 AND >=5 consecutive would-take at >=60% win. Path B (regime): real_yield<2.0 for 30 consecutive days AND shadow>=0; first 5 trades at 50% size. Path C (new strategy): v7.3+ passes DSR AND new SPRT pre-reg. Hard stop: retire if none fire by 2026-10-13. See docs/experiments/2026-07-13_reentry_conditions_prereg.md."
+    },
+    {
+      "id": "bootstrap_reference_max_dd_2026_07_13",
+      "registered_utc": "2026-07-13T11:00:00Z",
+      "layer": "operational_halt",
+      "verdict": "shipped",
+      "sr_per_period": null,
+      "n_observations": 14,
+      "notes": "Bootstrapped p95 max DD from pre-launch 14-trade null with M=10000 draws. n=10 horizon = $13,695 (used as REFERENCE_MAX_DD in halt_monitor.py, replacing $20k placeholder). n=72 horizon = $42,498. Refresh at n=30, 50, 100 live samples."
+    },
+    {
+      "id": "path_y_filter_sync",
+      "registered_utc": "2026-07-13T15:00:00Z",
+      "layer": "strategy_engine",
+      "verdict": "shipped",
+      "sr_per_period": null,
+      "n_observations": 25,
+      "notes": "Path Y: synced backtest SESSION_CONFIG to match live's actual filter (or_vs_atr_max=2.0 default on all sessions). v7.1 per-session filters (or_vs_atr_min NY, or_atr_deadzone ASIA) never shipped to live per commit a363282 which only touched backtest. NY tp_mult 1.0->1.5 (v7.2 rationale invalidated). New DSR: n=25, 52% win, +$424/trade, CI [-$112,+$954] -> FAIL (NOT READY). Per-session: LON 75% win/$1031/trade edge, ASIA 46%/$309 marginal, NY 25%/-$415 negative. See docs/experiments/2026-07-13_path_y_results.md."
+    },
+    {
+      "id": "sprt_v72_1_launch_path_y",
+      "registered_utc": "2026-07-13T15:00:00Z",
+      "layer": "operational_halt",
+      "verdict": "pre_registered",
+      "sr_per_period": null,
+      "n_observations": 10,
+      "notes": "SPRT re-baseline under Path Y: H0=0.52 (corrected backtest win rate) vs H1=0.35. Old sprt_v72_1_launch (H0=0.57) is invalid because it used v7.1 phantom-backtest metric. Under Path Y: log-LR = +2.33 (below halt boundary +2.94) -> SPRT_CONTINUE. Halt does NOT fire under corrected baseline. Sensitivity: H1=0.30 -> +2.84 CONTINUE, H1=0.25 -> +3.28 HALT. Kill switch stays on regardless because DSR audit FAILS on Path Y (CI includes 0)."
+    },
+    {
+      "id": "daily_slope_consistency_shadow",
+      "registered_utc": "2026-07-18T07:15:00Z",
+      "resolved_utc": "2026-07-20T14:15:00Z",
+      "layer": "strategy_engine",
+      "verdict": "rejected",
+      "sr_per_period": null,
+      "n_observations": 329,
+      "notes": "REJECTED at n=329 per pre-reg rejection gate #2 (skip-rate 41.6% > 40% ceiling without decisive P&L improvement). Ship-gate report (2026-07-20 XAU/USD proxy backfill 2024-01-15 -> 2026-07-20 via Dukascopy): n=329 taken shadow decisions with valid dsc signal; skip-rate 41.6%; precision-on-losers 58.4% (below 60% ship floor, above 55% reject floor); P&L lift -$11.23/trade; bootstrap 95% CI [-$77, +$49] spans zero. Path Y unfiltered lost -$16.70/trade on same sample (n=329 over 2.5yr XAU/USD), so filter removal is NOT a rejection of the strategy either -- Path Y itself may lack edge over 2.5yr, which retroactively validates the sprt_v72_1_launch_path_y halt at n=18. Caveat: data is XAU/USD spot not GC futures (~95% correlated); direction/precision valid, P&L $ approximate. Analysis file preserved at data/shadow_equity_xauusd_backfill_full.jsonl. Bonferroni-N increments as rejected trial. See docs/experiments/2026-07-18_daily_slope_consistency_shadow.md rejection section."
+    },
+    {
+      "id": "knox_soft_launch_engine_b",
+      "registered_utc": "2026-07-18T08:30:00Z",
+      "resolved_utc": "2026-07-20T14:15:00Z",
+      "layer": "operational_launch",
+      "verdict": "deprecated_by_dependency",
+      "sr_per_period": null,
+      "n_observations": 16,
+      "notes": "DEPRECATED: Knox soft-launch is retired because its underlying filter (daily_slope_consistency) was REJECTED at n=329 on 2026-07-20. Config SESSION_CONFIGS_V8_B depended on require_daily_slope_alignment=True; that filter is no longer a valid ship candidate. No Knox alerts were ever published to research channel (research channel never created; KNOX_RESEARCH_ENABLED=0 throughout soft-launch window). Zero user-facing artifacts. Systemd knox-*.timer units remain installed on VPS but inert (kill switch off in .env.vps + data/knox_state.json). Next Engine B design will be v9 candidate: Volker Knapp asymmetric ER-based stops (kaufman_ch17_readnotes.md) as first pre-reg since it addresses the LONG stop-hit failure mode that dsc failed to address. Original plan doc: docs/launch/2026-07-18_soft_launch_plan.md."
+    },
+    {
+      "id": "knox_sprt_prereg",
+      "registered_utc": "2026-07-18T09:00:00Z",
+      "resolved_utc": "2026-07-20T14:15:00Z",
+      "layer": "operational_halt",
+      "verdict": "deprecated_never_activated",
+      "sr_per_period": null,
+      "n_observations": 0,
+      "notes": "DEPRECATED never activated: was gated on Knox n=50 which never accumulated (Knox never went live because research channel never created + dsc filter rejected before reaching activation threshold). No SPRT rebase attempted. Original pre-reg: docs/experiments/2026-07-18_knox_sprt_prereg.md."
+    },
+    {
+      "id": "path_z_ny_short_shadow",
+      "registered_utc": "2026-07-20T17:30:00Z",
+      "layer": "strategy_engine",
+      "verdict": "rejected_oos_test",
+      "sr_per_period": null,
+      "n_observations": 91,
+      "notes": "SHADOW pre-reg (v9 candidate #2): filter_path_z. Take-filter (restrictive) that takes ONLY when session=NY AND direction=SHORT AND ER_5m_20<0.30 AND dow in Mon-Tue-Wed. Discovered via scripts/deep_analysis_orb.py on Dukascopy XAU/USD 5m 2024-2026 (n=1018). Path Y overall lost -$25,249 but NY-SHORT+LowER+Mon-Wed subset (n=91) has mean +$409/trade, 62.6% win rate, bootstrap 95% CI [+$45,+$760] clears zero. Mechanism identified: winners come on 25% wider OR + asymmetric payoff (winner mean +$1,233 vs loser mean -$971 = 1.27:1). Real yield IDENTICAL across winners/losers (not macro-regime edge). Sign confirmed on real GC 5m yfinance n=31 (NY-SHORT +$36/trade, only positive quadrant). Concentration risk documented: top 5 trades = 64% of P&L. Ship gate: n>=100 shadow-taken AND mean>0 AND CI clears 0 AND win rate>=55% AND Bonferroni-adjusted DSR passes AND fresh Path Z-specific SPRT pre-reg. Reject gate: mean<=0, or CI includes 0 with mean<+$50, or win rate<55%, or hard-stop 2026-10-13. Fails 3-months-ago test (discovered from analyzing today's sample). Bonferroni-N increments +6-8 for today's segmentation multiplicity. Full pre-reg: docs/experiments/2026-07-20_path_z_ny_short_prereg.md. No live effect (require_path_z=False in all live configs). AMENDMENT 2026-07-22: ship-gate #5 changed from Bonferroni-DSR>0.95 (structurally infeasible for fat-tail Path Z; per-trade SR 0.222 vs SR* 1.485 at N=32 V=0.5) to PSR vs SR=0 > 0.95 on forward n>=100 sample. Full rationale: docs/experiments/2026-07-22_path_z_ship_gate_amendment.md. Current in-sample PSR = 0.9858 (clears). FORMAL RETIREMENT 2026-07-22: 9-year OOS test on 2015-2023 Dukascopy XAUUSD (n=288) showed mean +$2.58/trade, WR 44.1% (below 55% gate), Sharpe R=-0.039. Path Z is a 2025-2026 gold-rally regime anomaly, not a persistent edge. 9 of 12 years near-flat/losing. Combined 12yr sample n=373 with mean +$107/week barely clears bootstrap CI. Retired per pre-reg reject gate: OOS mean/WR falls below thresholds when broader sample is tested. Full: memory/path_z_oos_result.md. Ship-gate 6 (Path Z SPRT pre-reg sprt_path_z_live) also becomes DEPRECATED as dependency chain is now dead.",
+      "resolved_utc": "2026-07-22T09:38:33.577744+00:00"
+    },
+    {
+      "id": "knapp_er_stops_v9",
+      "registered_utc": "2026-07-20T14:45:00Z",
+      "resolved_utc": "2026-07-20T16:45:00Z",
+      "layer": "strategy_engine",
+      "verdict": "rejected_pre_apply",
+      "sr_per_period": null,
+      "n_observations": 1018,
+      "notes": "REJECTED pre-apply on 2026-07-20 (same-day resolution): reproduction study failed on 3 non-gold markets + gold below ship gate. Gold (XAU/USD n=1018): paired lift +$2.35/trade (ship gate required +$50/trade). EUR/USD n=1216: +/-$0.00 lift. GBP/USD n=1203: +/-$0.00 lift. USD/JPY n=1226: +$0.20 lift, CI spans zero. Even at 100x scale correction for FX contract sizing, all three FX markets remain under +$50/trade. Higher-ER band on gold (ER>=0.60) showed +$12.81/trade lift (n=37) but sample too small to defend. Knapp asymmetric stop logic does not add measurable P&L when applied to Path Y-style ORB entries. Filed as v9 candidate #1; will be replaced by NY-SHORT sub-edge investigation as v9 candidate #2 (see docs/experiments/2026-07-20_deep_analysis_findings.md). Bonferroni-N increments. Original draft pre-reg: docs/experiments/2026-07-20_v9_knapp_er_stops_prereg.md."
+    },
+    {
+      "id": "sprt_path_z_live",
+      "registered_utc": "2026-07-22T09:00:00Z",
+      "resolved_utc": "2026-07-22T09:38:33.577776+00:00",
+      "layer": "halt_monitor",
+      "verdict": "deprecated_by_dependency",
+      "sr_per_period": null,
+      "n_observations": 0,
+      "notes": "Path Z-specific SPRT halt framework. Pre-registered dormant; activates on first Path Z live trade. Satisfies Path Z ship-gate #6. Parameters: p0=0.541 (in-sample WR), p1=0.35 (broken threshold), alpha=beta=0.05, halt boundary +2.9444, safe boundary -2.9444, per-win LR -0.4355, per-loss LR +0.3479. Frozen sample window semantics; hard-stop 2026-10-13 aligned with Path C. Full doc: docs/experiments/2026-07-22_path_z_sprt_prereg.md. DEPRECATED 2026-07-22: parent Path Z candidate rejected on OOS. SPRT framework never activated (Path Z had 0 live trades)."
+    },
+    {
+      "id": "far_weekly_gold_read_v1",
+      "registered_utc": "2026-07-22T11:00:00Z",
+      "resolved_utc": null,
+      "layer": "strategy_engine_weekly",
+      "verdict": "shadow_beta",
+      "sr_per_period": 0.1064,
+      "n_observations": 363,
+      "notes": "FAR Weekly Gold Read v1: momentum (M20/M60 + MA10/40 cross) + macro (RY_chg<0) filter on weekly gold. Pre-reg: docs/experiments/2026-07-22_far_weekly_gold_read_prereg.md. Backtest 2015-2026 (n=266 trades): total +$140k, WR 55.6%, Sharpe ann 0.72. Gates: 3/6 pass, 3/6 borderline fail (training Sharpe 0.478 vs 0.5 target, combined CI [-0.16%, +0.35%] doesn't clear 0, PSR 0.9483 vs 0.95). Year-by-year 9/12 positive. Stops are the loss driver (15% stop rate, -$5930/stop). SHIPPING AS BETA per user directive to build product; live tracking replaces failed statistical gates. Retire if 12mo live diverges from backtest. AMENDMENT 2026-07-22 12:00 UTC: extended sample 2010-2026 (n=363 trades) clears original borderline gates 4 (CI [+0.013%, +0.447%] clears 0) and 6 (PSR 0.9785 > 0.95). 16yr WR 55.9%, Sharpe ann 0.767, 13/17 years positive. Product stays BETA; live tracking remains ultimate validation. Full: docs/experiments/2026-07-22_far_weekly_gold_read_amendment.md."
+    },
+    {
+      "id": "far_weekly_gold_read_v2",
+      "registered_utc": "2026-07-22T13:00:00Z",
+      "resolved_utc": null,
+      "layer": "strategy_engine_weekly",
+      "verdict": "pre_registered_shadow",
+      "sr_per_period": 0.1442,
+      "n_observations": 270,
+      "notes": "FAR Weekly v2: v1 signal AND DXY_chg agrees with direction. Pre-reg: docs/experiments/2026-07-22_far_weekly_v2_dxy_prereg.md. 16yr backtest (design-time comparison, NOT ship gate): n=270 trades vs v1 n=363. WR 58.5% vs v1 55.9%. Sharpe ann 1.042 vs v1 0.767. Total P&L +$187,570 vs v1 +$181,598. PSR 0.9903 vs v1 0.9785. Bootstrap 95% CI [+0.060%, +0.570%]. v2 filters ~11% of v1 non-flat signals (never opposite direction). Ship decision requires 26 weeks forward comparison. First live divergence: v1 SHORT for 2026-07-27, v2 FLAT (DXY not confirming)."
+    },
+    {
+      "id": "far_weekly_meta_labeling_v1",
+      "registered_utc": "2026-07-22T14:30:00Z",
+      "resolved_utc": "2026-07-22T14:45:00Z",
+      "layer": "strategy_engine_weekly_ml",
+      "verdict": "rejected_ship_gates",
+      "sr_per_period": 0.138,
+      "n_observations": 252,
+      "notes": "Prado AFML Ch 3.6 meta-labeling on FAR Weekly v1 primary signals. 15 features, RF (n=100, min_samples_leaf=3), 2010-2020 train / 2021-2026 hold-out. Result: 3 of 5 ship gates fail (mean, Sharpe, precision). Training precision 97% but hold-out 58% \u2014 classifier overfits despite regularization. 127 training samples too small for 15 features. Ship gates NOT relaxed post-hoc. Full: memory/far_weekly_meta_labeling_result.md."
+    },
+    {
+      "id": "far_weekly_bitcoin_read_v1",
+      "registered_utc": "2026-07-24T06:00:00Z",
+      "resolved_utc": "2026-07-24T06:10:00Z",
+      "layer": "strategy_engine_weekly",
+      "verdict": "rejected_ship_gates",
+      "sr_per_period": -0.0708,
+      "n_observations": 89,
+      "notes": "FAR Weekly BTC v1 (M60 + DXY on BTC). Pre-reg: docs/experiments/2026-07-24_far_weekly_bitcoin_read_prereg.md. Training 2017-2020: Sharpe 1.04, WR 52.4%, but 77% of P&L from 2017 bull-run outlier; CI includes 0. OOS 2021-2023: Sharpe -0.51 (NEGATIVE), WR 48.3%, total -$4,507, mean -$51/trade, PSR 0.256. 5 of 6 ship gates fail. 2022 bear market drove failure (-$6,196). Cross-asset conditioning (gold->BTC) does NOT generalize with fixed gold parameters. Kill switch triggered on negative OOS Sharpe."
+    },
+    {
+      "id": "far_weekly_wti_read_v1",
+      "registered_utc": "2026-07-24T06:20:00Z",
+      "resolved_utc": "2026-07-24T06:25:00Z",
+      "layer": "strategy_engine_weekly",
+      "verdict": "rejected_ship_gates",
+      "sr_per_period": -0.0169,
+      "n_observations": 96,
+      "notes": "FAR Weekly WTI v1 (M60 + DXY on WTI). Same fixed gold-inherited params, oil-native macro. Training 2015-2019: Sharpe 0.97, WR 59.3%, +$32,297. OOS 2020-2023: Sharpe -0.12 NEGATIVE (kill switch), PSR 0.434, WR 51%, skew -1.16 (left tail). Total P&L +$22,996 but 2022 alone was +$38,063 masking losses in 2020, 2021, 2023. 2 of 6 gates fail (Sharpe, PSR). Second cross-asset test rejection after BTC v1. Confirms fixed-parameter transfer from gold fails as pattern."
+    },
+    {
+      "id": "far_weekly_gold_cot_extreme_v1",
+      "registered_utc": "2026-07-24T09:40:00Z",
+      "resolved_utc": "2026-07-24T09:55:00Z",
+      "layer": "strategy_engine_weekly",
+      "verdict": "rejected_ship_gates",
+      "sr_per_period": 0.0628,
+      "n_observations": 80,
+      "notes": "Contrarian standalone signal on nc_net 52wk z-score (|z|>2). Different mechanism family from FAR Weekly (mean-reversion vs momentum). Pre-reg: docs/experiments/2026-07-24_cot_extreme_standalone_prereg.md. Full 2010-2023 n=80: Sharpe 0.453, WR 53.8%, +$17,352, PSR 0.713. Tail 2019-2023 n=27: Sharpe -0.613 (kill switch), WR 51.9%, -$4,222. 3 of 7 gates pass. 2019 alone was -$17,812 (specs kept adding during gold bull run; reversion failed). Positioning-based mean-reversion breaks in trending regimes."
+    },
+    {
+      "id": "gold_seasonality_v1",
+      "registered_utc": "2026-07-24T10:20:00Z",
+      "resolved_utc": "2026-07-24T10:25:00Z",
+      "layer": "strategy_engine_weekly",
+      "verdict": "rejected_ship_gates",
+      "sr_per_period": -0.0132,
+      "n_observations": 169,
+      "notes": "Seasonality signal: LONG in top-3 months by mean return (Aug, Jan, Feb from 2010-2019 discovery), SHORT in bottom-3 (Sep, Nov, May). In-sample 2010-2019 Sharpe 1.576, OOS 2020-2026 Sharpe -0.095 (kill switch), total -$24,900. Classic overfit collapse. Fourth session rejection."
+    },
+    {
+      "id": "far_weekly_gold_short_put_income_v1",
+      "registered_utc": "2026-07-24T11:15:00Z",
+      "resolved_utc": "2026-07-24T11:35:00Z",
+      "layer": "strategy_engine_weekly",
+      "verdict": "rejected_ship_gates",
+      "sr_per_period": -0.0419,
+      "n_observations": 379,
+      "notes": "Options-selling income (BSM 5-delta puts on gold weekly, GVZ as IV). Fresh mechanism family. Primary spec (delta 0.05) OOS 2019-2026: Sharpe -0.30, total -$17,123, WR 96.6%, skew -8.51, max weekly loss -$22k. 2/7 gates pass. Kill switch on negative Sharpe. Sensitivity: delta 0.10 \u2192 3/7 gates (Sharpe -0.09), delta 0.15 \u2192 5/7 gates (Sharpe 0.09) \u2014 but choosing best delta post-hoc = curve fit. Skewness -8.5 to -6.4 across all delta variants = catastrophic left tail. Not shippable. Volatility risk premium on gold appears too small to justify tail exposure in modeled backtest. Real GLD/GC options may differ (skew premium) but pre-reg was pure BSM."
+    },
+    {
+      "id": "far_weekly_gold_ml_direction_v1",
+      "registered_utc": "2026-07-24T11:45:00Z",
+      "resolved_utc": "2026-07-24T12:00:00Z",
+      "layer": "strategy_engine_weekly",
+      "verdict": "rejected_ship_gates",
+      "sr_per_period": 0.0111,
+      "n_observations": 175,
+      "notes": "LogReg on 8 features (M20, M60, MA_ratio, ATR_pct, RY_chg, DXY_chg, GVZ_z, nc_z). 26-week walk-forward CV expanding window from 2019. 15 folds. OOS: 175 non-flat trades, WR 49.1%, total -$48,726, Sharpe 0.08, PSR 0.56. 2/7 gates pass (only n and folds count). Kill switch: worst fold Sharpe -9.16 in 2026 blowup (n=15, all LONG, -$85k in single fold). Model was directionally sensible in 2020-2022 (WR 60-77%) but couldn't adapt to 2026 regime shift. Third and final mechanism family from user brief tried and rejected."
+    }
+  ]
+}
