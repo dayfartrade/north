@@ -385,6 +385,16 @@
       "sr_per_period": 0.0111,
       "n_observations": 175,
       "notes": "LogReg on 8 features (M20, M60, MA_ratio, ATR_pct, RY_chg, DXY_chg, GVZ_z, nc_z). 26-week walk-forward CV expanding window from 2019. 15 folds. OOS: 175 non-flat trades, WR 49.1%, total -$48,726, Sharpe 0.08, PSR 0.56. 2/7 gates pass (only n and folds count). Kill switch: worst fold Sharpe -9.16 in 2026 blowup (n=15, all LONG, -$85k in single fold). Model was directionally sensible in 2020-2022 (WR 60-77%) but couldn't adapt to 2026 regime shift. Third and final mechanism family from user brief tried and rejected."
+    },
+    {
+      "id": "far_weekly_gold_put_spread_income_v1",
+      "registered_utc": "2026-07-24T13:00:00Z",
+      "resolved_utc": "2026-07-24T13:15:00Z",
+      "layer": "strategy_engine_weekly",
+      "verdict": "rejected_ship_gates",
+      "sr_per_period": 0.0114,
+      "n_observations": 379,
+      "notes": "Put-spread variant of C1 (short 5-delta + long 2-delta). Improved over naked-put: max loss capped $6.6k (was $22k), Sharpe +0.08 (was -0.30), total +$2,563 (was -$17k). 4/7 gates pass. Kill switch triggered: skew -6.73 < -4. Cap helped but structural issue remains \u2014 weekly premium (~$50) is too small to survive individual assignments ($1000-$6000). Options mechanism family on gold weekly definitively closed."
     }
   ]
 }
