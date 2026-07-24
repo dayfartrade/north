@@ -335,6 +335,16 @@
       "sr_per_period": -0.0708,
       "n_observations": 89,
       "notes": "FAR Weekly BTC v1 (M60 + DXY on BTC). Pre-reg: docs/experiments/2026-07-24_far_weekly_bitcoin_read_prereg.md. Training 2017-2020: Sharpe 1.04, WR 52.4%, but 77% of P&L from 2017 bull-run outlier; CI includes 0. OOS 2021-2023: Sharpe -0.51 (NEGATIVE), WR 48.3%, total -$4,507, mean -$51/trade, PSR 0.256. 5 of 6 ship gates fail. 2022 bear market drove failure (-$6,196). Cross-asset conditioning (gold->BTC) does NOT generalize with fixed gold parameters. Kill switch triggered on negative OOS Sharpe."
+    },
+    {
+      "id": "far_weekly_wti_read_v1",
+      "registered_utc": "2026-07-24T06:20:00Z",
+      "resolved_utc": "2026-07-24T06:25:00Z",
+      "layer": "strategy_engine_weekly",
+      "verdict": "rejected_ship_gates",
+      "sr_per_period": -0.0169,
+      "n_observations": 96,
+      "notes": "FAR Weekly WTI v1 (M60 + DXY on WTI). Same fixed gold-inherited params, oil-native macro. Training 2015-2019: Sharpe 0.97, WR 59.3%, +$32,297. OOS 2020-2023: Sharpe -0.12 NEGATIVE (kill switch), PSR 0.434, WR 51%, skew -1.16 (left tail). Total P&L +$22,996 but 2022 alone was +$38,063 masking losses in 2020, 2021, 2023. 2 of 6 gates fail (Sharpe, PSR). Second cross-asset test rejection after BTC v1. Confirms fixed-parameter transfer from gold fails as pattern."
     }
   ]
 }
