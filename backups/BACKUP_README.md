@@ -79,6 +79,15 @@ tar xzf backups/memory_*.tar.gz -C /c/Users/farha/.claude/projects/C--golddaytra
   RSS/API endpoints, v2 shadow tracking, meta-labeling test, GSR test,
   sensitivity analysis, seasonality scan, error handling.
   Includes `far_weekly_v2_shadow.jsonl` (v2 candidate log).
+- **20260724-080510Z** — mid-session backup after A+C+D+E workstreams.
+  4 rejections registered (BTC v1, WTI v1, COT extreme v1, seasonality
+  v1). D-track fresh data: COT extended to 2010-2026 (863 rows, 133
+  fresh 2024+), FOMC calendar (137 dates), GVZ Gold IV (4732 rows).
+  E-track: v1 outcome pipeline verified. C1 pre-reg written
+  (`far_weekly_gold_short_put_income_v1`, pre_registered, backtest
+  pending). Registry N=40.
+  New archive: `macro_data_20260724-080510Z.tar.gz` (gitignored COT
+  raw + simplified + new macro CSVs already in git for redundancy).
 
 Latest backup is authoritative for restoring session state.
 Data archive (`dukascopy_data_*`) hasn't changed since the first backup
