@@ -369,12 +369,12 @@
     {
       "id": "far_weekly_gold_short_put_income_v1",
       "registered_utc": "2026-07-24T11:15:00Z",
-      "resolved_utc": null,
+      "resolved_utc": "2026-07-24T11:35:00Z",
       "layer": "strategy_engine_weekly",
-      "verdict": "pre_registered",
-      "sr_per_period": null,
-      "n_observations": null,
-      "notes": "Options-selling income mechanism. Fresh family (income vs directional). Enabled by D3 GVZ IV data. Pre-reg: docs/experiments/2026-07-24_gold_short_put_income_prereg.md. Sell 1-week 5-delta OTM put weekly, priced via Black-Scholes with GVZ as IV. Backtest pending next iteration. Sample: 2010-2018 train, 2019-2026 OOS."
+      "verdict": "rejected_ship_gates",
+      "sr_per_period": -0.0419,
+      "n_observations": 379,
+      "notes": "Options-selling income (BSM 5-delta puts on gold weekly, GVZ as IV). Fresh mechanism family. Primary spec (delta 0.05) OOS 2019-2026: Sharpe -0.30, total -$17,123, WR 96.6%, skew -8.51, max weekly loss -$22k. 2/7 gates pass. Kill switch on negative Sharpe. Sensitivity: delta 0.10 \u2192 3/7 gates (Sharpe -0.09), delta 0.15 \u2192 5/7 gates (Sharpe 0.09) \u2014 but choosing best delta post-hoc = curve fit. Skewness -8.5 to -6.4 across all delta variants = catastrophic left tail. Not shippable. Volatility risk premium on gold appears too small to justify tail exposure in modeled backtest. Real GLD/GC options may differ (skew premium) but pre-reg was pure BSM."
     }
   ]
 }
