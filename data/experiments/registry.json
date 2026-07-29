@@ -405,6 +405,16 @@
       "sr_per_period": 0.1403,
       "n_observations": 168,
       "notes": "Ensemble voting: v1 + v2 + monthly M12 momentum, trade when >=2 agree. Pre-reg: docs/experiments/2026-07-24_ensemble_v1_v2_monthly_prereg.md. OOS 2019-2026: n=168, Sharpe 1.012, WR 59.5%, +$135,357. PSR 0.9622. Skew -0.17. All 5 ship gates PASS. Caveat: v1+v2 components tuned on same window; ensemble is new construction but has seen-data baggage. Verdict: pre_registered_shadow \u2014 requires 26-week forward validation like v2. First candidate today to pass all gates."
+    },
+    {
+      "id": "far_weekly_gold_seed2_countertrend_fade_v1",
+      "registered_utc": "2026-07-29T05:55:00Z",
+      "resolved_utc": "2026-07-29T06:06:12Z",
+      "layer": "strategy_engine_weekly",
+      "verdict": "rejected",
+      "sr_per_period": 0.006,
+      "n_observations": 29,
+      "notes": "Davey Seed 2 countertrend fade: SHORT if 4w-high AND close < close[8w ago]; LONG mirror. Pre-reg: docs/experiments/2026-07-29_seed2_countertrend_fade_prereg.md. IS 2010-2018: n=57, Sharpe 0.474, PF 1.10 \u2014 fails 3/5 in-sample. OOS 2019-2026: n=29, Sharpe 0.043, PF 0.838, total -$8170. Auto-reject on negative OOS. 5 of 8 years negative. Diversification R^2 vs v1 = 0.0005 (PASS, structurally uncorrelated). Kill mode: 2026 single-trade -$20k on gold ATH breakout \u2014 countertrend cannot survive modern gold bull regime. Same failure family as gold_orb_family_dead."
     }
   ]
 }
