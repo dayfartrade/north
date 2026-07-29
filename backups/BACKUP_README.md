@@ -125,6 +125,17 @@ tar xzf backups/memory_*.tar.gz -C /c/Users/farha/.claude/projects/C--golddaytra
   (memory-claim mismatch with live site architecture). First
   live v1 outcome resolves Fri 2026-07-31 close; first
   ensemble/v2 shadow log fires Sun 2026-08-02 22:00 UTC.
+- **20260729-062813Z** — session-close snapshot after full day.
+  Includes: RSS/API URL fix (`/track-record`), Davey Seed 2
+  countertrend REJECTED (auto-reject on -$8k OOS, single-trade
+  -$20k on 2026 gold ATH). Registry N=44. 2 commits pushed
+  (main at f18e24e → b6791fe). Reading: Davey Ch 15-19 full notes,
+  Kaufman Ch 17 Adaptive Techniques (Table 17.1 confirms gold
+  hostile to trend methods). Memory correction: adaptive is
+  Kaufman Ch 17 not Ch 24. IBKR application rejected 2026-07-29
+  (doesn't block product launch, subscribers execute on own broker).
+  Next session (2026-07-30): soft-launch 9-point walkthrough
+  targeting Mon 2026-08-03 announce.
 
 Latest backup is authoritative for restoring session state.
 Data archive (`dukascopy_data_*`) hasn't changed since the first backup
