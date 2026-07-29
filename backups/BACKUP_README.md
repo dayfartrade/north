@@ -113,6 +113,18 @@ tar xzf backups/memory_*.tar.gz -C /c/Users/farha/.claude/projects/C--golddaytra
   next-session top priority with 9-point walkthrough agenda.
   Registry N=43. Tests: 107 passed, 3 skipped.
   Next scheduled event unchanged: Sunday 2026-08-02 22:00 UTC.
+- **20260729-053550Z** — operational-sweep snapshot (2026-07-29).
+  No new code changes since 20260724-142614Z (repo stable, main at
+  10e3d74). Session verified: TG bot @GOLDDAYTARDER_bot alive,
+  Engine A halted (correct), Knox disabled (correct), publisher
+  wiring for v2+ensemble shadow on origin/main, live site
+  faractionradar.com serving Next.js app (`/market-read`,
+  `/track-record`, `/docs`, `/blog`). Flagged: RSS/API endpoints
+  (`/feed.xml`, `/api/latest.json`) return 404 on live domain —
+  script generates URLs pointing at non-existent routes
+  (memory-claim mismatch with live site architecture). First
+  live v1 outcome resolves Fri 2026-07-31 close; first
+  ensemble/v2 shadow log fires Sun 2026-08-02 22:00 UTC.
 
 Latest backup is authoritative for restoring session state.
 Data archive (`dukascopy_data_*`) hasn't changed since the first backup

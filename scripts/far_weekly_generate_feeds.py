@@ -24,7 +24,7 @@ API_CALLS = ROOT / "site" / "api" / "calls.json"
 API_LATEST = ROOT / "site" / "api" / "latest.json"
 
 SITE_URL = "https://faractionradar.com"
-PRODUCT_URL = f"{SITE_URL}/weekly.html"
+PRODUCT_URL = f"{SITE_URL}/track-record"
 
 
 def load_calls() -> list[dict]:
