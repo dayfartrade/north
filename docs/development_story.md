@@ -290,6 +290,28 @@ Two other observations:
 
 Recommendation: this becomes a live paper-trade forward test. Publish to research shadow log (not to public Telegram yet), track for 6-12 months, and if forward performance holds anywhere near the OOS profile, propose as a companion LONG signal to NORTH v1. This is the strongest candidate we have found in the current sweep, and it deserves that forward track.
 
+## 2026-08-03 — Silver GSR fresh OOS revisit. Same profile as gold basis.
+
+Applied the same discipline to silver GSR z-score reversion (Candidate 2 in the original silver sweep). Locked a single-config pre-reg (lookback=180, |z|>=1.5, hold=10 days, stop=2*ATR(20)) with Bonferroni n=1, and split train 2010-2017 / OOS 2018-2026 before touching results.
+
+TRAIN (2010-2017): n=40, mean R = +0.153, 3/3 positive years. Encouraging.
+
+OOS (2018-2026): n=131, mean R = +0.1146, WR 51.1%, DD -9.53R, total +$79,580, 7/9 positive years (77.8%). Bootstrap CI = [-0.057, +0.288], p_adj = 0.189.
+
+Gate 1 FAIL (CI). Gate 2 PASS (positive years). Formal verdict: REJECTED.
+
+This is the same profile as the gold basis LONG-only OOS result: directionally positive mean R, high positive-years percentage, but CI straddles zero due to per-trade variance (best +$164K, worst -$46K in the OOS window). n=131 is bigger than gold basis's 54, but silver's volatility makes each trade wider, so the CI is still underpowered.
+
+Losing years: 2022 (-$19K) and 2025 (-$40K). 2021 and 2023 were the standouts (+$23K, +$26K). The mechanism is not dead — it works in most environments and takes real losses in a couple.
+
+Recommendation: add this to the same shadow-log track as gold basis LONG-only. Two candidates with parallel profiles doubles the forward-data collection speed. If either grows n to 100+ while holding its OOS mean R, we have a shippable signal.
+
+## Shadow log for gold basis LONG-only
+
+Built as scripts/gold_basis_shadow_log.py. Uses Dukascopy XAUUSD (via research.tools.data_loader) as the authoritative spot source, matching the OOS backtest exactly. Refuses to emit new signals when spot data is stale beyond 3 days. Currently blocked (spot is 14.5 days stale because the VPS Dukascopy fetch is down). Ready to run daily on the VPS as soon as the pipeline is restored. Resolves signals when their 7-day hold window elapses, tracks per-signal and cumulative R + dollar outcomes.
+
+Not published to Telegram. Research shadow only. Purpose: grow n from 54 forward to 100+ before considering ship.
+
 ## Pipeline state note (2026-08-03)
 
 Separate from the research: the VPS at 91.99.228.197 was rebuilt around July 22 (host key changed, SSH keys no longer authorized). Telegram channel silent since the July 22 SHORT call for week 07-27, and the call is unresolved on the public surface. User's deployment territory, not the research track.

@@ -465,6 +465,16 @@
       "sr_per_period": 0.229,
       "n_observations": 54,
       "notes": "Fresh pre-reg of LONG-only gold basis mechanism (post-hoc finding from gold_basis_janus_transplant_v1). Train 2010-2017 / OOS 2018-2026 split. TRAIN n=49, mean R +0.033 (break-even). OOS n=54, mean R +0.252, WR 59.3%, DD -2.85R, total +$106K, 7/9 positive years (78%). Bonferroni n=2: CI [-0.033, +0.562], p_adj 0.191, ci_low fails 0.005 threshold. VERDICT: rejected by pre-reg gate (Gate 1 FAIL, Gate 2 PASS). BUT: OOS is directionally strong, just underpowered \u2014 small n=54 means large CI even for strong mean. Signal appears regime-dependent (much stronger post-2018). Recommendation: live paper-trade forward for 6-12 months to grow n. If forward n=100+ maintains R~0.15+, consider shipping as companion LONG signal to NORTH v1. Files: scripts/gold_basis_long_only_oos.py."
+    },
+    {
+      "id": "silver_gsr_oos_revisit_v1",
+      "registered_utc": "2026-08-03T07:15:00Z",
+      "resolved_utc": "2026-08-03T11:23:20Z",
+      "layer": "strategy_engine_weekly",
+      "verdict": "rejected_gate1_underpowered",
+      "sr_per_period": 0.113,
+      "n_observations": 131,
+      "notes": "Fresh pre-reg of Silver GSR z-score reversion, single-config (lookback=180, |z|>=1.5, hold=10d, stop=2*ATR20). Bonferroni n=1 (prior 27-way sweep counted as informational). Train 2010-2017 / OOS 2018-2026 split. TRAIN n=40, mean R +0.153, 3/3 positive years. OOS n=131, mean R +0.115, WR 51.1%, DD -9.53R, total +$79,580, 7/9 positive years (77.8%). Bootstrap CI [-0.057, +0.288], p_adj 0.189, ci_low fails 0.005. VERDICT: rejected by Gate 1 (CI significance), passes Gate 2 (positive years). Same profile as gold_basis_long_only_oos_v1 \u2014 underpowered, not flat. High per-trade variance (best +$164K, worst -$46K) widens CI. 2022 (-$19K) and 2025 (-$40K) were losing years, rest positive. Files: scripts/silver_gsr_oos_revisit.py. Candidate for shadow-log forward tracking alongside gold basis LONG-only."
     }
   ]
 }
