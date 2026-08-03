@@ -1,0 +1,119 @@
+name: Data refresh
+
+# Refreshes Dukascopy XAUUSD/XAGUSD 5m bars, GC=F daily, FRED macro CSVs.
+# Runs every day at 06:00 UTC (after Asia close, before EU open).
+# Commits any updated CSVs back to main.
+#
+# Manual trigger available via "Run workflow" button in Actions tab.
+
+on:
+  schedule:
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: data-refresh
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # Cache Dukascopy files across runs. First run backfills from scratch;
+      # subsequent runs restore + append incrementally.
+      - name: Cache Dukascopy 5m CSVs
+        uses: actions/cache@v4
+        with:
+          path: data/external/dukascopy/
+          key: dukascopy-${{ github.run_id }}
+          restore-keys: |
+            dukascopy-
+
+      - name: Fetch XAUUSD 5m
+        run: python scripts/fetch_dukascopy_xauusd.py
+        continue-on-error: true
+
+      - name: Fetch GC=F daily via yfinance
+        run: |
+          python - <<'PY'
+          import pandas as pd, yfinance as yf
+          from pathlib import Path
+          out = Path("data/gc/GC_1d.csv")
+          out.parent.mkdir(parents=True, exist_ok=True)
+          existing = pd.read_csv(out, parse_dates=["ts"]) if out.exists() else None
+          start = "2000-08-01"
+          if existing is not None and len(existing):
+              last = pd.to_datetime(existing["ts"], utc=True).max()
+              start = (last - pd.Timedelta(days=5)).strftime("%Y-%m-%d")
+              print(f"[GC=F] incremental from {start} (existing rows: {len(existing)})")
+          else:
+              print(f"[GC=F] full fetch from {start}")
+          d = yf.download("GC=F", start=start, progress=False, auto_adjust=False)
+          if isinstance(d.columns, pd.MultiIndex):
+              d.columns = d.columns.get_level_values(0)
+          d = d[["Open","High","Low","Close","Adj Close","Volume"]].reset_index()
+          d["ts"] = pd.to_datetime(d["Date"], utc=True)
+          d = d[["ts","Open","High","Low","Close","Adj Close","Volume"]]
+          d.columns = ["ts","open","high","low","close","adj close","volume"]
+          if existing is not None:
+              combined = pd.concat([existing, d], ignore_index=True)
+              combined = combined.drop_duplicates(subset=["ts"], keep="last").sort_values("ts")
+          else:
+              combined = d.sort_values("ts")
+          combined.to_csv(out, index=False)
+          print(f"[GC=F] wrote {len(combined)} rows, last: {combined['ts'].max()}")
+          PY
+        continue-on-error: true
+
+      - name: Fetch FRED macro CSVs
+        run: |
+          python - <<'PY'
+          import urllib.request, os
+          from pathlib import Path
+          FRED = {
+              "real_yield_10y__DFII10.csv": "DFII10",
+              "tnx_10y__DGS10.csv": "DGS10",
+              "dxy_proxy__DTWEXBGS.csv": "DTWEXBGS",
+              "fedfunds_target__DFEDTARU.csv": "DFEDTARU",
+              "claims__ICSA.csv": "ICSA",
+          }
+          out_dir = Path("data/macro")
+          out_dir.mkdir(parents=True, exist_ok=True)
+          for filename, series_id in FRED.items():
+              url = f"https://fred.stlouisfed.org/graph/fredgraph.csv?id={series_id}"
+              try:
+                  data = urllib.request.urlopen(url, timeout=30).read()
+                  (out_dir / filename).write_bytes(data)
+                  n = len(data.decode().splitlines())
+                  print(f"[FRED] {series_id}: {n} rows -> {filename}")
+              except Exception as e:
+                  print(f"[FRED] {series_id}: FAILED {type(e).__name__} {e}")
+          PY
+        continue-on-error: true
+
+      - name: Commit updated data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/gc/GC_1d.csv data/macro/*.csv 2>/dev/null || true
+          if git diff --cached --quiet; then
+              echo "No data changes to commit"
+          else
+              git commit -m "data: refresh $(date -u +%Y-%m-%d) via github-actions"
+              git push
+          fi

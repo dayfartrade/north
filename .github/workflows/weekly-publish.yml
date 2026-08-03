@@ -1,0 +1,99 @@
+name: Weekly publish (FAR gold read)
+
+# Publishes NORTH weekly gold call to Telegram every Sunday at 22:00 UTC.
+# Depends on data-refresh having run earlier the same day.
+# Also resolves the prior week's call outcome.
+#
+# Manual trigger available via "Run workflow" button.
+
+on:
+  schedule:
+    - cron: "0 22 * * 0"
+  workflow_dispatch:
+    inputs:
+      force:
+        description: "Skip data-freshness check (for testing)"
+        required: false
+        default: "false"
+
+concurrency:
+  group: weekly-publish
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      GOLDTRADER_TG_TOKEN: ${{ secrets.GOLDTRADER_TG_TOKEN }}
+      GOLDTRADER_TG_CHAT: ${{ secrets.GOLDTRADER_TG_CHAT }}
+      GOLDTRADER_TG_CHAT_PUBLIC: ${{ secrets.GOLDTRADER_TG_CHAT_PUBLIC }}
+      GOLDTRADER_STRICT_PUBLIC: "1"
+      PYTHONPATH: ${{ github.workspace }}/src
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # Restore whatever the most recent data-refresh cached.
+      - name: Restore Dukascopy cache
+        uses: actions/cache/restore@v4
+        with:
+          path: data/external/dukascopy/
+          key: dukascopy-restore-${{ github.run_id }}
+          restore-keys: |
+            dukascopy-
+
+      # If cache miss, do an inline fetch as fallback so the publish
+      # doesn't fail on a cold cache.
+      - name: Fallback data fetch if cache empty
+        run: |
+          if [ ! -f data/external/dukascopy/XAUUSD_5m.csv ]; then
+              echo "[fallback] cache miss, doing full XAUUSD backfill"
+              python scripts/fetch_dukascopy_xauusd.py
+          else
+              age_days=$(python -c "
+          import pandas as pd
+          d = pd.read_csv('data/external/dukascopy/XAUUSD_5m.csv', parse_dates=['ts'])
+          last = pd.to_datetime(d['ts'], utc=True).max()
+          print(int((pd.Timestamp.now(tz='UTC') - last).total_seconds() // 86400))
+          ")
+              echo "[fallback] XAUUSD data age: ${age_days} days"
+              if [ "$age_days" -gt "2" ]; then
+                  echo "[fallback] stale, refreshing"
+                  python scripts/fetch_dukascopy_xauusd.py
+              fi
+          fi
+
+      - name: Publish weekly call
+        run: |
+          if [ "${{ github.event.inputs.force }}" = "true" ]; then
+              python scripts/far_weekly_gold_read_publish.py --force
+          else
+              python scripts/far_weekly_gold_read_publish.py
+          fi
+
+      - name: Commit updated logs + site data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/far_weekly_calls.jsonl \
+                  data/far_weekly_v2_shadow.jsonl \
+                  data/far_weekly_ensemble_shadow.jsonl \
+                  site/data/*.json 2>/dev/null || true
+          if git diff --cached --quiet; then
+              echo "No log changes to commit"
+          else
+              git commit -m "publish: weekly call $(date -u +%Y-%m-%d) via github-actions"
+              git push
+          fi
