@@ -415,6 +415,56 @@
       "sr_per_period": 0.006,
       "n_observations": 29,
       "notes": "Davey Seed 2 countertrend fade: SHORT if 4w-high AND close < close[8w ago]; LONG mirror. Pre-reg: docs/experiments/2026-07-29_seed2_countertrend_fade_prereg.md. IS 2010-2018: n=57, Sharpe 0.474, PF 1.10 \u2014 fails 3/5 in-sample. OOS 2019-2026: n=29, Sharpe 0.043, PF 0.838, total -$8170. Auto-reject on negative OOS. 5 of 8 years negative. Diversification R^2 vs v1 = 0.0005 (PASS, structurally uncorrelated). Kill mode: 2026 single-trade -$20k on gold ATH breakout \u2014 countertrend cannot survive modern gold bull regime. Same failure family as gold_orb_family_dead."
+    },
+    {
+      "id": "silver_candidate_1_native_momentum_v1",
+      "registered_utc": "2026-07-31T15:00:00Z",
+      "resolved_utc": "2026-08-03T11:01:49Z",
+      "layer": "strategy_engine_weekly",
+      "verdict": "rejected",
+      "sr_per_period": null,
+      "n_observations": null,
+      "notes": "Silver-native momentum + industrial macro (copper/silver ratio, oil, ISM). Pre-reg: docs/experiments/2026-07-31_silver_research.md Candidate 1. Bootstrap 3-hyp Bonferroni: mean R = -0.130, CI=[-0.251,-0.002], verdict INDIST. Rejected: silver's dual-demand structure did not produce edge with momentum+industrial filter combo."
+    },
+    {
+      "id": "silver_candidate_2_gsr_zscore_reversion_v1",
+      "registered_utc": "2026-07-31T15:00:00Z",
+      "resolved_utc": "2026-08-03T11:01:49Z",
+      "layer": "strategy_engine_weekly",
+      "verdict": "rejected",
+      "sr_per_period": null,
+      "n_observations": null,
+      "notes": "Gold-silver ratio z-score extreme reversion. Pre-reg: docs/experiments/2026-07-31_silver_research.md Candidate 2. Sweep of 27 configs (lookback in [60,90,180] x |z|>= in [1.5,2.0,2.5] x hold in [10,15,30] days). All configs INDIST after 3-hypothesis Bonferroni. Best config (lookback=180) profitable pre-correction but killed by multiple-testing adjustment. Rejected."
+    },
+    {
+      "id": "silver_candidate_3_vol_regime_v1",
+      "registered_utc": "2026-08-03T05:55:00Z",
+      "resolved_utc": "2026-08-03T11:01:49Z",
+      "layer": "strategy_engine_weekly",
+      "verdict": "rejected",
+      "sr_per_period": -0.044,
+      "n_observations": 192,
+      "notes": "Silver volatility regime signal. Pre-reg baseline: 20d ann vol; LOW<25%=SHORT above MA20 (mean-revert); HIGH>40%=LONG on MA10 upcross (breakout); MED=FLAT. Stop=2*ATR(20), hold=15d. Result: n=192, mean R=-0.055, CI=[-0.227,0.122], p_adj=1.0, verdict INDIST. LOW-regime SHORTs bleed (silver drifts up on industrial demand); HIGH-regime breakouts too rare (28 signals, 16yr). 8 robustness variants (vol thresholds, MA lengths, hold periods, regime-change exit) all also INDIST. Rejected. Silver research sweep (3 candidates) exhausted."
+    },
+    {
+      "id": "gold_basis_janus_transplant_v1",
+      "registered_utc": "2026-08-03T06:15:00Z",
+      "resolved_utc": "2026-08-03T11:07:12Z",
+      "layer": "strategy_engine_weekly",
+      "verdict": "rejected_baseline_positive_direction",
+      "sr_per_period": 0.077,
+      "n_observations": 255,
+      "notes": "Janus funding-extreme transplant to gold via futures basis (GC=F minus XAUUSD spot). Pre-reg baseline: 180d lookback, p95/p5 percentile thresholds, hold=7d, stop=2*ATR(20). n=255 over 17yr. Bootstrap: mean R=+0.079, CI=[-0.047, +0.207], p_adj=0.220, verdict INDIST \u2014 misses 0.5% ship threshold and significance. Baseline does NOT ship. HOWEVER: direction split shows LONG-only cut (basis extreme low = physical stress reversal) is much stronger: n=157, mean R=+0.119, total=+$104,410, 13/17 positive years for the tighter p97.5 variant. SHORT side (crowded premium unwind, the direct crypto-funding analog) is dead: mean R=+0.006, total=-$24,755. Follow-up worth pre-registering with LONG-only baseline on fresh OOS split. Robustness sweep also indist but directionally supportive except lookback=365 and hold=15. Total 17yr baseline P&L: +$86,204. Files: scripts/gold_basis_janus_transplant.py."
+    },
+    {
+      "id": "gold_basis_long_only_oos_v1",
+      "registered_utc": "2026-08-03T06:35:00Z",
+      "resolved_utc": "2026-08-03T11:09:02Z",
+      "layer": "strategy_engine_weekly",
+      "verdict": "rejected_gate1_underpowered",
+      "sr_per_period": 0.229,
+      "n_observations": 54,
+      "notes": "Fresh pre-reg of LONG-only gold basis mechanism (post-hoc finding from gold_basis_janus_transplant_v1). Train 2010-2017 / OOS 2018-2026 split. TRAIN n=49, mean R +0.033 (break-even). OOS n=54, mean R +0.252, WR 59.3%, DD -2.85R, total +$106K, 7/9 positive years (78%). Bonferroni n=2: CI [-0.033, +0.562], p_adj 0.191, ci_low fails 0.005 threshold. VERDICT: rejected by pre-reg gate (Gate 1 FAIL, Gate 2 PASS). BUT: OOS is directionally strong, just underpowered \u2014 small n=54 means large CI even for strong mean. Signal appears regime-dependent (much stronger post-2018). Recommendation: live paper-trade forward for 6-12 months to grow n. If forward n=100+ maintains R~0.15+, consider shipping as companion LONG signal to NORTH v1. Files: scripts/gold_basis_long_only_oos.py."
     }
   ]
 }
