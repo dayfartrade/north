@@ -1,0 +1,68 @@
+name: Shadow log (gold basis LONG-only)
+
+# Daily: check whether today's gold basis (GC - XAUUSD spot) triggers
+# the LONG-only extreme-percentile signal. Also resolves any prior
+# signals whose 7-day hold window has elapsed.
+#
+# Not published to Telegram. Research shadow only. Purpose: grow n
+# from the OOS baseline of 54 toward 100+ before considering ship.
+#
+# Cron: 06:30 UTC daily, right after data-refresh (06:00) finishes.
+
+on:
+  schedule:
+    - cron: "30 6 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: shadow-log
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  tick:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Restore Dukascopy cache
+        uses: actions/cache/restore@v4
+        with:
+          path: data/external/dukascopy/
+          key: shadow-log-restore-${{ github.run_id }}
+          restore-keys: |
+            dukascopy-
+
+      - name: Fallback XAUUSD fetch if cache empty
+        run: |
+          if [ ! -f data/external/dukascopy/XAUUSD_5m.csv ]; then
+              echo "[fallback] no XAUUSD cache, doing full backfill"
+              python scripts/fetch_dukascopy_xauusd.py
+          fi
+
+      - name: Run shadow log tick
+        run: python scripts/gold_basis_shadow_log.py
+
+      - name: Commit shadow log updates
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/gold_basis_shadow.jsonl 2>/dev/null || true
+          if git diff --cached --quiet; then
+              echo "No shadow log changes to commit"
+          else
+              git commit -m "shadow: gold basis tick $(date -u +%Y-%m-%d)"
+              git push
+          fi
