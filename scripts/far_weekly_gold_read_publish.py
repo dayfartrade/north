@@ -511,17 +511,58 @@ def main() -> None:
         try:
             sys.path.insert(0, str(ROOT / "src"))
             from far_weekly_telegram import (publish_weekly_call,
-                                              publish_weekly_resolve)
+                                              publish_weekly_resolve,
+                                              publish_weekly_performance)
 
             track = None
+            track_history_full = None
             if SITE_HISTORY.exists():
                 try:
-                    track = json.loads(SITE_HISTORY.read_text(encoding="utf-8"))
+                    site_data = json.loads(SITE_HISTORY.read_text(encoding="utf-8"))
+                    track = site_data
+                    track_history_full = site_data.get("history", [])
                 except Exception:
                     track = None
+                    track_history_full = None
 
-            # (a) Send current call once per week
             current_row = history[-1]
+
+            # Narrative order:
+            #   (1) Resolve card for the most recent resolved prior week
+            #   (2) Performance snapshot
+            #   (3) This week's new call
+
+            # (1) Resolve
+            for row in reversed(history[:-1]):
+                outcome = row.get("outcome")
+                if outcome and outcome.get("result") == "resolved" and \
+                   not row.get("resolve_sent"):
+                    try:
+                        r = publish_weekly_resolve(row, outcome, track=track,
+                                                    audience="public")
+                        if r.get("ok"):
+                            row["resolve_sent"] = True
+                            print(f"[telegram] resolve card sent for {row.get('week_of')}")
+                        else:
+                            print(f"[telegram] resolve failed: {r}")
+                    except Exception as e:
+                        print(f"[telegram] resolve exception: {e}")
+                    break
+
+            # (2) Performance snapshot — once per Sunday cycle
+            if track and not current_row.get("performance_sent"):
+                try:
+                    r = publish_weekly_performance(track, track_history_full or [],
+                                                    audience="public")
+                    if r.get("ok"):
+                        current_row["performance_sent"] = True
+                        print("[telegram] performance snapshot sent (public)")
+                    else:
+                        print(f"[telegram] performance send failed: {r}")
+                except Exception as e:
+                    print(f"[telegram] performance exception: {e}")
+
+            # (3) This week's call
             if not current_row.get("telegram_sent"):
                 try:
                     r = publish_weekly_call(current_row, track=track,
@@ -533,20 +574,6 @@ def main() -> None:
                         print(f"[telegram] send failed: {r}")
                 except Exception as e:
                     print(f"[telegram] send exception: {e}")
-
-            # (b) Send resolve card for the most recent resolved week (once)
-            for row in reversed(history[:-1]):
-                outcome = row.get("outcome")
-                if outcome and outcome.get("result") == "resolved" and \
-                   not row.get("resolve_sent"):
-                    try:
-                        r = publish_weekly_resolve(row, outcome, audience="public")
-                        if r.get("ok"):
-                            row["resolve_sent"] = True
-                            print(f"[telegram] resolve card sent for {row.get('week_of')}")
-                    except Exception as e:
-                        print(f"[telegram] resolve failed: {e}")
-                    break
 
             # Persist the sent flags by rewriting the CALLS_LOG
             with open(CALLS_LOG, "w", encoding="utf-8") as f:
