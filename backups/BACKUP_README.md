@@ -140,3 +140,133 @@ tar xzf backups/memory_*.tar.gz -C /c/Users/farha/.claude/projects/C--golddaytra
 Latest backup is authoritative for restoring session state.
 Data archive (`dukascopy_data_*`) hasn't changed since the first backup
 (source data files were fetched only once).
+
+---
+
+## 2026-07-31 session snapshot
+
+**File:** `session_20260731T134800Z_full_snapshot.tar.gz` (48 KB)
+
+**Contains:**
+- `memory/` = all 21 memory files post deep-audit clean state
+- `site/` = 6 HTML mockups built today (weekly_v3, v2_a, v2_b, launch_preview, vision, soft_launch)
+- `docs/development_story.md` = living Knox narrative
+- `MANIFEST.md` = full description of what changed today
+
+**What today accomplished:**
+- Memory cleanup 76 -> 21 files, removed all book-framework worship
+- Product renamed to NORTH (hosted on FAR site)
+- Behavioral overrides created (7 rules against rigid/lazy/sycophantic drift)
+- NORTH v1 factsheet cleaned of "cannot modify shipped" language
+- Decision: refine NORTH to v2 using thesis + Bollinger Band S/R (not Monday-Friday)
+- Janus collaboration opened for funding-based signal transplant to gold
+- 3 intermediate memory backup snapshots created during the day
+
+**Also preserved as loose folders (not tar-compressed):**
+- `memory_20260731T134317Z_post_second_audit/`
+- `memory_20260731T134644Z_deep_sweep_final/`
+- `session_20260731T134800Z_full_snapshot/`
+
+If disk space matters later, the tar.gz is the durable version. Delete the loose folders.
+
+---
+
+## 2026-07-31 evening addition: Janus transplant package
+
+Not backed up as a separate archive because it lives at `research/janus_2026_07_31/` which is inside the working tree and version-controllable.
+
+**Contents (18 files, ~192 KB):**
+- Janus's `README.md`, `MANIFEST.md`, `FOLLOWUP_ANSWERS.md`
+- `code/` = 6 Python files (~1500 lines): funding_extreme_revert.py, cost_model.py, perf_bootstrap.py, analysis_helpers.py, level_picker.py, types.py
+- `pre_reg_examples/` = 3 real pre-reg docs
+- `verdict_examples/` = 3 real verdict docs
+- `analysis_scripts/` = 3 read-only analytics scripts
+
+**Plus Knox's `INDEX.md` mapping the material to NORTH work.**
+
+Memory pointer at `ref_janus_transplant_package.md`. Dev story updated with the evening addition entry.
+
+Source directory (original Janus delivery) stays at `C:\Users\farha\OneDrive\Desktop\info\` for reference.
+
+---
+
+## 2026-07-31 late evening: Phase 2 partial snapshot
+
+**File:** `session_20260731T150220Z_phase2_partial.tar.gz` (148 KB)
+
+**What's inside (75 files):**
+- memory/ = 22 memory files (unchanged since afternoon)
+- site/ = 6 HTML mockups (unchanged since afternoon)
+- docs/development_story.md = extended with Phase 2 findings
+- docs/experiments/ = 2 design docs from Phase 1
+- research/tools/ = 5 Python tools + README (backtest.py updated to add market_next_open entry type)
+- scripts/ = 3 new backtest scripts (north_backtest, silver_candidate_gsr, silver_candidate_native)
+
+**Findings preserved:**
+- NORTH v2 with BB execution DOES NOT beat calibrated NORTH v1. v2 rejected.
+- Silver GSR z-score reversion: 27 configs tested, all INDIST. lookback=180 pattern filed as future work.
+- Silver native momentum + oil: clear FAIL (-$85k, 1/9 positive years).
+- NORTH v1 stands as-is.
+
+**Still open:**
+- Silver Candidate 3 (volatility regime) not tested yet
+- Site deployment situation
+- 12-month retirement criterion needs user decision
+- Gold lease rate data availability (Janus track)
+
+**Session backups today (3 total):**
+- `session_20260731T134800Z_full_snapshot.tar.gz` (initial state)
+- `session_20260731T143213Z_phase1_complete.tar.gz` (tools + designs)
+- `session_20260731T150220Z_phase2_partial.tar.gz` (this one)
+
+---
+
+## 2026-07-31 FINAL WRAP snapshot
+
+**File:** `session_20260731T${TS}_final_wrap.tar.gz`
+
+Final snapshot of the day. Includes next session agenda file.
+
+**New vs Phase 2 partial:**
+- memory/next_session_agenda.md (queued work for next session)
+- memory/product_focus_and_structure.md (weekly + daily structure + focus directive)
+- MEMORY.md index updated
+
+**Session backups today (4 total):**
+1. session_20260731T134800Z_full_snapshot.tar.gz
+2. session_20260731T143213Z_phase1_complete.tar.gz
+3. session_20260731T150220Z_phase2_partial.tar.gz
+4. session_20260731T${TS}_final_wrap.tar.gz (this one)
+
+---
+
+## 2026-08-03 NORTH MIGRATION snapshot
+
+**Dir:** `session_20260803T125929Z_north_migration/`  (747K uncompressed)
+
+Contents:
+- `memory/` — full Claude memory dump (includes new `ref_github_north.md` + updated `next_session_agenda.md`)
+- `docs/development_story.md` — session narrative added (silver rejection, gold basis LONG-only OOS candidate, GitHub migration)
+- `docs/experiments/` — full experiments folder
+- `data/` — far_weekly_calls.jsonl (with 07-27 resolve + 08-10 SHORT), registry.json (49 trials, +4 today)
+- `site_data/` — updated current + history JSONs
+- `scripts/` — new: gold_basis_shadow_log.py, gold_basis_janus_transplant.py, gold_basis_long_only_oos.py, silver_candidate_vol_regime.py, silver_gsr_oos_revisit.py; edited: far_weekly_gold_read_publish.py, far_weekly_telegram.py
+- `workflows/` — new: data-refresh.yml, weekly-publish.yml, shadow-log.yml (all live and verified on GitHub Actions)
+- `requirements.txt`
+
+**What changed this session:**
+- Silver Candidate 3 REJECTED; silver research complete this round
+- Gold basis Janus transplant tested; baseline REJECTED, LONG-only OOS profile very strong but underpowered (n=54, mean R +0.25, 78% positive years)
+- Silver GSR fresh OOS revisit: same profile as gold basis (n=131, mean R +0.11, 78% positive years, underpowered)
+- Diagnosed VPS pipeline dead (rebuilt without notice around 2026-07-22)
+- Migrated the entire scheduled pipeline off Hetzner VPS onto GitHub Actions on dedicated dayfartrade/north repo (old far-reach repo deleted after verification)
+- Elevated Telegram card design; added new performance snapshot card
+- Fixed a data-format bug that emitted a broken FLAT card to subscribers; posted correction
+- All 3 workflows live and verified end-to-end
+
+**Still open:**
+- Silver GSR shadow log (parallel to gold basis) — priority for next session
+- Daily brief content (3-part bundle)
+- Wire faractionradar.com to a real page
+- Failure notifications on workflow failures
+- Untracked in repo: `backups/session_*` dirs, `research material/` books, `.telegram`, `.github-token` (all correctly gitignored)

@@ -312,9 +312,20 @@ Built as scripts/gold_basis_shadow_log.py. Uses Dukascopy XAUUSD (via research.t
 
 Not published to Telegram. Research shadow only. Purpose: grow n from 54 forward to 100+ before considering ship.
 
-## Pipeline state note (2026-08-03)
+## 2026-08-03 — Migration off Hetzner to GitHub Actions
 
-Separate from the research: the VPS at 91.99.228.197 was rebuilt around July 22 (host key changed, SSH keys no longer authorized). Telegram channel silent since the July 22 SHORT call for week 07-27, and the call is unresolved on the public surface. User's deployment territory, not the research track.
+The old VPS at Hetzner had been rebuilt around July 22 without notice, our SSH keys wiped, pipeline dead 12 days. Rather than reprovision, we moved the whole scheduled-job stack to GitHub Actions. The workload (weekly publish, daily data refresh, daily shadow-log tick) fits comfortably in the free tier and removes an entire class of "the machine mysteriously changed" problems.
+
+Also moved the repo itself off the cluttered personal `far-reach` account onto a dedicated `dayfartrade` GitHub account (owner-controlled). Old repo deleted after verifying local had every commit and there were no issues/PRs/releases/wiki to preserve.
+
+Three workflows are now live and cron-scheduled:
+- `data-refresh.yml` daily 06:00 UTC (Dukascopy + GC + FRED, commits back)
+- `shadow-log.yml` daily 06:30 UTC (gold basis LONG-only tick)
+- `weekly-publish.yml` Sunday 22:00 UTC (weekly call to Telegram)
+
+Telegram card design was elevated in the same session: new performance snapshot card (fires between the resolve and the new call each Sunday), tighter driver-agreement grid on the call, removed a hard-coded URL that pointed at an undeployed page, cleaner track-record inline. Publisher now runs a narrative-ordered sequence: resolve last week → performance snapshot → new week's call.
+
+Migration bug worth remembering: the initial data-refresh workflow used a naive urllib fetch for FRED that wrote CSVs in the raw `observation_date,SERIES_ID` schema. The publisher expects `date,value` (normalized by `src/data_fred.snapshot_all`). This blew up compute_current_signal on the first live publish and the fallback emitted a broken FLAT card labeled "week of unknown" to the public channel. Fixed by replacing the inline fetch with `snapshot_all()`. Correction posted to the channel. Lesson: when a formatted-CSV loader exists, always use it — don't rewrite fetchers from scratch.
 
 ---
 
