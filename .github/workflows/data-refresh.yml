@@ -80,30 +80,9 @@ jobs:
           PY
         continue-on-error: true
 
-      - name: Fetch FRED macro CSVs
+      - name: Fetch FRED macro CSVs (normalized to date,value)
         run: |
-          python - <<'PY'
-          import urllib.request, os
-          from pathlib import Path
-          FRED = {
-              "real_yield_10y__DFII10.csv": "DFII10",
-              "tnx_10y__DGS10.csv": "DGS10",
-              "dxy_proxy__DTWEXBGS.csv": "DTWEXBGS",
-              "fedfunds_target__DFEDTARU.csv": "DFEDTARU",
-              "claims__ICSA.csv": "ICSA",
-          }
-          out_dir = Path("data/macro")
-          out_dir.mkdir(parents=True, exist_ok=True)
-          for filename, series_id in FRED.items():
-              url = f"https://fred.stlouisfed.org/graph/fredgraph.csv?id={series_id}"
-              try:
-                  data = urllib.request.urlopen(url, timeout=30).read()
-                  (out_dir / filename).write_bytes(data)
-                  n = len(data.decode().splitlines())
-                  print(f"[FRED] {series_id}: {n} rows -> {filename}")
-              except Exception as e:
-                  print(f"[FRED] {series_id}: FAILED {type(e).__name__} {e}")
-          PY
+          PYTHONPATH=src python -c "from data_fred import snapshot_all; snapshot_all()"
         continue-on-error: true
 
       - name: Commit updated data

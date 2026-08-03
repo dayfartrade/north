@@ -40,18 +40,6 @@
         "resolved_utc": "2026-08-03T12:33:08.526192+00:00"
       },
       "resolve_sent": true
-    },
-    {
-      "type": "call",
-      "direction": "FLAT",
-      "signal_date_utc": "2026-08-03T12:33:08.526192+00:00",
-      "week_of": "unknown",
-      "week_end": "unknown",
-      "message": "Signal computation failed: ValueError",
-      "published_utc": "2026-08-03T12:33:09.037250+00:00",
-      "confidence_disclaimer": "ERROR \u2014 signal computation failed. See publisher logs. No trade advice given.",
-      "performance_sent": true,
-      "telegram_sent": true
     }
   ]
 }
