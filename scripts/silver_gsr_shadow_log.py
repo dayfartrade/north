@@ -67,6 +67,16 @@ RT_COST = 5.0
 MAX_STALE_DAYS = 3
 
 
+def notify_private(msg: str) -> None:
+    """Best-effort private-chat Telegram ping. Silent no-op on any failure."""
+    try:
+        sys.path.insert(0, str(ROOT / "src"))
+        from telegram_bot import send
+        send(msg, audience="private")
+    except Exception as e:
+        print(f"[notify] private-chat send failed: {type(e).__name__}: {e}")
+
+
 def _ms_to_iso_date(ts_ms: int) -> str:
     return datetime.fromtimestamp(ts_ms / 1000, tz=timezone.utc).strftime("%Y-%m-%d")
 
@@ -208,6 +218,14 @@ def emit_signal_if_triggered(gsr_df: pd.DataFrame, z_ser: pd.Series,
     if not dry_run:
         append_shadow(rec)
         print(f"[signal] {sid}: EMITTED ({direction})")
+        notify_private(
+            f"🕯 SHADOW SIGNAL — silver GSR {direction}\n"
+            f"date: {today_date}\n"
+            f"GSR: {float(today_row['gsr']):.3f}  z: {today_z:+.3f}\n"
+            f"entry: silver same-bar close ${entry_price:.3f}\n"
+            f"stop: ${stop_price:.3f} (2xATR20)\n"
+            f"max hold: {MAX_HOLD_DAYS} trading days"
+        )
     else:
         print(f"[signal] {sid}: WOULD EMIT (dry-run)")
     return rec
@@ -306,6 +324,14 @@ def resolve_open_signals(gsr_df: pd.DataFrame, z_ser: pd.Series,
               f"exit ${exit_price:.3f} ({exit_reason}) R={r_mult:+.2f} $={pnl:+.0f}")
         if not dry_run:
             append_shadow(outcome)
+            icon = "✅" if r_mult > 0 else "🟥"
+            notify_private(
+                f"🕯 SHADOW RESOLVE — silver GSR {direction} {icon}\n"
+                f"signal date: {sig_date}\n"
+                f"entry ${entry_price:.3f} → exit ${exit_price:.3f}\n"
+                f"reason: {exit_reason}\n"
+                f"R: {r_mult:+.2f}  |  $: {pnl:+.0f}"
+            )
 
 
 def print_track_record(log: list[dict]):

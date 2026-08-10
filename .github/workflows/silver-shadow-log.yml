@@ -25,6 +25,10 @@ jobs:
   tick:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    env:
+      GOLDTRADER_TG_TOKEN: ${{ secrets.GOLDTRADER_TG_TOKEN }}
+      GOLDTRADER_TG_CHAT: ${{ secrets.GOLDTRADER_TG_CHAT }}
+      PYTHONPATH: ${{ github.workspace }}/src
     steps:
       - uses: actions/checkout@v4
 
