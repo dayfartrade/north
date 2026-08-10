@@ -1,0 +1,55 @@
+name: Signal drift monitor (weekly private)
+
+# Sunday 23:00 UTC — one hour after weekly-publish resolves last week's
+# call. Checks four independent tripwires and sends a private-chat alert
+# only if any of them trip.
+#
+# Does NOT touch the kill switch. Halt is always an operator decision.
+
+on:
+  schedule:
+    - cron: "0 23 * * 0"
+  workflow_dispatch:
+
+concurrency:
+  group: drift-monitor
+  cancel-in-progress: false
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      GOLDTRADER_TG_TOKEN: ${{ secrets.GOLDTRADER_TG_TOKEN }}
+      GOLDTRADER_TG_CHAT: ${{ secrets.GOLDTRADER_TG_CHAT }}
+      PYTHONPATH: ${{ github.workspace }}/src
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run drift monitor
+        run: python scripts/signal_drift_monitor.py
+
+      - name: Notify Telegram on failure
+        if: failure()
+        env:
+          TG_TOKEN: ${{ secrets.GOLDTRADER_TG_TOKEN }}
+          TG_CHAT: ${{ secrets.GOLDTRADER_TG_CHAT }}
+        run: |
+          if [ -z "$TG_TOKEN" ] || [ -z "$TG_CHAT" ]; then
+              echo "TG creds not set — cannot notify"
+              exit 0
+          fi
+          MSG="🚨 GH Actions FAILED: ${{ github.workflow }}
+          run: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          curl -sS "https://api.telegram.org/bot${TG_TOKEN}/sendMessage" \
+              --data-urlencode "chat_id=${TG_CHAT}" \
+              --data-urlencode "text=${MSG}" > /dev/null || echo "notify request failed"
