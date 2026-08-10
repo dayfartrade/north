@@ -38,6 +38,7 @@ sys.path.insert(0, str(ROOT))
 CALLS_LOG = ROOT / "data" / "far_weekly_calls.jsonl"
 XAUUSD_5M = ROOT / "data" / "external" / "dukascopy" / "XAUUSD_5m.csv"
 DAILY_BRIEF_LOG = ROOT / "data" / "north_daily_brief.jsonl"
+KILL_FILE = ROOT / "data" / "far_weekly_paused"
 
 MAX_STALE_HOURS = 6
 RULE = "━━━━━━━━━━━━━━━━━━━━━━━━"
@@ -196,6 +197,14 @@ def main():
     args = ap.parse_args()
 
     print(f"[north_daily_brief] {datetime.now(timezone.utc).isoformat()}")
+
+    import os
+    if not args.force:
+        paused_env = os.environ.get("FAR_WEEKLY_PAUSED", "").strip().lower() in ("1","true","yes","on")
+        if paused_env or KILL_FILE.exists():
+            print(f"[HALT] Kill switch active (FAR_WEEKLY_PAUSED env or "
+                  f"{KILL_FILE.name} file). Not publishing brief.")
+            sys.exit(0)
 
     call = load_active_call()
     if call is None:
