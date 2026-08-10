@@ -1,0 +1,72 @@
+name: Pre-publish preview (private)
+
+# Sunday 21:00 UTC — one hour before the public weekly-publish fires
+# at 22:00. Sends a private-channel preview showing:
+#   - What v1 will publish (direction, entry, stop, drivers)
+#   - What v2 (DXY-confirmed) shadow says
+#   - What ensemble (v1+v2+monthly) shadow says
+#   - Any divergence, prior week resolve status
+# Purpose: gives the operator a chance to review or halt before
+# the public 22:00 UTC publish.
+
+on:
+  schedule:
+    - cron: "0 21 * * 0"
+  workflow_dispatch:
+
+concurrency:
+  group: pre-publish-preview
+  cancel-in-progress: false
+
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      GOLDTRADER_TG_TOKEN: ${{ secrets.GOLDTRADER_TG_TOKEN }}
+      GOLDTRADER_TG_CHAT: ${{ secrets.GOLDTRADER_TG_CHAT }}
+      PYTHONPATH: ${{ github.workspace }}/src
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Restore Dukascopy cache
+        uses: actions/cache/restore@v4
+        with:
+          path: data/external/dukascopy/
+          key: pre-publish-restore-${{ github.run_id }}
+          restore-keys: |
+            dukascopy-
+
+      - name: Fallback XAUUSD fetch if cache empty
+        run: |
+          if [ ! -f data/external/dukascopy/XAUUSD_5m.csv ]; then
+              python scripts/fetch_dukascopy_xauusd.py
+          fi
+
+      - name: Send pre-publish preview
+        run: python scripts/pre_publish_preview.py
+
+      - name: Notify Telegram on failure
+        if: failure()
+        env:
+          TG_TOKEN: ${{ secrets.GOLDTRADER_TG_TOKEN }}
+          TG_CHAT: ${{ secrets.GOLDTRADER_TG_CHAT }}
+        run: |
+          if [ -z "$TG_TOKEN" ] || [ -z "$TG_CHAT" ]; then
+              echo "TG creds not set — cannot notify"
+              exit 0
+          fi
+          MSG="🚨 GH Actions FAILED: ${{ github.workflow }}
+          run: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          curl -sS "https://api.telegram.org/bot${TG_TOKEN}/sendMessage" \
+              --data-urlencode "chat_id=${TG_CHAT}" \
+              --data-urlencode "text=${MSG}" > /dev/null || echo "notify request failed"
