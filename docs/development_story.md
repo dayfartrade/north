@@ -367,6 +367,58 @@ Live pipelines on GitHub Actions:
 
 Current weekly call: FLAT for 2026-08-10 → 2026-08-14 (no position). Track record: n=1 resolved, -0.72% cumulative. Two forward-shadow candidates (gold basis LONG, silver GSR) accruing n in parallel.
 
+## 2026-08-10 (afternoon) — Soft-launch readiness push: QA, decision tools, operator surface
+
+Ahead of a soft-launch trigger (next directional call, whenever it fires), spent the Monday building out product QA, operator visibility, and the decision-support tools we would need before considering a switch from v1 to a stronger signal.
+
+### Real Telegram render of the daily brief
+
+Synthesized a SHORT call against real July 2026 XAU/USD data and sent the resulting brief to the private chat. Bold, italic, and code entities parsed correctly on mobile. Verified the layout works before public subscribers see it — no ugly first-fire on the coming Sunday.
+
+### Daily brief semantic backtest
+
+`scripts/daily_brief_backtest.py` replays the brief on the last 15 directional weeks: 11 clean verdict-vs-outcome matches, 2 CHOPPING (genuine ambiguity), 2 mismatches. Both mismatches are Thursday-vs-Friday late-move cases the brief cannot forecast — a fundamental limit of a state-based card, not a threshold miscalibration. Verdict thresholds hold up.
+
+### Kill-switch drill + parity fix
+
+`touch data/far_weekly_paused` cleanly halts the weekly publisher (exit 2, no publish). The new daily brief was missing this check — added the same guard so a single halt file stops both surfaces. If we need to pull the emergency brake mid-week, we now can.
+
+### v1 → v2 filter analysis (the key finding of the session)
+
+`scripts/v1_vs_v2_filter_analysis.py` and `scripts/ensemble_vs_v1_analysis.py` decompose the v2 (DXY-confirmed) and ensemble filters against v1. The critical result:
+
+|                 | Train 2010-2017 | OOS 2018-2026 |
+|-----------------|-----------------|---------------|
+| v1 mean/wk      | $+223           | $+717         |
+| v2 kept mean/wk | $+252           | $+1,030       |
+| v2 filtered subset mean/wk | $+147 | $-254 |
+
+The v2 DXY filter has BIGGER uplift in OOS than in the train window. That is the opposite of overfitting — if the filter had been curve-fit on 2010-2017, its OOS performance would degrade, not improve. This is real edge.
+
+Ensemble filters much less (~7-11% vs v2's 25%) and its backtest Sharpe advantage over v1 comes from variance reduction rather than mean uplift. For soft launch, v2 is the cleaner "next-step" candidate. The pre-reg 26-week forward window still applies, but the historical evidence supports it more strongly than we knew before this analysis.
+
+### Pre-publish preview (Sunday 21:00 UTC private)
+
+`scripts/pre_publish_preview.py` + `.github/workflows/pre-publish-preview.yml` fire one hour before every Sunday 22:00 public publish. Sends a private-channel card showing what v1 is about to publish, what v2 shadow says, what ensemble says, and any divergence flag. Gives the operator a review-and-halt window. The 2026-07-27 SHORT that lost -0.72% would have shown a divergence flag ("v1 says SHORT but v2 says FLAT, ensemble split 1-1") — a real early-warning surface. First live fire on GitHub via workflow_dispatch delivered `message_id 151` to the private chat.
+
+### Shadow signal notifications
+
+Both gold basis and silver GSR shadow scripts now Telegram the private chat when a signal is emitted or resolves. Was previously a silent surface — a signal could fire and go unnoticed for days. Small helper `notify_private()` in each script, best-effort send, silent no-op on missing creds.
+
+### Operator status probe
+
+`python scripts/north_status.py [--github]` — one-shot health check that prints: latest weekly call + track record, shadow log counts, data freshness per source, kill-switch state, Telegram creds sanity, and (with `--github`) last run status per workflow. Pre-launch runbook.
+
+### State at end of Monday session
+
+Live pipelines: same as previous entry, plus new pre-publish-preview.yml at Sunday 21:00 UTC.
+
+Six workflows total on GitHub Actions, all with failure-notify. Current v1 projection for the week of 2026-08-17 is FLAT (v1, v2, and ensemble all agree). Soft-launch trigger — first directional weekly call — remains in queue.
+
+### The soft-launch stance, in one paragraph
+
+Ship v1 unchanged at the next directional call. Keep v2 and ensemble as private shadow. The v2 filter is measurably better in OOS than in train — that's real signal, not curve fit — but the disciplined path is to run the 26-week forward window before switching what subscribers see. The pre-publish preview and shadow notifications give the operator enough visibility to make that switch decision when the time comes, rather than being surprised by it.
+
 ---
 
 *End of current entry. Story continues in subsequent updates.*
