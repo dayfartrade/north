@@ -327,6 +327,46 @@ Telegram card design was elevated in the same session: new performance snapshot 
 
 Migration bug worth remembering: the initial data-refresh workflow used a naive urllib fetch for FRED that wrote CSVs in the raw `observation_date,SERIES_ID` schema. The publisher expects `date,value` (normalized by `src/data_fred.snapshot_all`). This blew up compute_current_signal on the first live publish and the fallback emitted a broken FLAT card labeled "week of unknown" to the public channel. Fixed by replacing the inline fetch with `snapshot_all()`. Correction posted to the channel. Lesson: when a formatted-CSV loader exists, always use it — don't rewrite fetchers from scratch.
 
+## 2026-08-10 — Second candidate shadow, daily brief, failure alerts
+
+Shipped three additions to the live product surface in one session.
+
+### Silver GSR shadow log (parallel to gold basis)
+
+`scripts/silver_gsr_shadow_log.py` is a structural clone of the gold basis shadow log with the silver-GSR OOS pre-reg baked in: lookback=180 days, |z|>=1.5 both LONG (silver cheap vs gold) and SHORT (silver expensive), max hold 10 trading days, stop 2*silver_ATR(20), fill same-bar silver-spot close. Exit rules per bar: stop → z-crosses-zero → time. Freshness gate refuses to emit if XAG/USD data is more than 3 days stale.
+
+`.github/workflows/silver-shadow-log.yml` runs at 06:35 UTC daily, right after data-refresh and the gold basis tick. `data-refresh.yml` was extended with a `Fetch XAGUSD 5m` step calling `fetch_dukascopy_symbols.py "XAG/USD"` so silver stops being stale (it had been sitting 21 days stale locally, since data-refresh was gold-only).
+
+First run on GitHub was clean: 814 aligned days (XAG/USD cache starts 2024-01-01 fresh; the local `XAGUSD_5m_historical.csv` was not pushed to the cache), fresh data, z=+1.007, FLAT correctly emitted. Both silver GSR and gold basis LONG-only now accrue forward n in parallel — doubling data-collection speed toward the 100+ trades needed to collapse either CI.
+
+### NORTH Daily Brief
+
+Item 2 of the soft-launch queue: a midweek position update. `scripts/north_daily_brief.py` publishes a 3-section Telegram card while a directional weekly call is live:
+
+- **Signal Health**: entry vs current, open %, verdict badge (ON TRACK / CHOPPING / DRIFTING / AT RISK) driven by pnl% and stop distance in ATR multiples.
+- **Cost Radar**: open P&L, MAE (max adverse excursion since Monday), stop distance in dollars, % and ATR units.
+- **What Kills This Call**: direction-specific price thresholds (intraday break of stop; Friday close on the wrong side of entry).
+
+FLAT weeks are silently skipped per the soft-launch decision that mid-week engagement is net-negative when there's no live position (the alternative was engagement theater without trader value). `.github/workflows/daily-brief.yml` runs Mon-Fri at 12:00 UTC. Won't fire this week (current call is FLAT for 2026-08-10 → 2026-08-14), but ready for the next directional call.
+
+Card format was previewed locally against a synthetic SHORT call anchored in real XAU/USD spot data. Renders cleanly on Telegram Markdown.
+
+### Failure notifications across all workflows
+
+Closed the observability gap. Previously a silently failing GitHub Actions workflow required manually checking the Actions UI to notice. Now each of the five workflows (`data-refresh`, `shadow-log`, `silver-shadow-log`, `weekly-publish`, `daily-brief`) has a final `if: failure()` step that curls the Telegram Bot API and drops a short alert (`workflow name + run URL`) into the private chat. Guards against missing creds by no-op'ing rather than failing again.
+
+### State at end of session
+
+Live pipelines on GitHub Actions:
+- 06:00 UTC — data-refresh (XAUUSD + XAGUSD 5m, GC=F daily, FRED macro)
+- 06:30 UTC — gold basis LONG-only shadow log
+- 06:35 UTC — silver GSR shadow log
+- 12:00 UTC Mon-Fri — daily brief (skips when FLAT)
+- 22:00 UTC Sunday — weekly publish
+- Every workflow now Telegrams on failure
+
+Current weekly call: FLAT for 2026-08-10 → 2026-08-14 (no position). Track record: n=1 resolved, -0.72% cumulative. Two forward-shadow candidates (gold basis LONG, silver GSR) accruing n in parallel.
+
 ---
 
 *End of current entry. Story continues in subsequent updates.*
