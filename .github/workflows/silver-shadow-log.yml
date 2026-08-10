@@ -1,0 +1,75 @@
+name: Shadow log (silver GSR z-score reversion)
+
+# Daily: check whether the gold-silver ratio's 180d z-score is at |z| >= 1.5
+# and emit LONG or SHORT silver signals accordingly. Also resolves any prior
+# signals whose 10-day hold has elapsed or that hit a stop / z-cross-zero.
+#
+# Not published to Telegram. Research shadow only. Purpose: grow n on the
+# silver GSR candidate forward-out-of-sample, in parallel with gold basis.
+#
+# Cron: 06:35 UTC daily, right after data-refresh (06:00) + gold shadow (06:30).
+
+on:
+  schedule:
+    - cron: "35 6 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: silver-shadow-log
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  tick:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Restore Dukascopy cache
+        uses: actions/cache/restore@v4
+        with:
+          path: data/external/dukascopy/
+          key: silver-shadow-restore-${{ github.run_id }}
+          restore-keys: |
+            dukascopy-
+
+      - name: Fallback XAUUSD fetch if cache empty
+        run: |
+          if [ ! -f data/external/dukascopy/XAUUSD_5m.csv ]; then
+              echo "[fallback] no XAUUSD cache, doing full backfill"
+              python scripts/fetch_dukascopy_xauusd.py
+          fi
+
+      - name: Fallback XAGUSD fetch if cache empty
+        run: |
+          if [ ! -f data/external/dukascopy/XAGUSD_5m.csv ]; then
+              echo "[fallback] no XAGUSD cache, doing full backfill"
+              python scripts/fetch_dukascopy_symbols.py "XAG/USD"
+          fi
+
+      - name: Run silver GSR shadow log tick
+        run: python scripts/silver_gsr_shadow_log.py
+
+      - name: Commit shadow log updates
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/silver_gsr_shadow.jsonl 2>/dev/null || true
+          if git diff --cached --quiet; then
+              echo "No shadow log changes to commit"
+          else
+              git commit -m "shadow: silver GSR tick $(date -u +%Y-%m-%d)"
+              git push
+          fi

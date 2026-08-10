@@ -48,6 +48,10 @@ jobs:
         run: python scripts/fetch_dukascopy_xauusd.py
         continue-on-error: true
 
+      - name: Fetch XAGUSD 5m
+        run: python scripts/fetch_dukascopy_symbols.py "XAG/USD"
+        continue-on-error: true
+
       - name: Fetch GC=F daily via yfinance
         run: |
           python - <<'PY'
