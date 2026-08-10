@@ -122,6 +122,7 @@ def format_weekly_call(call: dict, track: dict | None = None) -> str:
         RULE,
         f"_Next update: Fri 21:00 UTC (week close outcome)_",
         "_Not financial advice. BETA product — 16yr backtest passes, live still validating._",
+        "_Sample: 363 backtested calls, 13/17 years positive. Live n growing every Sunday._",
     ]
 
     return "\n".join(lines)
