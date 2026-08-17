@@ -50,5 +50,9 @@ research material/
 data/external/
 backups/*.tar.gz
 
+# Session and memory snapshots — local rollback, never for repo
+backups/session_*/
+backups/memory_*/
+
 data/macro/cot_gold.csv
 data/macro/cot_gold_simplified.csv

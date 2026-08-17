@@ -1,0 +1,493 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FAR — Soft Launch preview</title>
+  <link rel="stylesheet" href="./style.css" />
+  <style>
+    :root {
+      --sec3: #60a5fa;  /* blue    — watchlist */
+      --sec5: #4ade80;  /* green   — daily brief */
+      --sec6: #22d3ee;  /* cyan    — position calc */
+      --secblog: #a78bfa; /* violet — monthly blog */
+    }
+
+    .preview-banner {
+      background: linear-gradient(90deg, rgba(96,165,250,0.15), rgba(74,222,128,0.05));
+      border-bottom: 2px solid var(--accent);
+      padding: 10px 0;
+      text-align: center;
+      font-size: 13px;
+      color: var(--accent);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    /* Live-signal hero */
+    .signal-hero {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 20px;
+      align-items: center;
+      padding: 24px 26px;
+      background: linear-gradient(135deg, rgba(248,113,113,0.08), var(--bg-card));
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--down);
+      border-radius: var(--radius);
+      margin-bottom: 20px;
+    }
+    .signal-dir {
+      font-size: 36px;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      color: var(--down);
+    }
+    .signal-body { font-size: 14px; }
+    .signal-body strong { color: var(--fg); }
+    .signal-price {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+    .signal-price .px { font-size: 26px; font-weight: 700; color: var(--fg); }
+    .signal-price .lbl { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+
+    /* Section markers */
+    .section-header {
+      display: flex; align-items: center; gap: 14px;
+      margin-bottom: 16px;
+    }
+    .section-tag {
+      width: 38px; height: 38px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; font-weight: 700;
+      color: var(--bg); border-radius: 8px; flex-shrink: 0;
+    }
+    .section-title h2 { margin: 0; font-size: 20px; }
+    .section-title .meta { color: var(--muted); font-size: 12px; margin-top: 2px; }
+    .polish-tag {
+      display: inline-block; font-size: 10px; padding: 2px 8px;
+      border-radius: 10px; margin-left: 8px;
+      background: rgba(242,201,76,0.15); color: var(--accent);
+      border: 1px solid rgba(242,201,76,0.3);
+      letter-spacing: 0.06em; text-transform: uppercase;
+    }
+
+    .sec-3 { border-top: 3px solid var(--sec3); }
+    .sec-3 .section-tag { background: var(--sec3); }
+    .sec-3 h2 { color: var(--sec3); }
+
+    .sec-5 { border-top: 3px solid var(--sec5); }
+    .sec-5 .section-tag { background: var(--sec5); }
+    .sec-5 h2 { color: var(--sec5); }
+
+    .sec-6 { border-top: 3px solid var(--sec6); }
+    .sec-6 .section-tag { background: var(--sec6); }
+    .sec-6 h2 { color: var(--sec6); }
+
+    .sec-blog { border-top: 3px solid var(--secblog); }
+    .sec-blog .section-tag { background: var(--secblog); }
+    .sec-blog h2 { color: var(--secblog); }
+
+    /* Watchlist */
+    .cond-row {
+      display: grid; grid-template-columns: 1fr 90px 110px;
+      gap: 12px; padding: 10px 0;
+      border-top: 1px solid var(--border);
+      align-items: center; font-size: 14px;
+    }
+    .cond-row:first-of-type { border-top: none; color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; }
+    .cond-yes { color: var(--sec5); font-weight: 700; text-align: center; }
+    .cond-no { color: var(--down); font-weight: 700; text-align: center; }
+    .cond-val { text-align: right; font-variant-numeric: tabular-nums; color: var(--muted); font-size: 13px; }
+    .likely-box {
+      background: linear-gradient(90deg, rgba(96,165,250,0.12), transparent);
+      border-left: 3px solid var(--sec3);
+      padding: 16px 18px; border-radius: 6px; margin-top: 16px;
+    }
+    .likely-box .headline { font-size: 15px; font-weight: 600; color: var(--sec3); margin-bottom: 4px; }
+    .likely-box .sub { font-size: 13px; color: var(--muted); }
+    .flip-hint {
+      display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px;
+      font-size: 12px; color: var(--muted);
+    }
+    .flip-hint span { background: var(--bg); border: 1px solid var(--border); padding: 3px 8px; border-radius: 8px; }
+
+    /* Daily brief */
+    .brief-block {
+      background: var(--bg);
+      border-left: 3px solid var(--sec5);
+      padding: 12px 16px; margin: 8px 0;
+      border-radius: 4px; font-size: 14px;
+    }
+    .brief-block strong { color: var(--sec5); }
+    .brief-block .val { font-variant-numeric: tabular-nums; color: var(--fg); font-weight: 500; }
+    .brief-block .dn { color: var(--down); }
+    .brief-block .up { color: var(--up); }
+    .brief-tabs {
+      display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap;
+    }
+    .brief-tab {
+      font-size: 11px; padding: 4px 10px; border-radius: 6px;
+      background: var(--bg); border: 1px solid var(--border);
+      color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em;
+    }
+    .brief-tab.active { background: rgba(74,222,128,0.15); color: var(--sec5); border-color: var(--sec5); }
+
+    /* Position calc */
+    .calc-widget {
+      background: var(--bg);
+      border: 1px solid var(--sec6);
+      border-radius: 8px;
+      padding: 18px;
+    }
+    .calc-current {
+      font-size: 12px; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.05em;
+      margin-bottom: 14px;
+      display: flex; gap: 14px; flex-wrap: wrap;
+    }
+    .calc-current strong { color: var(--fg); font-weight: 700; }
+    .calc-inputs {
+      display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 14px;
+    }
+    @media (max-width: 680px) { .calc-inputs { grid-template-columns: 1fr; } }
+    .calc-inputs label {
+      display: block; font-size: 11px; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;
+    }
+    .calc-inputs input, .calc-inputs select {
+      width: 100%; background: var(--bg-card); color: var(--fg);
+      border: 1px solid var(--border); border-radius: 4px;
+      padding: 8px 10px; font-size: 14px; font-variant-numeric: tabular-nums;
+    }
+    .calc-out {
+      background: rgba(34,211,238,0.08);
+      border: 1px solid var(--sec6);
+      border-radius: 6px; padding: 14px 16px;
+    }
+    .calc-out-row {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 14px;
+    }
+    .calc-out-cell .lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+    .calc-out-cell .val { font-size: 20px; font-weight: 700; color: var(--fg); font-variant-numeric: tabular-nums; margin-top: 2px; }
+    .calc-out-cell .val.dn { color: var(--down); }
+    .calc-out-cell .val.up { color: var(--up); }
+    .calc-out-cell .val.accent { color: var(--sec6); }
+
+    /* Blog */
+    .blog-post {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--secblog);
+      border-radius: 6px;
+      padding: 20px 22px;
+      margin-bottom: 14px;
+    }
+    .blog-post .date {
+      font-size: 11px; color: var(--secblog);
+      text-transform: uppercase; letter-spacing: 0.08em;
+    }
+    .blog-post h3 { margin: 6px 0 12px; font-size: 22px; }
+    .blog-preview-metrics {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+      gap: 12px; margin: 12px 0;
+    }
+    .bpm-cell {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 10px 12px;
+    }
+    .bpm-cell .lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+    .bpm-cell .val { font-size: 18px; font-weight: 700; margin-top: 2px; font-variant-numeric: tabular-nums; }
+
+    .retire-mini {
+      display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px;
+    }
+    .retire-chip {
+      font-size: 12px; padding: 4px 10px;
+      background: rgba(248,113,113,0.08);
+      border: 1px solid rgba(248,113,113,0.25);
+      color: var(--down);
+      border-radius: 10px;
+    }
+
+    .archive-list {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 8px; margin-top: 14px;
+    }
+    .archive-item {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 10px 12px;
+      font-size: 12px;
+      color: var(--muted);
+      text-align: center;
+    }
+    .archive-item.empty { opacity: 0.4; }
+
+    .separator-note {
+      text-align: center; color: var(--muted); font-size: 12px;
+      padding: 20px 0; letter-spacing: 0.06em; text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+  <div class="preview-banner">🚀 SOFT-LAUNCH DRAFT · sections color-coded · methodology in separate section (not shown)</div>
+
+  <header class="hero">
+    <div class="wrap">
+      <h1>FAR Weekly Gold Read</h1>
+      <p class="tagline">One directional gold call per week · daily market read · pre-registered signal · public track record.</p>
+      <div class="status">
+        <span class="dot dot-down"></span>
+        <span>Active call: SHORT · resolves Fri 2026-07-31 21:00 UTC</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+
+    <!-- ============================================================
+         Live signal (existing weekly report — condensed hero)
+         ============================================================ -->
+    <div class="signal-hero">
+      <div>
+        <div class="signal-dir">SHORT</div>
+        <div class="muted" style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; text-align: center; margin-top: 2px;">Week of 2026-07-27</div>
+      </div>
+      <div class="signal-body">
+        <div><strong>Entry:</strong> Monday NY open, market order</div>
+        <div><strong>Stop:</strong> 4211.29 (2×ATR = $197)</div>
+        <div><strong>Exit:</strong> Friday 21:00 UTC close or stop hit</div>
+        <div style="margin-top: 6px; color: var(--muted); font-size: 12px;">Signal: M20 -4.14% · M60 -14.44% · MA10&lt;MA40 · RY +7bps · all 4 align SHORT</div>
+      </div>
+      <div class="signal-price">
+        <div class="px">$4,014.24</div>
+        <div class="lbl">Ref price at publish</div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         SECTION 3 — Mid-week watchlist preview
+         ============================================================ -->
+    <section class="card sec-3">
+      <div class="section-header">
+        <div class="section-tag">3</div>
+        <div class="section-title">
+          <h2>Mid-week watchlist preview</h2>
+          <div class="meta">Wed/Thu 15:00 UTC · Sunday's signal state, refreshed <span class="polish-tag">needs polish</span></div>
+        </div>
+      </div>
+
+      <p class="hint">Not a call. Not tradable. Shows where each of the 4 v1 rule-conditions stand right now, and what would flip the direction.</p>
+
+      <div class="cond-row"><div>Condition</div><div style="text-align:center;">State</div><div class="cond-val">Current value</div></div>
+      <div class="cond-row"><div>4-week momentum &lt; 0</div><div><span class="cond-yes">✓ YES</span></div><div class="cond-val">M20 = -4.14%</div></div>
+      <div class="cond-row"><div>12-week momentum &lt; 0</div><div><span class="cond-yes">✓ YES</span></div><div class="cond-val">M60 = -14.44%</div></div>
+      <div class="cond-row"><div>MA10 &lt; MA40 (short-term below long-term)</div><div><span class="cond-yes">✓ YES</span></div><div class="cond-val">Δ = -$28</div></div>
+      <div class="cond-row"><div>Real yield 20d Δ &gt; 0 (rising rates)</div><div><span class="cond-yes">✓ YES</span></div><div class="cond-val">RY Δ = +7 bps</div></div>
+
+      <div class="likely-box">
+        <div class="headline">Sunday's call is currently likely: SHORT</div>
+        <div class="sub">All 4 conditions align. Historical similarity: 96% of prior 4-of-4 SHORT states led to SHORT calls at Sunday publish.</div>
+        <div class="flip-hint">
+          <span>Would flip to FLAT if: RY drops &gt; 10 bps</span>
+          <span>or: gold rallies &gt; 3.5% in 2 days</span>
+          <span>or: MA10 crosses back above MA40</span>
+        </div>
+      </div>
+
+      <p class="hint" style="margin-top: 16px;">Auto-updates every 4 hours. Full history of previews vs actual Sunday calls: <a href="#" style="color: var(--sec3);">preview accuracy log →</a></p>
+    </section>
+
+    <!-- ============================================================
+         SECTION 5 — Daily descriptive brief
+         ============================================================ -->
+    <section class="card sec-5">
+      <div class="section-header">
+        <div class="section-tag">5</div>
+        <div class="section-title">
+          <h2>Daily brief</h2>
+          <div class="meta">Mon–Fri 07:00 UTC · descriptive market read · no new calls <span class="polish-tag">needs polish</span></div>
+        </div>
+      </div>
+
+      <div class="brief-tabs">
+        <span class="brief-tab active">Today</span>
+        <span class="brief-tab">Yesterday</span>
+        <span class="brief-tab">Wed Jul 29</span>
+        <span class="brief-tab">Tue Jul 28</span>
+        <span class="brief-tab">Mon Jul 27</span>
+        <span class="brief-tab">Archive →</span>
+      </div>
+
+      <div class="brief-block">
+        <strong>Overnight action</strong> · Gold closed <span class="val up">+0.4%</span> at <span class="val">$4,024</span> (range $4,003–$4,032). Silver <span class="val up">+0.8%</span>. DXY <span class="val dn">-0.2%</span>. US 10y real yield <span class="val up">+2 bps</span> to 1.94%. Asia session drove the move, London flat.
+      </div>
+      <div class="brief-block">
+        <strong>Macro delta (5d)</strong> · RY <span class="val up">+7 bps</span> · DXY <span class="val up">+0.6%</span> · GVZ <span class="val">14.2</span> (unchanged) · COT non-comm net long <span class="val up">+3.2σ</span> (bucket: crowded long).
+      </div>
+      <div class="brief-block">
+        <strong>Live position</strong> · SHORT gold from Mon @ 4014.24 · stop 4211.29 · target exit today Fri 21:00 UTC · currently <span class="val up">+$1,842 open P&L</span>.
+      </div>
+      <div class="brief-block">
+        <strong>Next 24h events</strong> · Chicago PMI 13:45 UTC · Michigan sentiment 14:00 UTC · Fed Bowman speech 15:00 UTC.
+      </div>
+
+      <p class="hint" style="margin-top: 14px;">Published Mon–Fri 07:00 UTC. Automated from macro feeds. No signals introduced, no forward-looking predictions. <a href="#" style="color: var(--sec5);">Subscribe by email →</a></p>
+    </section>
+
+    <!-- ============================================================
+         SECTION 6 — Position-size calculator
+         ============================================================ -->
+    <section class="card sec-6">
+      <div class="section-header">
+        <div class="section-tag">6</div>
+        <div class="section-title">
+          <h2>Position calculator</h2>
+          <div class="meta">Live for current call · sized to your account and risk tolerance <span class="polish-tag">needs polish</span></div>
+        </div>
+      </div>
+
+      <div class="calc-widget">
+        <div class="calc-current">
+          <div>Current call: <strong style="color: var(--down);">SHORT @ $4,014.24</strong></div>
+          <div>Stop: <strong>$4,211.29</strong></div>
+          <div>Stop distance: <strong>$197 (2×ATR)</strong></div>
+        </div>
+        <div class="calc-inputs">
+          <div>
+            <label>Account size ($)</label>
+            <input type="number" id="calc-acct" value="100000" min="1000" step="1000" />
+          </div>
+          <div>
+            <label>Risk per call (%)</label>
+            <input type="number" id="calc-risk" value="1.0" min="0.1" max="10" step="0.1" />
+          </div>
+          <div>
+            <label>Instrument</label>
+            <select id="calc-inst">
+              <option value="gc">GC futures (100 oz)</option>
+              <option value="mgc" selected>MGC micro (10 oz)</option>
+              <option value="gld">GLD ETF (~1 oz per share)</option>
+            </select>
+          </div>
+        </div>
+        <div class="calc-out">
+          <div class="calc-out-row">
+            <div class="calc-out-cell"><div class="lbl">Risk this call</div><div class="val accent" id="out-risk">$1,000</div></div>
+            <div class="calc-out-cell"><div class="lbl">Suggested size</div><div class="val" id="out-size">5 MGC</div></div>
+            <div class="calc-out-cell"><div class="lbl">If stopped</div><div class="val dn" id="out-loss">-$985</div></div>
+            <div class="calc-out-cell"><div class="lbl">If time-exit at 1×ATR win</div><div class="val up" id="out-win">+$493</div></div>
+          </div>
+        </div>
+      </div>
+
+      <p class="hint" style="margin-top: 14px;">Instrument guide: MGC micro for accounts &lt; $200k · GLD ETF for accounts &lt; $30k · GC full-size for &gt; $500k. Position sizing rules on the separate methodology page.</p>
+    </section>
+
+    <div class="separator-note">— Blog · monthly archive —</div>
+
+    <!-- ============================================================
+         BLOG / MONTHLY ARCHIVE — Section 1 + 2 packaged monthly
+         ============================================================ -->
+    <section class="card sec-blog">
+      <div class="section-header">
+        <div class="section-tag">📖</div>
+        <div class="section-title">
+          <h2>Monthly report</h2>
+          <div class="meta">Published 1st of each month · previous month archived · Section 1 (outcomes) + Section 2 (retirements) live here</div>
+        </div>
+      </div>
+
+      <p class="hint">Each month gets its own post. All resolved calls + running record + any retirements from that month. Once posted, the month is archived and the next month starts fresh.</p>
+
+      <div class="blog-post">
+        <div class="date">July 2026 · published 2026-08-01</div>
+        <h3>FAR Weekly Gold — July 2026 recap</h3>
+
+        <div style="font-size: 13px; color: var(--muted); margin-bottom: 10px;">Signal launched July 22. One resolved call this month.</div>
+
+        <div class="blog-preview-metrics">
+          <div class="bpm-cell"><div class="lbl">Calls resolved</div><div class="val">1</div></div>
+          <div class="bpm-cell"><div class="lbl">Wins</div><div class="val" style="color: var(--up);">1</div></div>
+          <div class="bpm-cell"><div class="lbl">Losses</div><div class="val">0</div></div>
+          <div class="bpm-cell"><div class="lbl">Win rate</div><div class="val" style="color: var(--up);">100%</div></div>
+          <div class="bpm-cell"><div class="lbl">P&L per contract</div><div class="val" style="color: var(--up);">+$1,842</div></div>
+          <div class="bpm-cell"><div class="lbl">Running N</div><div class="val">1</div></div>
+        </div>
+
+        <div style="font-size: 13px; color: var(--muted); margin-top: 14px;">
+          <strong style="color: var(--fg);">Detail:</strong> Week of Jul 27 · SHORT @ 4014.24 → 3995.82 · time exit · +$1,842. All 4 signal conditions aligned SHORT at publish, held through the week without triggering the 4211.29 stop.
+        </div>
+
+        <div style="margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--border);">
+          <div style="font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px;">Retirements this month</div>
+          <div class="retire-mini">
+            <span class="retire-chip">Davey Seed 2 countertrend fade — 2026-07-29</span>
+          </div>
+          <div style="font-size: 12px; color: var(--muted); margin-top: 8px;">One mechanism retired: 4-week extreme fade lost -$8k OOS with a single -$20k trade on 2026 gold ATH breakout.</div>
+        </div>
+      </div>
+
+      <div>
+        <div style="font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px;">Archive</div>
+        <div class="archive-list">
+          <div class="archive-item">Jul 2026 (current)</div>
+          <div class="archive-item empty">Aug 2026 →</div>
+          <div class="archive-item empty">Sep 2026 →</div>
+          <div class="archive-item empty">Oct 2026 →</div>
+          <div class="archive-item empty">Nov 2026 →</div>
+          <div class="archive-item empty">Dec 2026 →</div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <p class="muted">Methodology · pre-reg discipline · risk profile · execution guide → separate section (not shown here).</p>
+    <p class="muted"><a href="./index.html" style="color:var(--muted);">← current site</a> · <a href="./launch_preview.html" style="color:var(--muted);">6-section preview</a> · <a href="./vision.html" style="color:var(--muted);">12-mo vision</a></p>
+  </footer>
+
+  <script>
+    // Simple position calc — updates outputs on any input change
+    (function() {
+      const $ = id => document.getElementById(id);
+      const acct = $('calc-acct'), risk = $('calc-risk'), inst = $('calc-inst');
+      const outRisk = $('out-risk'), outSize = $('out-size'), outLoss = $('out-loss'), outWin = $('out-win');
+      const stopDist = 197;  // 2×ATR for current call
+      const atr = 98.52;
+
+      const dollarPerPt = { gc: 100, mgc: 10, gld: 1 };
+      const instLabel = { gc: 'GC', mgc: 'MGC', gld: 'GLD sh' };
+
+      function update() {
+        const a = parseFloat(acct.value) || 0;
+        const r = parseFloat(risk.value) || 0;
+        const dollarRisk = a * r / 100;
+        const dpp = dollarPerPt[inst.value];
+        const rawSize = dollarRisk / (stopDist * dpp);
+        const size = inst.value === 'gld' ? Math.round(rawSize * 100) : Math.round(rawSize * 10) / 10;
+        const finalSize = inst.value === 'gld' ? size : Math.max(1, Math.round(rawSize));
+        const actualLoss = finalSize * stopDist * dpp;
+        const oneAtrWin = finalSize * atr * dpp;
+
+        outRisk.textContent = '$' + dollarRisk.toLocaleString(undefined, {maximumFractionDigits: 0});
+        outSize.textContent = finalSize + ' ' + instLabel[inst.value];
+        outLoss.textContent = '-$' + actualLoss.toLocaleString(undefined, {maximumFractionDigits: 0});
+        outWin.textContent = '+$' + oneAtrWin.toLocaleString(undefined, {maximumFractionDigits: 0});
+      }
+
+      [acct, risk, inst].forEach(el => el.addEventListener('input', update));
+      [acct, risk, inst].forEach(el => el.addEventListener('change', update));
+      update();
+    })();
+  </script>
+</body>
+</html>

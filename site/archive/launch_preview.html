@@ -1,0 +1,519 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FAR — Launch Preview (6 additions)</title>
+  <link rel="stylesheet" href="./style.css" />
+  <style>
+    /* Section colors — one per proposed addition */
+    :root {
+      --sec1: #f2c94c;  /* amber   — outcome resolver */
+      --sec2: #f87171;  /* coral   — retirement wall */
+      --sec3: #60a5fa;  /* blue    — watchlist preview */
+      --sec4: #c084fc;  /* violet  — shadow transparency */
+      --sec5: #4ade80;  /* green   — daily brief */
+      --sec6: #22d3ee;  /* cyan    — position calculator */
+    }
+
+    .preview-banner {
+      background: linear-gradient(90deg, rgba(96,165,250,0.15), rgba(96,165,250,0.05));
+      border-bottom: 2px solid var(--sec3);
+      padding: 10px 0;
+      text-align: center;
+      font-size: 13px;
+      color: var(--sec3);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+    .section-tag {
+      width: 42px; height: 42px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; font-weight: 700;
+      color: var(--bg);
+      border-radius: 8px;
+      flex-shrink: 0;
+    }
+    .section-title { flex: 1; }
+    .section-title h2 { margin: 0; font-size: 20px; }
+    .section-title .meta { color: var(--muted); font-size: 12px; margin-top: 2px; text-transform: uppercase; letter-spacing: 0.06em; }
+
+    /* Per-section color accents */
+    .sec-1 { border-top: 3px solid var(--sec1); }
+    .sec-1 .section-tag { background: var(--sec1); }
+    .sec-1 h2 { color: var(--sec1); }
+
+    .sec-2 { border-top: 3px solid var(--sec2); }
+    .sec-2 .section-tag { background: var(--sec2); }
+    .sec-2 h2 { color: var(--sec2); }
+
+    .sec-3 { border-top: 3px solid var(--sec3); }
+    .sec-3 .section-tag { background: var(--sec3); }
+    .sec-3 h2 { color: var(--sec3); }
+
+    .sec-4 { border-top: 3px solid var(--sec4); }
+    .sec-4 .section-tag { background: var(--sec4); }
+    .sec-4 h2 { color: var(--sec4); }
+
+    .sec-5 { border-top: 3px solid var(--sec5); }
+    .sec-5 .section-tag { background: var(--sec5); }
+    .sec-5 h2 { color: var(--sec5); }
+
+    .sec-6 { border-top: 3px solid var(--sec6); }
+    .sec-6 .section-tag { background: var(--sec6); }
+    .sec-6 h2 { color: var(--sec6); }
+
+    .demo-box {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 18px 20px;
+      margin: 12px 0;
+    }
+    .demo-label {
+      font-size: 10px; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.08em;
+      margin-bottom: 10px;
+    }
+
+    /* Outcome resolver bits */
+    .outcome-hero { text-align: center; padding: 20px 0; }
+    .outcome-verdict { font-size: 42px; font-weight: 800; letter-spacing: 0.05em; }
+    .outcome-verdict.win { color: var(--up); }
+    .outcome-verdict.loss { color: var(--down); }
+    .outcome-sub { color: var(--muted); margin-top: 6px; font-size: 14px; }
+
+    /* Retirement wall */
+    .retire-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
+    .retire-item {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--sec2);
+      padding: 10px 12px;
+      border-radius: 6px;
+      font-size: 13px;
+    }
+    .retire-name { font-weight: 600; color: var(--fg); }
+    .retire-when { color: var(--muted); font-size: 11px; margin-top: 2px; }
+    .retire-why { color: var(--muted); font-size: 12px; margin-top: 6px; line-height: 1.4; }
+
+    /* Watchlist preview */
+    .cond-row {
+      display: grid; grid-template-columns: 1fr 100px 80px;
+      gap: 12px; padding: 10px 0;
+      border-top: 1px solid var(--border);
+      font-size: 14px; align-items: center;
+    }
+    .cond-row:first-of-type { border-top: none; }
+    .cond-yes { color: var(--sec5); font-weight: 700; }
+    .cond-no { color: var(--down); font-weight: 700; }
+    .cond-meta { color: var(--muted); font-size: 12px; font-variant-numeric: tabular-nums; text-align: right; }
+    .likely-call {
+      background: linear-gradient(90deg, rgba(96,165,250,0.15), transparent);
+      border-left: 3px solid var(--sec3);
+      padding: 14px 16px;
+      border-radius: 4px;
+      margin-top: 14px;
+      font-size: 15px;
+    }
+
+    /* Shadow transparency */
+    .shadow-warning {
+      background: rgba(192,132,252,0.08);
+      border: 1px solid var(--sec4);
+      border-radius: 8px;
+      padding: 14px 18px;
+      margin-bottom: 16px;
+    }
+    .shadow-warning strong { color: var(--sec4); }
+    .shadow-signal {
+      display: grid; grid-template-columns: 100px 1fr 80px;
+      gap: 12px; padding: 10px 0;
+      border-top: 1px solid var(--border);
+      align-items: center; font-size: 14px;
+    }
+    .shadow-signal:first-of-type { border-top: none; }
+    .shadow-badge { font-size: 11px; padding: 3px 8px; border-radius: 10px; text-transform: uppercase; letter-spacing: 0.06em; }
+    .shadow-badge.long { background: rgba(74,222,128,0.15); color: var(--up); }
+    .shadow-badge.short { background: rgba(248,113,113,0.15); color: var(--down); }
+    .shadow-badge.flat { background: rgba(138,143,153,0.15); color: var(--muted); }
+
+    /* Daily brief blocks */
+    .brief-block {
+      background: var(--bg);
+      border-left: 3px solid var(--sec5);
+      padding: 12px 16px;
+      margin: 8px 0;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    .brief-block strong { color: var(--sec5); }
+
+    /* Position calculator */
+    .calc-mini {
+      background: var(--bg);
+      border: 1px solid var(--sec6);
+      border-radius: 8px;
+      padding: 16px;
+    }
+    .calc-mini-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+    .calc-mini label { display: block; font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+    .calc-mini input {
+      width: 100%; background: var(--bg-card); color: var(--fg);
+      border: 1px solid var(--border); border-radius: 4px;
+      padding: 8px 10px; font-size: 14px;
+    }
+    .calc-mini-out {
+      background: rgba(34,211,238,0.08);
+      border: 1px solid var(--sec6);
+      border-radius: 6px;
+      padding: 12px 14px;
+      margin-top: 10px;
+      font-size: 14px;
+    }
+    .calc-mini-out strong { color: var(--sec6); font-size: 18px; }
+
+    .effort-line {
+      display: inline-block;
+      font-size: 11px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 2px 8px;
+      border-radius: 10px;
+      margin-left: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="preview-banner">🎨 LAUNCH PREVIEW — 6 additions proposed for soft launch · each section color-coded</div>
+
+  <header class="hero">
+    <div class="wrap">
+      <h1>Launch package preview</h1>
+      <p class="tagline">Six additions to the weekly report. Each below is a working mockup of what that piece looks like when built.
+        Section header shows the number + color assigned in the proposal.</p>
+      <div class="status">
+        <span class="dot dot-up"></span>
+        <span>Tier 1 total: ~5-7h · Tier 2 adds ~5-7h more</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+
+    <!-- ============================================================
+         SECTION 1 — Weekly outcome resolver
+         ============================================================ -->
+    <section class="card sec-1">
+      <div class="section-header">
+        <div class="section-tag">1</div>
+        <div class="section-title">
+          <h2>Weekly outcome resolver</h2>
+          <div class="meta">Auto-published Friday close <span class="effort-line">~2h build</span> <span class="effort-line">TIER 1</span></div>
+        </div>
+      </div>
+      <p class="hint">Every Friday at 21:00 UTC (NY close), the resolver reads the price, computes the outcome vs the pre-registered call, and publishes.
+        Non-negotiable trust asset — literally becomes the launch moment tonight.</p>
+
+      <div class="demo-box">
+        <div class="demo-label">📄 What subscribers see · Fri 2026-07-31 21:00 UTC</div>
+        <div class="outcome-hero">
+          <div class="outcome-verdict win">WON · +$1,842</div>
+          <div class="outcome-sub">Week of 2026-07-27 · SHORT gold entry 4014.24 → exit 3995.82 · Time exit (Friday close)</div>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 14px; padding: 14px; background: var(--bg-card); border-radius: 6px;">
+          <div><div class="metric-label">Direction</div><div class="metric-value" style="font-size: 18px;">SHORT</div></div>
+          <div><div class="metric-label">Entry</div><div class="metric-value" style="font-size: 18px;">4014.24</div></div>
+          <div><div class="metric-label">Exit</div><div class="metric-value" style="font-size: 18px;">3995.82</div></div>
+          <div><div class="metric-label">Exit type</div><div class="metric-value" style="font-size: 18px;">Time</div></div>
+          <div><div class="metric-label">$ per contract</div><div class="metric-value up" style="font-size: 18px;">+$1,842</div></div>
+        </div>
+        <div style="margin-top: 14px; padding: 12px 14px; background: var(--bg-card); border-radius: 6px;">
+          <div class="demo-label" style="margin-bottom: 6px;">Running record after this call</div>
+          <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+            <div><span class="muted">N=</span> <strong>1</strong></div>
+            <div><span class="muted">Wins</span> <strong style="color: var(--up);">1</strong></div>
+            <div><span class="muted">Losses</span> <strong>0</strong></div>
+            <div><span class="muted">Win rate</span> <strong style="color: var(--up);">100%</strong></div>
+            <div><span class="muted">Total P&L</span> <strong style="color: var(--up);">+$1,842</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="demo-box">
+        <div class="demo-label">📄 Same template if call had lost</div>
+        <div class="outcome-hero">
+          <div class="outcome-verdict loss">LOST · -$2,100</div>
+          <div class="outcome-sub">Week of 2026-07-27 · SHORT gold entry 4014.24 → stopped 4211.29 · Stop-loss hit Wed AM</div>
+        </div>
+        <p class="hint" style="margin-top: 10px;">Losers get the same layout. Same auto-publish schedule. No cherry-picking possible.</p>
+      </div>
+
+      <p class="hint" style="margin-top: 16px;">
+        <strong>Cadence:</strong> Fires every Friday whether call is WIN, LOSS, or FLAT (FLAT card just says "no position taken; N unchanged").
+        <strong>Channels:</strong> Telegram broadcast, site card, RSS entry, JSON API append.
+      </p>
+    </section>
+
+    <!-- ============================================================
+         SECTION 2 — Retirement wall on landing
+         ============================================================ -->
+    <section class="card sec-2">
+      <div class="section-header">
+        <div class="section-tag">2</div>
+        <div class="section-title">
+          <h2>Featured "What we retired" wall</h2>
+          <div class="meta">Compact version on landing above the fold <span class="effort-line">~30min build</span> <span class="effort-line">TIER 1</span></div>
+        </div>
+      </div>
+      <p class="hint">24 rejections documented in <a href="./research.html" style="color: var(--sec2);">/research</a>. Move a compact 6-card grid to <code>index.html</code> above the fold.
+        Strongest single differentiator on the site — nobody in trading Twitter publishes losers.</p>
+
+      <div class="demo-box">
+        <div class="demo-label">📄 What visitors see on landing · scroll-1</div>
+        <div class="retire-grid">
+          <div class="retire-item">
+            <div class="retire-name">Session ORB v7 family</div>
+            <div class="retire-when">Shipped 2026-07-01 · Retired 2026-07-13</div>
+            <div class="retire-why">Halted by SPRT at n=18 (4 wins, -$8.7k). Intraday ORB broken on modern gold.</div>
+          </div>
+          <div class="retire-item">
+            <div class="retire-name">Path Z (NY-SHORT + Low-ER)</div>
+            <div class="retire-when">Discovered 2026-07-20 · Retired 2026-07-22</div>
+            <div class="retire-why">9-year OOS revealed 2025-26 regime artifact, not persistent edge.</div>
+          </div>
+          <div class="retire-item">
+            <div class="retire-name">Davey Seed 2 countertrend</div>
+            <div class="retire-when">Retired 2026-07-29</div>
+            <div class="retire-why">-$20k single-trade wipeout on gold ATH breakout.</div>
+          </div>
+          <div class="retire-item">
+            <div class="retire-name">Six-in-one-day rejection block</div>
+            <div class="retire-when">Retired 2026-07-24</div>
+            <div class="retire-why">BTC/WTI cross-asset, COT extreme, seasonality, short-put income, ML direction — all pre-registered, all rejected in one session.</div>
+          </div>
+          <div class="retire-item">
+            <div class="retire-name">Meta-labeling (Prado Ch 3.6)</div>
+            <div class="retire-when">Retired 2026-07-22</div>
+            <div class="retire-why">Training 97% / hold-out 58% precision — catastrophic overfit.</div>
+          </div>
+          <div class="retire-item">
+            <div class="retire-name">+19 more retired mechanisms</div>
+            <div class="retire-when">Full log</div>
+            <div class="retire-why">Every rejected pre-reg, dated, with reason. <a href="./research.html" style="color: var(--sec2);">See /research →</a></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         SECTION 3 — Mid-week watchlist preview
+         ============================================================ -->
+    <section class="card sec-3">
+      <div class="section-header">
+        <div class="section-tag">3</div>
+        <div class="section-title">
+          <h2>Mid-week watchlist preview</h2>
+          <div class="meta">Wed/Thu preview of Sunday's likely direction <span class="effort-line">~3h build</span> <span class="effort-line">TIER 1</span></div>
+        </div>
+      </div>
+      <p class="hint">NOT a new call. Derived from v1's public rule state. Doubles cadence without introducing signal to pre-reg.
+        Preserves discipline because the rules are the same ones already published.</p>
+
+      <div class="demo-box">
+        <div class="demo-label">📄 Wednesday preview · 2026-07-29 15:00 UTC</div>
+        <div class="cond-row"><div><strong>Condition</strong></div><div style="text-align: center;"><strong>State</strong></div><div class="cond-meta"><strong>Value</strong></div></div>
+        <div class="cond-row"><div>4-week momentum &lt; 0 (SHORT-eligible)</div><div style="text-align: center;"><span class="cond-yes">✓ YES</span></div><div class="cond-meta">M20 = -4.14%</div></div>
+        <div class="cond-row"><div>12-week momentum &lt; 0 (SHORT-eligible)</div><div style="text-align: center;"><span class="cond-yes">✓ YES</span></div><div class="cond-meta">M60 = -14.44%</div></div>
+        <div class="cond-row"><div>MA10 &lt; MA40 (SHORT-eligible)</div><div style="text-align: center;"><span class="cond-yes">✓ YES</span></div><div class="cond-meta">Δ = -$28</div></div>
+        <div class="cond-row"><div>Real yield 20d change &gt; 0 (SHORT-eligible)</div><div style="text-align: center;"><span class="cond-yes">✓ YES</span></div><div class="cond-meta">RY Δ = +7 bps</div></div>
+
+        <div class="likely-call">
+          <strong style="color: var(--sec3);">Sunday's call is currently likely: SHORT</strong><br>
+          <span class="muted">All 4 conditions align. Would need RY to drop more than 10bps OR gold to rally more than 3.5% by Friday to flip to FLAT.</span>
+        </div>
+      </div>
+
+      <div class="demo-box">
+        <div class="demo-label">📄 Same template on a FLAT-likely week</div>
+        <div class="cond-row"><div>4-week momentum &lt; 0</div><div style="text-align: center;"><span class="cond-yes">✓ YES</span></div><div class="cond-meta">M20 = -1.2%</div></div>
+        <div class="cond-row"><div>12-week momentum &lt; 0</div><div style="text-align: center;"><span class="cond-no">✗ NO</span></div><div class="cond-meta">M60 = +2.8%</div></div>
+        <div class="cond-row"><div>MA10 &lt; MA40</div><div style="text-align: center;"><span class="cond-no">✗ NO</span></div><div class="cond-meta">Δ = +$14</div></div>
+        <div class="cond-row"><div>RY 20d change &gt; 0</div><div style="text-align: center;"><span class="cond-yes">✓ YES</span></div><div class="cond-meta">RY Δ = +3 bps</div></div>
+        <div class="likely-call">
+          <strong style="color: var(--sec3);">Sunday's call is currently likely: FLAT (signals conflict)</strong><br>
+          <span class="muted">2 of 4 aligned SHORT. All 4 must agree for a directional call. Trending-signal disagreement = no position.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         SECTION 4 — Shadow strategy transparency
+         ============================================================ -->
+    <section class="card sec-4">
+      <div class="section-header">
+        <div class="section-tag">4</div>
+        <div class="section-title">
+          <h2>Shadow strategy transparency page</h2>
+          <div class="meta">Public read-only view of v2 + ensemble shadow logs <span class="effort-line">~2h build</span> <span class="effort-line">TIER 1</span></div>
+        </div>
+      </div>
+
+      <div class="shadow-warning">
+        <strong>⚠ These are NOT trade calls.</strong> They're pre-registered candidate strategies in 26-week live validation.
+        Nothing on this page should be executed. We ship them only after they clear all forward gates.
+      </div>
+
+      <div class="demo-box">
+        <div class="demo-label">📄 Shadow strategies · updated 2026-07-31</div>
+
+        <div class="shadow-signal">
+          <div><strong>v2 (v1 + DXY)</strong></div>
+          <div>DXY-conditioned refinement. Shadow started 2026-07-22. <a href="#" style="color: var(--sec4);">Pre-reg →</a></div>
+          <div style="text-align: right;"><span class="shadow-badge short">SHORT</span></div>
+        </div>
+        <div class="shadow-signal">
+          <div><strong>Ensemble</strong></div>
+          <div>v1 + v2 + monthly-M12, ≥2 must agree. Shadow starts 2026-08-02. <a href="#" style="color: var(--sec4);">Pre-reg →</a></div>
+          <div style="text-align: right;"><span class="shadow-badge flat">PENDING</span></div>
+        </div>
+
+        <div style="margin-top: 18px; padding: 12px 14px; background: var(--bg-card); border-radius: 6px;">
+          <div class="demo-label" style="margin-bottom: 8px;">Shadow validation progress</div>
+          <div style="display: flex; gap: 20px; flex-wrap: wrap; font-size: 13px;">
+            <div><span class="muted">v2 weeks logged:</span> <strong>1 / 26</strong></div>
+            <div><span class="muted">v2 earliest ship:</span> <strong>2027-01-22</strong></div>
+            <div><span class="muted">Ensemble weeks logged:</span> <strong>0 / 26</strong></div>
+            <div><span class="muted">Ensemble earliest ship:</span> <strong>2027-01-31</strong></div>
+          </div>
+        </div>
+
+        <p class="hint" style="margin-top: 14px;">
+          <strong>Why show these publicly?</strong> If they ship, subscribers can see we didn't retroactively "discover" a great strategy — we called it live before shipping.
+          If they fail, they land on the retirement wall with the same public evidence.
+        </p>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         SECTION 5 — Daily descriptive brief (TIER 2)
+         ============================================================ -->
+    <section class="card sec-5">
+      <div class="section-header">
+        <div class="section-tag">5</div>
+        <div class="section-title">
+          <h2>Daily descriptive brief</h2>
+          <div class="meta">Yesterday's market read + macro + signal state <span class="effort-line">~4-6h build</span> <span class="effort-line">TIER 2 · delays launch 3-5 days</span></div>
+        </div>
+      </div>
+      <p class="hint">NO new trade calls. Pure descriptive market-read. Highest cadence increase available without new pre-reg.
+        Your original ask (point 3 of the launch agenda).</p>
+
+      <div class="demo-box">
+        <div class="demo-label">📄 Daily brief · 2026-07-31 07:00 UTC</div>
+
+        <div class="brief-block">
+          <strong>Overnight action:</strong> Gold closed +0.4% at $4,024, range $4,003-$4,032. Silver +0.8%, DXY -0.2%, US 10y real yield +2bps to 1.94%. Asia session drove the move, London flat.
+        </div>
+        <div class="brief-block">
+          <strong>Macro delta (5d):</strong> RY +7 bps · DXY +0.6% · GVZ 14.2 (unchanged) · COT non-comm net long +3.2σ (bucket: crowded long).
+        </div>
+        <div class="brief-block">
+          <strong>Current v1 signal state:</strong> SHORT (all 4 conditions align). Live position from Monday still open. Stop 4211.29. Target exit today (Fri close).
+        </div>
+        <div class="brief-block">
+          <strong>Shadow signals:</strong> v2 (DXY) = SHORT · Ensemble = PENDING (first log Sunday).
+        </div>
+        <div class="brief-block">
+          <strong>Next 24h:</strong> Chicago PMI 13:45 UTC · Michigan sentiment 14:00 UTC · Fed Bowman speech 15:00 UTC.
+        </div>
+
+        <p class="hint" style="margin-top: 14px;">
+          <strong>Cadence:</strong> Mon-Fri 07:00 UTC. Skips weekends (no new data).
+          <strong>Channels:</strong> Telegram, site (/daily), email digest, RSS.
+          <strong>Automation:</strong> Fully scripted from existing macro data sources. Manual review only for macro-event blurbs.
+        </p>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         SECTION 6 — Position calculator on landing
+         ============================================================ -->
+    <section class="card sec-6">
+      <div class="section-header">
+        <div class="section-tag">6</div>
+        <div class="section-title">
+          <h2>Position-size calculator on landing</h2>
+          <div class="meta">Mini widget on index.html for first-time visitors <span class="effort-line">~1h build</span> <span class="effort-line">TIER 2</span></div>
+        </div>
+      </div>
+      <p class="hint">Full calculator already exists on <code>weekly.html</code>. Duplicate a compact widget on <code>index.html</code>
+        so first-time visitors immediately grok "here's what a $100k account would risk on today's call".</p>
+
+      <div class="demo-box">
+        <div class="demo-label">📄 Mini widget on landing · above the fold</div>
+        <div class="calc-mini">
+          <div style="margin-bottom: 12px; font-size: 13px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em;">
+            Current call: <span style="color: var(--down); font-weight: 700;">SHORT gold @ 4014.24</span> · stop 4211.29 · 2×ATR = $197
+          </div>
+          <div class="calc-mini-row">
+            <div>
+              <label>Account size ($)</label>
+              <input type="number" id="calc-account" value="100000" />
+            </div>
+            <div>
+              <label>Risk per call (%)</label>
+              <input type="number" id="calc-risk" value="1.0" step="0.1" />
+            </div>
+          </div>
+          <div class="calc-mini-out">
+            Risk this call: <strong>$1,000</strong> ·
+            Suggested size: <strong>~5 MGC micro contracts</strong> or <strong>0.5 GC (round to 0)</strong> ·
+            If stopped: <strong style="color: var(--down);">-$985</strong> ·
+            If time-exit at 1×ATR win: <strong style="color: var(--up);">+$493</strong>
+          </div>
+          <p class="hint" style="margin-top: 12px; font-size: 12px;">
+            For accounts &lt; $200k, MGC micro-futures (10 oz) are the right vehicle. GLD ETF for &lt; $30k accounts.
+            <a href="./weekly.html" style="color: var(--sec6);">Full calculator + instrument guide →</a>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         Summary
+         ============================================================ -->
+    <section class="card">
+      <h2>Summary — pick your bundle</h2>
+      <p class="hint">Each section above is a fully-scoped mini-project. Bundle choice determines launch date.</p>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 12px;">
+        <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 16px;">
+          <div style="color: var(--up); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600;">Minimum bundle</div>
+          <div style="font-size: 18px; font-weight: 600; margin: 6px 0;">Sections 1 + 2 + 3 + 4</div>
+          <div style="color: var(--muted); font-size: 13px;">~5-7 hours build. Launch on original target Mon 2026-08-03.</div>
+        </div>
+        <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 16px;">
+          <div style="color: var(--accent); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600;">Full bundle</div>
+          <div style="font-size: 18px; font-weight: 600; margin: 6px 0;">Sections 1 + 2 + 3 + 4 + 5 + 6</div>
+          <div style="color: var(--muted); font-size: 13px;">~11-14 hours build. Launch delayed ~3-5 days → target Thu 2026-08-06.</div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <p class="muted">Launch preview · working mockups only · nothing here is deployed yet.</p>
+    <p class="muted"><a href="./index.html" style="color:var(--muted);">← current landing</a> · <a href="./weekly.html" style="color:var(--muted);">current weekly product</a> · <a href="./vision.html" style="color:var(--muted);">12-month vision</a></p>
+  </footer>
+</body>
+</html>

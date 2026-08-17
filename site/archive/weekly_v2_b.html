@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FAR Weekly · Design B (Z layered)</title>
+  <link rel="stylesheet" href="./style.css" />
+  <style>
+    :root { --wrap: 1240px; --dailyw: 380px; }
+    .preview-banner {
+      background: linear-gradient(90deg, rgba(192,132,252,0.15), rgba(192,132,252,0.05));
+      border-bottom: 2px solid #c084fc;
+      padding: 8px 0; text-align: center; font-size: 12px;
+      color: #c084fc; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600;
+    }
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr var(--dailyw);
+      gap: 24px;
+      align-items: start;
+    }
+    @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
+
+    /* ===== LAYER 1 · DIRECTION HERO (giant, unmissable) ===== */
+    .layer1 {
+      background: radial-gradient(circle at 20% 50%, rgba(248,113,113,0.15), transparent 60%),
+                  linear-gradient(180deg, rgba(248,113,113,0.05) 0%, var(--bg-card) 100%);
+      border: 1px solid var(--border);
+      border-top: 4px solid var(--down);
+      border-radius: var(--radius);
+      padding: 40px 44px;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 40px;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .layer1 .direction {
+      font-size: 96px; font-weight: 900; line-height: 0.9;
+      letter-spacing: -0.02em; color: var(--down);
+      text-shadow: 0 0 40px rgba(248,113,113,0.3);
+    }
+    .layer1 .meta { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; text-align: center; margin-top: 8px; }
+    .layer1 .headline {
+      font-size: 22px; font-weight: 600; line-height: 1.35; margin: 0 0 10px;
+    }
+    .layer1 .headline .price { color: var(--fg); font-weight: 800; }
+    .layer1 .subline {
+      color: var(--muted); font-size: 14px; margin: 0;
+      display: flex; gap: 18px; flex-wrap: wrap;
+    }
+    .layer1 .subline strong { color: var(--fg); }
+    .conv-strip { display: flex; gap: 5px; margin-top: 14px; align-items: center; }
+    .conv-pip { width: 24px; height: 7px; border-radius: 3px; background: var(--border); }
+    .conv-pip.on { background: var(--down); }
+    .conv-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-left: 8px; }
+
+    /* ===== LAYER 2 · EXECUTION BAR (compact reference) ===== */
+    .layer2 {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 24px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-bottom: 12px;
+    }
+    .layer2 .cell .lbl {
+      font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em;
+    }
+    .layer2 .cell .val {
+      font-size: 17px; font-weight: 700; font-variant-numeric: tabular-nums; margin-top: 2px;
+    }
+    .layer2 .cell .sub {
+      font-size: 11px; color: var(--muted); margin-top: 2px;
+    }
+
+    /* ===== LAYER 3 · ANALYSIS PROSE ===== */
+    .layer3 {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 26px 30px;
+    }
+    .prose h4 {
+      font-size: 10px; color: var(--accent); text-transform: uppercase; letter-spacing: 0.12em;
+      margin: 20px 0 8px; font-weight: 700;
+    }
+    .prose h4:first-child { margin-top: 0; }
+    .prose p { font-size: 14px; line-height: 1.7; margin: 0 0 12px; }
+    .prose p strong { color: var(--accent); }
+    .prose .lead {
+      font-size: 16px; line-height: 1.6; color: var(--fg);
+      border-left: 3px solid var(--down); padding-left: 16px; margin: 0 0 20px;
+    }
+
+    .callouts {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 14px; margin-top: 20px;
+    }
+    @media (max-width: 680px) { .callouts { grid-template-columns: 1fr; } }
+    .callout {
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 6px; padding: 14px 16px;
+    }
+    .callout.risk { border-left: 3px solid var(--down); }
+    .callout.confirm { border-left: 3px solid var(--up); }
+    .callout h5 {
+      font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em;
+      margin: 0 0 8px; font-weight: 700;
+    }
+    .callout.risk h5 { color: var(--down); }
+    .callout.confirm h5 { color: var(--up); }
+    .callout p { font-size: 13px; margin: 0; line-height: 1.5; color: var(--muted); }
+    .callout p strong { color: var(--fg); }
+
+    .analog-inline {
+      display: flex; gap: 10px; flex-wrap: wrap; margin: 8px 0 12px;
+      font-size: 12.5px;
+    }
+    .analog-chip {
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 12px; padding: 4px 10px;
+      display: flex; gap: 8px; align-items: baseline;
+      font-variant-numeric: tabular-nums;
+    }
+    .analog-chip .d { color: var(--muted); font-size: 11px; }
+    .analog-chip .r.up { color: var(--up); font-weight: 600; }
+    .analog-chip .r.dn { color: var(--down); font-weight: 600; }
+
+    /* ===== DAILY READ (RIGHT) ===== */
+    .daily {
+      position: sticky; top: 20px;
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 18px 20px;
+    }
+    .daily h3 {
+      margin: 0 0 4px; font-size: 15px; color: #4ade80;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .daily h3::before {
+      content: ""; width: 8px; height: 8px; border-radius: 50%;
+      background: #4ade80; box-shadow: 0 0 8px #4ade80;
+    }
+    .daily .subh { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 16px; }
+    .dblk { padding: 12px 0; border-top: 1px solid var(--border); }
+    .dblk:first-of-type { border-top: none; padding-top: 0; }
+    .dblk .lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+    .dblk .big { font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; }
+    .dblk .big.up { color: var(--up); }
+    .dblk .big.dn { color: var(--down); }
+    .dblk .small { font-size: 12px; color: var(--muted); margin-top: 4px; }
+    .kill-line { font-size: 12px; padding: 6px 0; display: flex; justify-content: space-between; gap: 10px; }
+    .kill-line .k { color: var(--muted); }
+    .kill-line .v { font-variant-numeric: tabular-nums; }
+    .illus { font-size: 10px; color: var(--muted); font-style: italic; margin-top: 12px; text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="preview-banner">🅱 DESIGN B · my Z recommendation · 3 visual layers · direction as hero · analysis as prose</div>
+
+  <header class="hero" style="padding: 30px 0 20px;">
+    <div class="wrap" style="max-width: 1240px;">
+      <h1 style="font-size: 28px; margin-bottom: 4px;">FAR Weekly Gold Read</h1>
+      <p class="tagline" style="font-size: 14px; margin: 0;">Week of 2026-07-27 · Published Sun 22:00 UTC · Resolves Fri 21:00 UTC</p>
+    </div>
+  </header>
+
+  <main class="wrap" style="max-width: 1240px; padding: 24px 20px 60px;">
+    <div class="layout">
+
+      <div>
+        <!-- LAYER 1 — DIRECTION HERO -->
+        <section class="layer1">
+          <div>
+            <div class="direction">SHORT</div>
+            <div class="meta">Week of Jul 27</div>
+          </div>
+          <div>
+            <p class="headline">Gold at <span class="price">$4,014</span> · momentum broken across both horizons · real yields rising</p>
+            <div class="subline">
+              <span><strong>Entry</strong> Mon NY open</span>
+              <span><strong>Stop</strong> $4,211.29</span>
+              <span><strong>Exit</strong> Fri 21:00 UTC</span>
+            </div>
+            <div class="conv-strip">
+              <span class="conv-pip on"></span><span class="conv-pip on"></span><span class="conv-pip on"></span><span class="conv-pip on"></span>
+              <span class="conv-label">4-of-4 conditions · max conviction</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- LAYER 2 — EXECUTION BAR -->
+        <section class="layer2">
+          <div class="cell"><div class="lbl">Reference price</div><div class="val">$4,014.24</div><div class="sub">at Sun 22:00 UTC publish</div></div>
+          <div class="cell"><div class="lbl">Stop distance</div><div class="val">$197</div><div class="sub">2× ATR(20d) = 98.52</div></div>
+          <div class="cell"><div class="lbl">Instrument</div><div class="val">GC · MGC · GLD</div><div class="sub">sizer determines vehicle</div></div>
+          <div class="cell"><div class="lbl">Duration</div><div class="val">5 days</div><div class="sub">time-exit rule</div></div>
+        </section>
+
+        <!-- LAYER 3 — ANALYSIS PROSE -->
+        <section class="layer3">
+          <div class="prose">
+            <p class="lead">Both trend and macro have rolled over. The strategy asks a simple question — does gold have upward momentum, above its own trend, with a falling-real-yield tailwind? This week all four answers came back <strong>no</strong>.</p>
+
+            <h4>Thesis</h4>
+            <p>Gold has printed <strong>-4.14% over 4 weeks</strong> and <strong>-14.44% over 12 weeks</strong>, with the 10-day moving average now sitting $28 below the 40-day. Real yields at 2.35% (+7bps over 20 days) reinforce the direction: rising real rates historically pull capital away from non-yielding assets. This is the strongest configuration the model produces — 4 of 4 conditions aligned SHORT.</p>
+
+            <h4>Macro backdrop</h4>
+            <p>DXY holding above 120 supports the real-yield story. COT non-commercial positioning sits at <strong>+3.2σ net long</strong> — historically an overcrowded reading that has preceded gold pullbacks. GVZ (gold's implied vol index) at 24.02 is elevated but not extreme; the market prices moderate risk, not panic.</p>
+
+            <h4>Historical analogs · 4-of-4 SHORT setups</h4>
+            <div class="analog-inline">
+              <span class="analog-chip"><span class="d">Oct 2018</span><span class="r up">+$2,140</span></span>
+              <span class="analog-chip"><span class="d">Feb 2022</span><span class="r dn">-$920</span></span>
+              <span class="analog-chip"><span class="d">Sep 2023</span><span class="r up">+$3,410</span></span>
+              <span style="color: var(--muted); font-size: 11px; align-self: center;">2 wins of 3 · avg +$1,543</span>
+            </div>
+
+            <div class="callouts">
+              <div class="callout risk">
+                <h5>⚠ Primary risk</h5>
+                <p>Dovish Fed surprise or geopolitical safe-haven bid could invalidate. <strong>The stop sits above last week's high</strong> — a rally to $4,211 means the momentum thesis was wrong. Time-exit at Fri close removes all discretion.</p>
+              </div>
+              <div class="callout confirm">
+                <h5>✓ Cross-asset confirmation</h5>
+                <p>Silver <strong>-2.1% wk</strong> · DXY <strong>+0.4%</strong> · GDX <strong>-3.8%</strong> · GVZ <strong>24.02</strong>. All correlated assets pointing the same direction. No divergence to hedge against.</p>
+              </div>
+            </div>
+
+            <h4>Playbook</h4>
+            <p>Enter Monday 13:30 UTC market order. Hard stop at $4,211.29 — <strong>no manual override, no mental stop</strong>. Time exit Friday 21:00 UTC regardless of open P&L. Do not adjust mid-week. Size to your own risk tolerance using the position calculator.</p>
+          </div>
+        </section>
+      </div>
+
+      <!-- ===== DAILY READ (RIGHT) — same as A ===== -->
+      <aside class="daily">
+        <h3>Daily read</h3>
+        <div class="subh">Fri 2026-07-31 · Day 5 of 5</div>
+
+        <div class="dblk">
+          <div class="lbl">Open P&L per contract</div>
+          <div class="big up">+$1,842</div>
+          <div class="small">Position: SHORT @ 4014.24 · currently ~3996</div>
+        </div>
+        <div class="dblk">
+          <div class="lbl">Distance to stop</div>
+          <div class="big">$215</div>
+          <div class="small">Stop at 4211.29 · never came within $150 all week</div>
+        </div>
+        <div class="dblk">
+          <div class="lbl">Signal health</div>
+          <div style="font-size: 13px;">All 4 conditions still aligned SHORT.</div>
+          <div class="small">Realized vol 0.9× sized ATR — position calmer than expected.</div>
+        </div>
+        <div class="dblk">
+          <div class="lbl">What would kill us today</div>
+          <div class="kill-line"><span class="k">Rally to $4,211</span><span class="v">+5.4%</span></div>
+          <div class="kill-line"><span class="k">Implied 1-day prob</span><span class="v">&lt; 3%</span></div>
+          <div class="kill-line"><span class="k">Event risk (24h)</span><span class="v">Chicago PMI · Michigan sentiment</span></div>
+        </div>
+        <div class="dblk">
+          <div class="lbl">Next 8 hours</div>
+          <div style="font-size: 12px;">
+            13:45 UTC · Chicago PMI<br>
+            14:00 UTC · Michigan sentiment<br>
+            <span style="color: var(--accent);">21:00 UTC · Position closes (time exit)</span>
+          </div>
+        </div>
+        <div class="illus">Daily numbers illustrative · pipeline built weekly</div>
+      </aside>
+
+    </div>
+  </main>
+
+  <footer style="padding: 30px 20px; text-align: center; border-top: 1px solid var(--border);">
+    <p class="muted" style="font-size: 12px;"><a href="./weekly_v2_a.html" style="color: var(--accent);">← Compare Design A (compact)</a> · <a href="./soft_launch.html" style="color:var(--muted);">soft launch page</a></p>
+  </footer>
+</body>
+</html>

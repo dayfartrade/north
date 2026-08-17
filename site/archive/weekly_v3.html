@@ -1,0 +1,586 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FAR Weekly · v3 (reordered + no-scroll compact)</title>
+  <link rel="stylesheet" href="./style.css" />
+  <style>
+    :root { --wrap: 1240px; --dailyw: 380px; }
+    .preview-banner {
+      background: linear-gradient(90deg, rgba(74,222,128,0.15), rgba(74,222,128,0.05));
+      border-bottom: 2px solid var(--up);
+      padding: 6px 0; text-align: center; font-size: 11px;
+      color: var(--up); letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600;
+    }
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr var(--dailyw);
+      gap: 20px;
+      align-items: start;
+    }
+    @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
+
+    /* Toggle */
+    .view-toggle {
+      display: inline-flex;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 4px;
+      margin-bottom: 12px;
+    }
+    .view-toggle button {
+      background: transparent; border: none;
+      color: var(--muted); font-size: 12px;
+      padding: 6px 14px; border-radius: 6px;
+      cursor: pointer; font-family: inherit;
+      letter-spacing: 0.05em; text-transform: uppercase; font-weight: 600;
+    }
+    .view-toggle button.active { background: var(--accent); color: var(--bg); }
+
+    body.view-full [data-view="compact"] { display: none; }
+    body.view-compact [data-view="full"] { display: none; }
+
+    /* ========== FULL VIEW ========== */
+
+    /* Layer 1: Hero */
+    .layer1 {
+      background: radial-gradient(circle at 20% 50%, rgba(248,113,113,0.15), transparent 60%),
+                  linear-gradient(180deg, rgba(248,113,113,0.05) 0%, var(--bg-card) 100%);
+      border: 1px solid var(--border);
+      border-top: 4px solid var(--down);
+      border-radius: var(--radius);
+      padding: 36px 40px;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 36px;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .direction {
+      font-size: 88px; font-weight: 900; line-height: 0.9;
+      letter-spacing: -0.02em; color: var(--down);
+      text-shadow: 0 0 40px rgba(248,113,113,0.3);
+    }
+    .meta { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; text-align: center; margin-top: 8px; }
+    .headline {
+      font-size: 20px; font-weight: 600; line-height: 1.35; margin: 0 0 10px;
+    }
+    .headline .price { color: var(--fg); font-weight: 800; }
+    .subline {
+      color: var(--muted); font-size: 13px; margin: 0;
+      display: flex; gap: 16px; flex-wrap: wrap;
+    }
+    .subline strong { color: var(--fg); }
+    .conv-strip { display: flex; gap: 5px; margin-top: 12px; align-items: center; }
+    .conv-pip { width: 22px; height: 6px; border-radius: 3px; background: var(--border); }
+    .conv-pip.on { background: var(--down); }
+    .conv-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-left: 8px; }
+
+    /* Layer 2: Execution bar */
+    .layer2 {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px 22px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-bottom: 12px;
+    }
+    .layer2 .cell .lbl {
+      font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em;
+    }
+    .layer2 .cell .val {
+      font-size: 16px; font-weight: 700; font-variant-numeric: tabular-nums; margin-top: 2px;
+    }
+    .layer2 .cell .sub {
+      font-size: 11px; color: var(--muted); margin-top: 2px;
+    }
+
+    /* Layer 3: Setup (Thesis + Risk elevated, side-by-side) */
+    .setup {
+      display: grid;
+      grid-template-columns: 3fr 2fr;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    @media (max-width: 700px) { .setup { grid-template-columns: 1fr; } }
+    .setup-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px 26px;
+    }
+    .setup-thesis {
+      border-left: 3px solid var(--down);
+    }
+    .setup-risk {
+      background: rgba(248,113,113,0.04);
+      border-color: rgba(248,113,113,0.25);
+      border-left: 3px solid var(--down);
+    }
+    .setup-card h4 {
+      font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.12em;
+      margin: 0 0 10px; font-weight: 700;
+    }
+    .setup-thesis h4 { color: var(--accent); }
+    .setup-risk h4 { color: var(--down); }
+    .setup-card p {
+      font-size: 14px; line-height: 1.65; margin: 0 0 10px;
+    }
+    .setup-card p:last-child { margin-bottom: 0; }
+    .setup-card p strong { color: var(--accent); }
+
+    /* Layer 4: Context (grouped background info) */
+    .context {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 26px;
+      margin-bottom: 12px;
+    }
+    .context h4 {
+      font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.12em;
+      margin: 18px 0 8px; font-weight: 700;
+    }
+    .context h4:first-child { margin-top: 0; }
+    .context p { font-size: 13.5px; line-height: 1.65; margin: 0 0 10px; color: var(--muted); }
+    .context p strong { color: var(--fg); }
+
+    .analog-inline { display: flex; gap: 8px; flex-wrap: wrap; margin: 6px 0 4px; font-size: 12.5px; }
+    .analog-chip {
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 12px; padding: 4px 10px;
+      display: flex; gap: 8px; align-items: baseline;
+      font-variant-numeric: tabular-nums;
+    }
+    .analog-chip .d { color: var(--muted); font-size: 11px; }
+    .analog-chip .r.up { color: var(--up); font-weight: 600; }
+    .analog-chip .r.dn { color: var(--down); font-weight: 600; }
+    .analog-summary { font-size: 11px; color: var(--muted); align-self: center; }
+
+    .confirm-row {
+      display: flex; gap: 8px; flex-wrap: wrap; margin: 4px 0;
+    }
+    .confirm-chip {
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 12px; padding: 4px 10px; font-size: 12px;
+      display: flex; gap: 6px; align-items: baseline;
+    }
+    .confirm-chip .k { color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+    .confirm-chip .v { font-variant-numeric: tabular-nums; font-weight: 600; }
+    .confirm-chip .v.up { color: var(--up); }
+    .confirm-chip .v.dn { color: var(--down); }
+
+    /* Layer 5: Playbook (action, sits at the bottom) */
+    .playbook {
+      background: linear-gradient(180deg, var(--bg-card) 0%, rgba(242,201,76,0.04) 100%);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: var(--radius);
+      padding: 18px 24px;
+    }
+    .playbook h4 {
+      font-size: 10px; color: var(--accent); text-transform: uppercase; letter-spacing: 0.12em;
+      margin: 0 0 8px; font-weight: 700;
+    }
+    .playbook p { font-size: 13.5px; line-height: 1.65; margin: 0; }
+    .playbook p strong { color: var(--fg); }
+
+    /* ========== DAILY READ (full-view version) ========== */
+    .daily {
+      position: sticky; top: 16px;
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 18px 20px;
+    }
+    .daily h3 {
+      margin: 0 0 4px; font-size: 15px; color: var(--up);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .daily h3::before {
+      content: ""; width: 8px; height: 8px; border-radius: 50%;
+      background: var(--up); box-shadow: 0 0 8px var(--up);
+    }
+    .daily .subh { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 14px; }
+    .dblk { padding: 11px 0; border-top: 1px solid var(--border); }
+    .dblk:first-of-type { border-top: none; padding-top: 0; }
+    .dblk .lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 5px; }
+    .dblk .big { font-size: 20px; font-weight: 700; font-variant-numeric: tabular-nums; }
+    .dblk .big.up { color: var(--up); }
+    .dblk .big.dn { color: var(--down); }
+    .dblk .small { font-size: 12px; color: var(--muted); margin-top: 3px; line-height: 1.5; }
+    .dblk.yesterday { background: rgba(138,143,153,0.04); margin: 0 -20px; padding: 10px 20px; border-top: 1px solid var(--border); }
+    .dblk.event-flag { background: rgba(242,201,76,0.06); border-left: 2px solid var(--accent); margin: 0 -20px; padding-left: 18px; padding-right: 20px; }
+    .dblk.event-flag .lbl { color: var(--accent); }
+    .kill-line { font-size: 12px; padding: 5px 0; display: flex; justify-content: space-between; gap: 10px; }
+    .kill-line .k { color: var(--muted); }
+    .kill-line .v { font-variant-numeric: tabular-nums; }
+    .illus { font-size: 10px; color: var(--muted); font-style: italic; margin-top: 10px; text-align: center; }
+
+    /* ================================================================
+       COMPACT VIEW · fits in one viewport, no scrolling
+       ================================================================ */
+    body.view-compact { overflow: hidden; }
+    body.view-compact .hero-band { display: none; }
+    body.view-compact main { padding: 12px 20px !important; }
+
+    .compact-grid {
+      display: grid;
+      grid-template-columns: 1fr var(--dailyw);
+      gap: 16px;
+      height: calc(100vh - 90px);
+      max-height: 780px;
+    }
+    @media (max-width: 900px) { .compact-grid { grid-template-columns: 1fr; height: auto; max-height: none; } }
+
+    /* Compact hero: single horizontal strip */
+    .c-hero {
+      background: linear-gradient(90deg, rgba(248,113,113,0.10), var(--bg-card) 50%);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--down);
+      border-radius: var(--radius);
+      padding: 16px 22px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 24px;
+      align-items: center;
+    }
+    .c-hero .c-dir { font-size: 44px; font-weight: 900; color: var(--down); line-height: 1; letter-spacing: -0.02em; }
+    .c-hero .c-week { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; text-align: center; margin-top: 3px; }
+    .c-hero .c-mid { font-size: 13px; }
+    .c-hero .c-mid .row { display: flex; gap: 14px; }
+    .c-hero .c-mid .row strong { color: var(--fg); }
+    .c-hero .c-mid .row .k { color: var(--muted); }
+    .c-hero .c-mid .conv { display: flex; gap: 4px; margin-top: 6px; align-items: center; }
+    .c-hero .c-mid .conv .p { width: 18px; height: 5px; border-radius: 3px; background: var(--down); }
+    .c-hero .c-mid .conv .lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-left: 6px; }
+    .c-hero .c-px { text-align: right; font-variant-numeric: tabular-nums; }
+    .c-hero .c-px .n { font-size: 22px; font-weight: 700; }
+    .c-hero .c-px .l { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+
+    /* Compact analysis: 6 rows, tight */
+    .c-analysis {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 8px 20px;
+      flex: 1;
+      display: flex; flex-direction: column;
+      justify-content: space-evenly;
+      min-height: 0;
+    }
+    .c-row {
+      display: grid; grid-template-columns: 78px 1fr;
+      gap: 12px; padding: 6px 0;
+      border-top: 1px solid var(--border);
+      font-size: 12.5px; line-height: 1.45;
+      align-items: center;
+    }
+    .c-row:first-child { border-top: none; }
+    .c-row .clbl { font-size: 9.5px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+    .c-row.risk .txt { color: #fca5a5; }
+    .c-row.confirm .txt { color: #86efac; }
+    .c-row .analog-inline { margin: 0; }
+
+    .c-left { display: flex; flex-direction: column; gap: 10px; min-height: 0; }
+
+    /* Compact daily: tight, fixed sections */
+    .c-daily {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      display: flex; flex-direction: column;
+      overflow: hidden;
+    }
+    .c-daily h3 {
+      margin: 0 0 3px; font-size: 13px; color: var(--up);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .c-daily h3::before {
+      content: ""; width: 7px; height: 7px; border-radius: 50%;
+      background: var(--up); box-shadow: 0 0 8px var(--up);
+    }
+    .c-daily .subh { color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
+    .c-dblk { padding: 7px 0; border-top: 1px solid var(--border); font-size: 12px; }
+    .c-dblk:first-of-type { border-top: none; padding-top: 0; }
+    .c-dblk .lbl { font-size: 9.5px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 3px; }
+    .c-dblk .big { font-size: 17px; font-weight: 700; font-variant-numeric: tabular-nums; }
+    .c-dblk .big.up { color: var(--up); }
+    .c-dblk .small { font-size: 11px; color: var(--muted); margin-top: 2px; line-height: 1.4; }
+    .c-dblk.event { background: rgba(242,201,76,0.06); border-left: 2px solid var(--accent); margin: 0 -16px; padding-left: 14px; padding-right: 16px; }
+    .c-dblk.event .lbl { color: var(--accent); }
+  </style>
+</head>
+<body class="view-full">
+  <div class="preview-banner">✅ V3.1 · reordered Full · fixed no-scroll Compact · human copy</div>
+
+  <header class="hero hero-band" style="padding: 24px 0 16px;">
+    <div class="wrap" style="max-width: 1240px;">
+      <h1 style="font-size: 24px; margin-bottom: 2px;">FAR Weekly Gold Read</h1>
+      <p class="tagline" style="font-size: 13px; margin: 0;">Week of 2026-07-27. Published Sun 22:00 UTC, resolves Fri 21:00 UTC.</p>
+    </div>
+  </header>
+
+  <main class="wrap" style="max-width: 1240px; padding: 18px 20px 60px;">
+
+    <div class="view-toggle" role="group">
+      <button id="btn-full" class="active">Full</button>
+      <button id="btn-compact">Compact</button>
+    </div>
+
+    <!-- ============ FULL VIEW ============ -->
+    <div class="layout" data-view="full">
+
+      <div>
+        <!-- Layer 1: Direction hero -->
+        <section class="layer1">
+          <div>
+            <div class="direction">SHORT</div>
+            <div class="meta">Week of Jul 27</div>
+          </div>
+          <div>
+            <p class="headline">Gold at <span class="price">$4,014</span>. Momentum broken on both horizons, real yields rising.</p>
+            <div class="subline">
+              <span><span style="color:var(--muted);">Entry</span> <strong>Mon NY open</strong></span>
+              <span><span style="color:var(--muted);">Stop</span> <strong>$4,211.29</strong></span>
+              <span><span style="color:var(--muted);">Exit</span> <strong>Fri 21:00 UTC</strong></span>
+            </div>
+            <div class="conv-strip">
+              <span class="conv-pip on"></span><span class="conv-pip on"></span><span class="conv-pip on"></span><span class="conv-pip on"></span>
+              <span class="conv-label">4 of 4 conditions, max conviction</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Layer 2: Execution bar -->
+        <section class="layer2">
+          <div class="cell"><div class="lbl">Reference price</div><div class="val">$4,014.24</div><div class="sub">at Sun 22:00 UTC publish</div></div>
+          <div class="cell"><div class="lbl">Stop distance</div><div class="val">$197</div><div class="sub">2× ATR(20d) of 98.52</div></div>
+          <div class="cell"><div class="lbl">Instrument</div><div class="val">GC, MGC, GLD</div><div class="sub">sizer picks the vehicle</div></div>
+          <div class="cell"><div class="lbl">Duration</div><div class="val">5 days</div><div class="sub">time exit rule</div></div>
+        </section>
+
+        <!-- Layer 3: SETUP (Thesis + Risk elevated, side-by-side) -->
+        <section class="setup">
+          <div class="setup-card setup-thesis">
+            <h4>Thesis</h4>
+            <p>Gold is down <strong>4.14% over 4 weeks</strong> and <strong>14.44% over 12 weeks</strong>. The 10-day moving average has crossed under the 40-day. Real yields are climbing to a level that has historically pulled money out of non-yielding assets.</p>
+            <p>All four of the model's conditions line up SHORT. That's the strongest configuration the system produces.</p>
+          </div>
+          <div class="setup-card setup-risk">
+            <h4>⚠ Primary risk</h4>
+            <p>Two things could invalidate the call. A dovish Fed surprise, or a safe-haven bid on some geopolitical event. The stop sits above last week's high at <strong>$4,211</strong>.</p>
+            <p>If gold rallies back into that range, the momentum read was wrong. Either way, the position closes at Friday's 21:00 UTC bell.</p>
+          </div>
+        </section>
+
+        <!-- Layer 4: CONTEXT (background info, less elevated) -->
+        <section class="context">
+          <h4>Historical analogs, prior 4-of-4 SHORT setups</h4>
+          <div class="analog-inline">
+            <span class="analog-chip"><span class="d">Oct 2018</span><span class="r up">+$2,140</span></span>
+            <span class="analog-chip"><span class="d">Feb 2022</span><span class="r dn">-$920</span></span>
+            <span class="analog-chip"><span class="d">Sep 2023</span><span class="r up">+$3,410</span></span>
+            <span class="analog-summary">3 prior instances, 2 wins, avg +$1,543</span>
+          </div>
+
+          <h4>Macro backdrop</h4>
+          <p>The US 10-year real yield is at <strong>2.35%</strong>, up 7bps in the last 20 days. That's the highest print since Q2. DXY is holding above 120. On the positioning side, COT non-commercials are net long by <strong>3.2 standard deviations</strong>, a crowded reading that has usually preceded gold pullbacks.</p>
+
+          <h4>Cross-asset confirmation</h4>
+          <div class="confirm-row">
+            <span class="confirm-chip"><span class="k">Silver</span><span class="v dn">-2.1% wk</span></span>
+            <span class="confirm-chip"><span class="k">DXY</span><span class="v up">+0.4%</span></span>
+            <span class="confirm-chip"><span class="k">GDX</span><span class="v dn">-3.8%</span></span>
+            <span class="confirm-chip"><span class="k">GVZ</span><span class="v">24.02</span></span>
+          </div>
+          <p style="margin-top: 8px;">All correlated moves point the same direction. Nothing is diverging, so there's no obvious hedge to worry about.</p>
+        </section>
+
+        <!-- Layer 5: Playbook (final action) -->
+        <section class="playbook">
+          <h4>Playbook</h4>
+          <p>Enter Monday at 13:30 UTC with a market order. Set a hard stop at <strong>$4,211.29</strong>. No manual override, no mental stops. Close the position at Friday 21:00 UTC no matter what the P&L reads. Don't touch anything mid-week. Size to your own risk tolerance using the position calculator on the main site.</p>
+        </section>
+      </div>
+
+      <!-- Daily read (full-view sidebar) -->
+      <aside class="daily">
+        <h3>Daily read</h3>
+        <div class="subh">Fri 2026-07-31, Day 5 of 5</div>
+
+        <div class="dblk yesterday">
+          <div class="lbl">Yesterday recap</div>
+          <div class="small">Gold closed flat in a $22 range. Position ran clean, no stop test. Behaving as the model expects.</div>
+        </div>
+
+        <div class="dblk">
+          <div class="lbl">Open P&L per contract</div>
+          <div class="big up">+$1,842</div>
+          <div class="small">SHORT from 4014.24, gold currently around 3996.</div>
+        </div>
+
+        <div class="dblk">
+          <div class="lbl">Distance to stop</div>
+          <div class="big">$215</div>
+          <div class="small">Stop at 4211.29. Closest gold came all week was $150.</div>
+        </div>
+
+        <div class="dblk">
+          <div class="lbl">Signal health</div>
+          <div style="font-size: 13px;">All 4 conditions still SHORT-aligned.</div>
+          <div class="small">Realized vol running 0.9× sized ATR. Quieter than we expected.</div>
+        </div>
+
+        <div class="dblk event-flag">
+          <div class="lbl">⚠ Event today</div>
+          <div class="small">Chicago PMI at 13:45 UTC, Michigan sentiment at 14:00 UTC. Neither has historically moved gold more than $10 in the first hour, but a big sentiment miss could shake the DXY leg.</div>
+        </div>
+
+        <div class="dblk">
+          <div class="lbl">What would kill us today</div>
+          <div class="kill-line"><span class="k">Rally to $4,211</span><span class="v">+5.4%</span></div>
+          <div class="kill-line"><span class="k">Implied 1-day prob</span><span class="v">&lt; 3%</span></div>
+        </div>
+
+        <div class="dblk">
+          <div class="lbl">Next 8 hours</div>
+          <div style="font-size: 12px; line-height: 1.6;">
+            13:45 UTC, Chicago PMI<br>
+            14:00 UTC, Michigan sentiment<br>
+            <span style="color: var(--accent);">21:00 UTC, position closes (time exit)</span>
+          </div>
+        </div>
+
+        <div class="illus">Daily numbers illustrative. Pipeline built weekly.</div>
+      </aside>
+
+    </div>
+
+    <!-- ============ COMPACT VIEW · no scroll ============ -->
+    <div data-view="compact">
+      <div class="compact-grid">
+        <div class="c-left">
+          <!-- Compact hero -->
+          <div class="c-hero">
+            <div>
+              <div class="c-dir">SHORT</div>
+              <div class="c-week">Wk Jul 27</div>
+            </div>
+            <div class="c-mid">
+              <div class="row">
+                <span><span class="k">Entry</span> <strong>Mon NY open</strong></span>
+                <span><span class="k">Stop</span> <strong>$4,211.29</strong></span>
+                <span><span class="k">Exit</span> <strong>Fri 21:00 UTC</strong></span>
+              </div>
+              <div class="conv">
+                <span class="p"></span><span class="p"></span><span class="p"></span><span class="p"></span>
+                <span class="lbl">4 of 4, max conviction</span>
+              </div>
+            </div>
+            <div class="c-px">
+              <div class="n">$4,014.24</div>
+              <div class="l">Ref at publish</div>
+            </div>
+          </div>
+
+          <!-- Compact analysis rows -->
+          <div class="c-analysis">
+            <div class="c-row">
+              <div class="clbl">Thesis</div>
+              <div class="txt">Gold down 4.14% over 4wk and 14.44% over 12wk. MA10 under MA40. Real yields rising. All 4 conditions SHORT.</div>
+            </div>
+            <div class="c-row risk">
+              <div class="clbl">Risk</div>
+              <div class="txt">Dovish Fed or geopolitical safe-haven bid could invalidate. Stop $4,211 above last week's high.</div>
+            </div>
+            <div class="c-row">
+              <div class="clbl">Macro</div>
+              <div class="txt">Real yield 2.35% (highest since Q2). DXY holding above 120. COT non-comm long at +3.2σ (crowded).</div>
+            </div>
+            <div class="c-row confirm">
+              <div class="clbl">Confirm</div>
+              <div class="txt">Silver -2.1%, DXY +0.4%, GDX -3.8%, GVZ 24.02. All aligned SHORT, no divergence.</div>
+            </div>
+            <div class="c-row">
+              <div class="clbl">Analogs</div>
+              <div>
+                <div class="analog-inline">
+                  <span class="analog-chip"><span class="d">Oct 2018</span><span class="r up">+$2,140</span></span>
+                  <span class="analog-chip"><span class="d">Feb 2022</span><span class="r dn">-$920</span></span>
+                  <span class="analog-chip"><span class="d">Sep 2023</span><span class="r up">+$3,410</span></span>
+                </div>
+              </div>
+            </div>
+            <div class="c-row">
+              <div class="clbl">Playbook</div>
+              <div class="txt">Market order Mon 13:30 UTC. Hard stop $4,211.29. Time exit Fri 21:00 UTC. No mid-week edits.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Compact daily -->
+        <aside class="c-daily">
+          <h3>Daily read</h3>
+          <div class="subh">Fri Jul 31, Day 5 of 5</div>
+
+          <div class="c-dblk">
+            <div class="lbl">Yesterday</div>
+            <div class="small">Flat close in $22 range. Position ran clean.</div>
+          </div>
+          <div class="c-dblk">
+            <div class="lbl">Open P&L</div>
+            <div class="big up">+$1,842</div>
+            <div class="small">SHORT from 4014.24</div>
+          </div>
+          <div class="c-dblk">
+            <div class="lbl">Distance to stop</div>
+            <div class="big">$215</div>
+            <div class="small">Closest all week: $150</div>
+          </div>
+          <div class="c-dblk">
+            <div class="lbl">Signal health</div>
+            <div class="small">4/4 still SHORT-aligned. Realized vol 0.9× ATR.</div>
+          </div>
+          <div class="c-dblk event">
+            <div class="lbl">⚠ Event today</div>
+            <div class="small">Chicago PMI 13:45, Michigan sentiment 14:00.</div>
+          </div>
+          <div class="c-dblk">
+            <div class="lbl">Kill scenario</div>
+            <div class="small">Rally to $4,211 (+5.4%), &lt;3% 1-day probability.</div>
+          </div>
+          <div class="c-dblk">
+            <div class="lbl">Closes today</div>
+            <div class="small" style="color:var(--accent);">21:00 UTC, time exit</div>
+          </div>
+        </aside>
+      </div>
+    </div>
+
+  </main>
+
+  <footer style="padding: 20px 20px; text-align: center; border-top: 1px solid var(--border);" class="hero-band">
+    <p class="muted" style="font-size: 12px;"><a href="./weekly_v2_a.html" style="color:var(--muted);">Design A</a>, <a href="./weekly_v2_b.html" style="color:var(--muted);">Design B</a>, <a href="./soft_launch.html" style="color:var(--muted);">soft launch page</a></p>
+  </footer>
+
+  <script>
+    (function() {
+      const body = document.body;
+      const btnFull = document.getElementById('btn-full');
+      const btnCompact = document.getElementById('btn-compact');
+      function setView(view) {
+        body.classList.remove('view-full', 'view-compact');
+        body.classList.add('view-' + view);
+        btnFull.classList.toggle('active', view === 'full');
+        btnCompact.classList.toggle('active', view === 'compact');
+      }
+      btnFull.addEventListener('click', () => setView('full'));
+      btnCompact.addEventListener('click', () => setView('compact'));
+    })();
+  </script>
+</body>
+</html>

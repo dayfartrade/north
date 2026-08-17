@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FAR — Vision State (mockup)</title>
+  <meta name="description" content="What the FAR platform looks like if everything goes right over 12-18 months of live operation. Mockup for planning purposes." />
+  <link rel="stylesheet" href="./style.css" />
+  <style>
+    .vision-banner {
+      background: linear-gradient(90deg, rgba(242,201,76,0.15), rgba(242,201,76,0.05));
+      border-bottom: 2px solid var(--accent);
+      padding: 10px 0;
+      text-align: center;
+      font-size: 13px;
+      color: var(--accent);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    .product-row {
+      display: grid;
+      grid-template-columns: 1fr 100px 100px 100px 100px 100px;
+      gap: 12px;
+      padding: 14px 0;
+      border-top: 1px solid var(--border);
+      align-items: center;
+      font-size: 14px;
+    }
+    .product-row:first-of-type { border-top: none; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+    .product-row.header { border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+    .product-name { font-weight: 600; }
+    .product-sub { color: var(--muted); font-size: 12px; margin-top: 2px; }
+    .status-badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 600; }
+    .status-shipped { background: rgba(74,222,128,0.12); color: var(--up); border: 1px solid rgba(74,222,128,0.3); }
+    .status-shadow { background: rgba(242,201,76,0.12); color: var(--accent); border: 1px solid rgba(242,201,76,0.3); }
+    .status-retired { background: rgba(248,113,113,0.12); color: var(--down); border: 1px solid rgba(248,113,113,0.3); }
+    @media (max-width: 680px) {
+      .product-row { grid-template-columns: 1fr; gap: 6px; padding: 12px 0; }
+      .product-row.header { display: none; }
+      .product-row > div::before { content: attr(data-label) ": "; color: var(--muted); font-size: 12px; }
+      .product-row > div:first-child::before { content: ""; }
+    }
+
+    .cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+      margin-top: 12px;
+    }
+    .cal-day {
+      padding: 8px 4px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      text-align: center;
+      font-size: 11px;
+    }
+    .cal-label { color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; font-size: 10px; margin-bottom: 2px; }
+    .cal-event { color: var(--fg); font-weight: 600; margin-top: 2px; font-size: 11px; line-height: 1.3; }
+    .cal-empty { opacity: 0.4; }
+
+    .brief-block {
+      background: var(--bg);
+      border-left: 3px solid var(--accent);
+      padding: 12px 16px;
+      margin: 10px 0;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    .brief-block strong { color: var(--accent); }
+
+    .track-history {
+      display: grid;
+      grid-template-columns: 100px 70px 100px 90px 1fr;
+      gap: 8px;
+      padding: 8px 0;
+      border-top: 1px solid var(--border);
+      font-size: 13px;
+      font-variant-numeric: tabular-nums;
+    }
+    .track-history:first-of-type { border-top: none; color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; }
+    .win { color: var(--up); font-weight: 600; }
+    .loss { color: var(--down); font-weight: 600; }
+    .flat { color: var(--muted); }
+
+    .audience-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 12px;
+    }
+    .audience-cell {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      text-align: center;
+    }
+    .audience-num { font-size: 28px; font-weight: 700; color: var(--accent); }
+    .audience-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 4px; }
+    .audience-delta { font-size: 11px; color: var(--up); margin-top: 4px; }
+
+    .retirement-item {
+      padding: 10px 0;
+      border-top: 1px solid var(--border);
+      font-size: 13px;
+    }
+    .retirement-item:first-of-type { border-top: none; }
+    .retirement-name { font-weight: 600; color: var(--fg); }
+    .retirement-reason { color: var(--muted); font-size: 12px; margin-top: 2px; }
+
+    .tier-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+    }
+    .tier-card.pro { border-color: var(--accent); position: relative; }
+    .tier-card.pro::before {
+      content: "MOST POPULAR";
+      position: absolute;
+      top: -10px;
+      left: 20px;
+      background: var(--accent);
+      color: var(--bg);
+      font-size: 10px;
+      padding: 2px 10px;
+      border-radius: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+    }
+    .tier-price { font-size: 28px; font-weight: 700; margin: 8px 0 4px; }
+    .tier-name { color: var(--accent); text-transform: uppercase; letter-spacing: 0.08em; font-size: 12px; font-weight: 600; }
+    .tier-list { padding-left: 18px; margin: 12px 0 0; }
+    .tier-list li { font-size: 13px; color: var(--muted); margin-bottom: 4px; }
+  </style>
+</head>
+<body>
+  <div class="vision-banner">🔮 VISION MOCKUP — what FAR looks like ~12-18 months into live operation (target state, not current)</div>
+
+  <header class="hero">
+    <div class="wrap">
+      <h1>FAR</h1>
+      <p class="tagline">Financial Action Radar. Systematic market calls with public, append-only track records.
+        <strong style="color: var(--fg);">4 shipped products. 3 in live shadow validation. 31 retired publicly.</strong>
+        Every call, every outcome, timestamped and unedited.</p>
+      <div class="status">
+        <span class="dot dot-up"></span>
+        <span>All systems live · last publish 6h ago · next: Sun 22:00 UTC</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+
+    <!-- Product portfolio -->
+    <section class="card">
+      <h2>Product portfolio</h2>
+      <p class="hint">Live shipped products + shadow candidates in validation · updated 2027-07-31</p>
+      <div class="product-row header">
+        <div>Product</div><div>Status</div><div>Live N</div><div>Live WR</div><div>Live Sharpe</div><div>Live P&L</div>
+      </div>
+      <div class="product-row">
+        <div>
+          <div class="product-name">FAR Weekly Gold Read v1</div>
+          <div class="product-sub">by Knox · Sun 22:00 UTC · momentum+macro</div>
+        </div>
+        <div data-label="Status"><span class="status-badge status-shipped">Shipped</span></div>
+        <div data-label="N">52</div>
+        <div data-label="WR" class="win">55.8%</div>
+        <div data-label="Sharpe" class="win">0.71</div>
+        <div data-label="P&L" class="win">+$18,420</div>
+      </div>
+      <div class="product-row">
+        <div>
+          <div class="product-name">FAR Weekly Gold v2 (DXY)</div>
+          <div class="product-sub">DXY-conditioned refinement of v1 · shipped after 26-wk shadow</div>
+        </div>
+        <div data-label="Status"><span class="status-badge status-shipped">Shipped</span></div>
+        <div data-label="N">26</div>
+        <div data-label="WR" class="win">61.5%</div>
+        <div data-label="Sharpe" class="win">0.94</div>
+        <div data-label="P&L" class="win">+$11,780</div>
+      </div>
+      <div class="product-row">
+        <div>
+          <div class="product-name">FAR Weekly Gold Ensemble</div>
+          <div class="product-sub">v1 + v2 + monthly-M12 voting</div>
+        </div>
+        <div data-label="Status"><span class="status-badge status-shipped">Shipped</span></div>
+        <div data-label="N">26</div>
+        <div data-label="WR" class="win">65.4%</div>
+        <div data-label="Sharpe" class="win">1.08</div>
+        <div data-label="P&L" class="win">+$14,210</div>
+      </div>
+      <div class="product-row">
+        <div>
+          <div class="product-name">FAR Monthly Macro Read</div>
+          <div class="product-sub">1 call per month · quarterly Fed cycle</div>
+        </div>
+        <div data-label="Status"><span class="status-badge status-shipped">Shipped</span></div>
+        <div data-label="N">12</div>
+        <div data-label="WR" class="win">66.7%</div>
+        <div data-label="Sharpe" class="win">0.85</div>
+        <div data-label="P&L" class="win">+$7,340</div>
+      </div>
+      <div class="product-row">
+        <div>
+          <div class="product-name">FAR Weekly Silver Read (candidate)</div>
+          <div class="product-sub">Native params, not gold-transferred · 26-wk shadow window</div>
+        </div>
+        <div data-label="Status"><span class="status-badge status-shadow">Shadow · wk 18/26</span></div>
+        <div data-label="N">18</div>
+        <div data-label="WR">55.6%</div>
+        <div data-label="Sharpe">0.62</div>
+        <div data-label="P&L">n/a until ship</div>
+      </div>
+      <div class="product-row">
+        <div>
+          <div class="product-name">FAR Weekly Event Drift (candidate)</div>
+          <div class="product-sub">Post-FOMC/CPI drift on gold · 26-wk shadow window</div>
+        </div>
+        <div data-label="Status"><span class="status-badge status-shadow">Shadow · wk 8/26</span></div>
+        <div data-label="N">8</div>
+        <div data-label="WR">62.5%</div>
+        <div data-label="Sharpe">0.55</div>
+        <div data-label="P&L">n/a until ship</div>
+      </div>
+    </section>
+
+    <!-- Combined performance -->
+    <section class="card call-card">
+      <h2>Combined live performance</h2>
+      <p class="hint">All shipped products, sized 1 contract each, since v1 launch 2026-08-03</p>
+      <div class="metrics">
+        <div class="metric"><div class="metric-label">Total resolved calls</div><div class="metric-value">116</div></div>
+        <div class="metric"><div class="metric-label">Aggregate P&L</div><div class="metric-value up">+$51,750</div></div>
+        <div class="metric"><div class="metric-label">Portfolio Sharpe (ann)</div><div class="metric-value up">1.14</div></div>
+        <div class="metric"><div class="metric-label">Portfolio max DD</div><div class="metric-value down">-$8,940</div></div>
+        <div class="metric"><div class="metric-label">Portfolio R/DD</div><div class="metric-value up">5.79</div></div>
+        <div class="metric"><div class="metric-label">Days since last DD-high</div><div class="metric-value">14</div></div>
+      </div>
+      <p class="hint" style="margin-top: 16px;">
+        Diversification bonus: individual product Sharpes range 0.71-1.08. Combined portfolio Sharpe = 1.14 because products are structurally uncorrelated (v1 momentum, v2 DXY, ensemble voting, monthly macro). Correlation matrix on <a href="#" style="color: var(--accent);">/portfolio</a>.
+      </p>
+    </section>
+
+    <!-- This week's brief snapshot -->
+    <section class="card">
+      <h2>This week at FAR</h2>
+      <p class="hint">Content calendar · current week</p>
+      <div class="cal-grid">
+        <div class="cal-day"><div class="cal-label">Sun</div><div class="cal-event">Weekly<br>Call</div></div>
+        <div class="cal-day"><div class="cal-label">Mon</div><div class="cal-event">Daily<br>Brief</div></div>
+        <div class="cal-day"><div class="cal-label">Tue</div><div class="cal-event">Daily<br>Brief</div></div>
+        <div class="cal-day"><div class="cal-label">Wed</div><div class="cal-event">Mid-week<br>Preview</div></div>
+        <div class="cal-day"><div class="cal-label">Thu</div><div class="cal-event">Daily<br>Brief</div></div>
+        <div class="cal-day"><div class="cal-label">Fri</div><div class="cal-event">Weekly<br>Resolve</div></div>
+        <div class="cal-day cal-empty"><div class="cal-label">Sat</div><div class="cal-event">—</div></div>
+      </div>
+      <p class="hint" style="margin-top: 20px;">
+        <strong style="color: var(--fg);">6 content beats per week.</strong> Cadence chosen so a subscriber has a reason to check in daily without introducing signals we haven't pre-registered.
+      </p>
+    </section>
+
+    <!-- Today's daily brief snippet -->
+    <section class="card">
+      <h2>Daily Brief · 2027-07-31 07:00 UTC</h2>
+      <p class="hint">Descriptive read of overnight action + macro + signal state · no new calls</p>
+      <div class="brief-block">
+        <strong>Overnight:</strong> Gold closed +0.4% at $4,082, range $4,048-$4,091. Silver +0.8%, DXY -0.2%, US 10y real yield +2bps to 1.94%. Asia session drove the move, London flat.
+      </div>
+      <div class="brief-block">
+        <strong>Macro delta (5d):</strong> RY +7bps, DXY +0.6%, GVZ 14.2 (unchanged), COT non-comm net long +3.2σ (bucket: crowded long).
+      </div>
+      <div class="brief-block">
+        <strong>Current signal state:</strong> v1 = SHORT (4-of-4 conditions align). v2 = SHORT (DXY confirming). Ensemble = SHORT. Live positions running to Fri close.
+      </div>
+      <div class="brief-block">
+        <strong>Next 24h:</strong> ADP jobs 12:15 UTC · US GDP 12:30 UTC · FOMC minutes 18:00 UTC. All three are known volatility events.
+      </div>
+    </section>
+
+    <!-- Live track record -->
+    <section class="grid">
+      <article class="card">
+        <h2>Recent resolved calls (v1)</h2>
+        <p class="hint">Last 8 outcomes · append-only</p>
+        <div class="track-history"><div>Week</div><div>Dir</div><div>Entry</div><div>P&L</div><div>Notes</div></div>
+        <div class="track-history"><div>Jul 27</div><div class="win">SHORT</div><div>4014.24</div><div class="win">+$1,842</div><div class="muted">Time exit Fri close</div></div>
+        <div class="track-history"><div>Jul 20</div><div class="win">SHORT</div><div>4058.10</div><div class="win">+$2,210</div><div class="muted">Time exit Fri close</div></div>
+        <div class="track-history"><div>Jul 13</div><div class="flat">FLAT</div><div>—</div><div class="flat">—</div><div class="muted">Signals disagreed</div></div>
+        <div class="track-history"><div>Jul 6</div><div class="loss">LONG</div><div>3982.55</div><div class="loss">-$1,860</div><div class="muted">Stopped Wed AM</div></div>
+        <div class="track-history"><div>Jun 29</div><div class="win">LONG</div><div>3941.20</div><div class="win">+$3,120</div><div class="muted">Time exit Fri close</div></div>
+        <div class="track-history"><div>Jun 22</div><div class="win">LONG</div><div>3898.15</div><div class="win">+$1,540</div><div class="muted">Time exit Fri close</div></div>
+        <div class="track-history"><div>Jun 15</div><div class="loss">SHORT</div><div>3925.60</div><div class="loss">-$1,970</div><div class="muted">Reversal Tue</div></div>
+        <div class="track-history"><div>Jun 8</div><div class="flat">FLAT</div><div>—</div><div class="flat">—</div><div class="muted">Signals disagreed</div></div>
+      </article>
+      <article class="card">
+        <h2>Live vs backtest — v1</h2>
+        <p class="hint">Match test after 52 live calls</p>
+        <div class="metrics">
+          <div class="metric"><div class="metric-label">Live WR</div><div class="metric-value up">55.8%</div></div>
+          <div class="metric"><div class="metric-label">Backtest WR</div><div class="metric-value">55.9%</div></div>
+          <div class="metric"><div class="metric-label">Live Sharpe</div><div class="metric-value up">0.71</div></div>
+          <div class="metric"><div class="metric-label">Backtest Sharpe</div><div class="metric-value">0.77</div></div>
+          <div class="metric"><div class="metric-label">t-test P(same)</div><div class="metric-value up">0.83</div></div>
+          <div class="metric"><div class="metric-label">Verdict</div><div class="metric-value up">Match</div></div>
+        </div>
+        <p class="hint" style="margin-top: 12px;">Live results statistically indistinguishable from backtest. Product continues.</p>
+      </article>
+    </section>
+
+    <!-- Audience -->
+    <section class="card">
+      <h2>Audience · community</h2>
+      <p class="hint">Free tier only · no paywall gate on any signal</p>
+      <div class="audience-grid">
+        <div class="audience-cell"><div class="audience-num">1,847</div><div class="audience-label">Telegram subs</div><div class="audience-delta">+42 this wk</div></div>
+        <div class="audience-cell"><div class="audience-num">612</div><div class="audience-label">RSS subs</div><div class="audience-delta">+8 this wk</div></div>
+        <div class="audience-cell"><div class="audience-num">2,203</div><div class="audience-label">Email list</div><div class="audience-delta">+51 this wk</div></div>
+        <div class="audience-cell"><div class="audience-num">438</div><div class="audience-label">Discord members</div><div class="audience-delta">+12 this wk</div></div>
+        <div class="audience-cell"><div class="audience-num">8.4k</div><div class="audience-label">X followers</div><div class="audience-delta">+180 this wk</div></div>
+        <div class="audience-cell"><div class="audience-num">12,340</div><div class="audience-label">Weekly page views</div><div class="audience-delta">+6% MoM</div></div>
+      </div>
+    </section>
+
+    <!-- Retirement wall -->
+    <section class="card muted-card">
+      <h2>Retirement wall</h2>
+      <p class="hint">31 candidates publicly retired to date. Full research log: <a href="./research.html" style="color: var(--accent);">/research</a></p>
+      <div class="retirement-item">
+        <div class="retirement-name">Session ORB gold day-trading (v7 family) · retired 2026-07-13</div>
+        <div class="retirement-reason">Shipped first, halted by SPRT at n=18. 12-year OOS confirmed intraday ORB is broken on modern gold.</div>
+      </div>
+      <div class="retirement-item">
+        <div class="retirement-name">Path Z (NY-SHORT + Low-ER) · retired 2026-07-22</div>
+        <div class="retirement-reason">Passed initial gates on 2024-26 data; 9-year OOS revealed it was a 2025-26 regime artifact.</div>
+      </div>
+      <div class="retirement-item">
+        <div class="retirement-name">Six-in-one-day rejection block · retired 2026-07-24</div>
+        <div class="retirement-reason">BTC/WTI cross-asset, COT extreme, seasonality, short-put income, ML direction — all six pre-registered and rejected in one session.</div>
+      </div>
+      <div class="retirement-item">
+        <div class="retirement-name">Davey Seed 2 countertrend fade · retired 2026-07-29</div>
+        <div class="retirement-reason">4-week extreme + 8-week trend fade. -$20k single-trade wipeout on 2026 gold ATH.</div>
+      </div>
+      <div class="retirement-item">
+        <div class="retirement-name">FAR Weekly Silver Read v1 (naive transfer) · retired 2026-09-15</div>
+        <div class="retirement-reason">Gold parameters transferred to silver. Failed OOS. Native-params version now in shadow.</div>
+      </div>
+      <div class="retirement-item">
+        <div class="retirement-name">+26 more · full log at /research</div>
+        <div class="retirement-reason">Every rejected pre-reg, dated, with reason.</div>
+      </div>
+    </section>
+
+    <!-- Monetization (optional future state) -->
+    <section class="card">
+      <h2>Support the project</h2>
+      <p class="hint">All signals stay free forever. Optional tiers unlock analysis + community.</p>
+      <div class="grid" style="grid-template-columns: 1fr 1fr 1fr;">
+        <div class="tier-card">
+          <div class="tier-name">Free</div>
+          <div class="tier-price">$0</div>
+          <ul class="tier-list">
+            <li>All weekly + monthly calls</li>
+            <li>Daily brief</li>
+            <li>Full track records</li>
+            <li>RSS + JSON API</li>
+            <li>Public Telegram channel</li>
+          </ul>
+        </div>
+        <div class="tier-card pro">
+          <div class="tier-name">Analyst</div>
+          <div class="tier-price">$29/mo</div>
+          <ul class="tier-list">
+            <li>Everything in Free</li>
+            <li>Discord community access</li>
+            <li>Weekly written commentary</li>
+            <li>Shadow strategy previews</li>
+            <li>Backtest playground access</li>
+          </ul>
+        </div>
+        <div class="tier-card">
+          <div class="tier-name">Desk</div>
+          <div class="tier-price">$249/mo</div>
+          <ul class="tier-list">
+            <li>Everything in Analyst</li>
+            <li>Direct DM to Knox operator</li>
+            <li>Custom mechanism requests</li>
+            <li>Early access new products</li>
+            <li>Quarterly research call</li>
+          </ul>
+        </div>
+      </div>
+      <p class="hint" style="margin-top: 20px; font-size: 12px;">
+        <em>Vision only. No monetization exists today. All signals + track records will always stay on the free tier — that's the credibility model.</em>
+      </p>
+    </section>
+
+    <!-- Governance -->
+    <section class="card muted-card">
+      <h2>Governance principles (unchanged from day 1)</h2>
+      <ul class="how">
+        <li><strong>Pre-registration.</strong> Every candidate's signal + parameters + gates frozen publicly BEFORE any backtest results are seen.</li>
+        <li><strong>Append-only.</strong> Once published, calls are never edited or deleted. Winners and losers stay in the record.</li>
+        <li><strong>Public retirement.</strong> If a shipped product diverges from backtest, it retires publicly with full disclosed track record.</li>
+        <li><strong>OOS discipline.</strong> Sample splits decided before testing. Hold-out windows never touched during design.</li>
+        <li><strong>Honest about failure.</strong> More retirements than shipments. Every rejection documented.</li>
+        <li><strong>No hidden signals.</strong> No paywall on any trading call, ever. Monetization is community + analysis only.</li>
+      </ul>
+    </section>
+
+    <!-- Disclaimer -->
+    <section class="card muted-card">
+      <h2>Disclaimer</h2>
+      <p class="muted">This is a vision mockup of what FAR could look like ~12-18 months into live operation if candidates ship and audience grows. Numbers are plausible projections based on backtest performance + industry benchmarks. No implied guarantees.</p>
+      <p class="muted">Nothing on this site is financial advice. Futures and derivatives involve substantial risk of loss.</p>
+    </section>
+  </main>
+
+  <footer>
+    <p class="muted">FAR Action Radar · 4 shipped products · 31 retired · Every call, every outcome, unedited.</p>
+    <p class="muted"><a href="./index.html" style="color:var(--muted);">← back to current site</a></p>
+  </footer>
+</body>
+</html>
