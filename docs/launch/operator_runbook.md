@@ -43,21 +43,13 @@ Do these in order. Do not skip steps.
 14. Copy the public channel link and send it to the invite list (`docs/launch/invite_message.md`).
 15. Do NOT post to Twitter, LinkedIn, or any broadcast surface yet. This is a soft launch.
 
-## Launch on FLAT? - decision flow
+## Launch decision - LOCKED 2026-08-17
 
-If Sunday's preview shows FLAT and you are considering launching anyway:
+Two-stage warm-up (Option C per `docs/launch/north_first_send.md`):
+- **Stage 1** on Sunday 2026-08-24 22:15 UTC: intro + warm-up welcome, regardless of that Sunday's signal direction.
+- **Stage 2** whenever: first automated directional call fires + Farhad posts a short manual heads-up.
 
-**Yes, launch FLAT if:**
-- It has been more than 4 FLAT weeks in a row (currently at 3 as of 2026-08-17)
-- You want the invite list to see the discipline in action from day one
-- You are OK with the first impression being "no trade this week"
-
-**No, wait if:**
-- You expect a directional call next Sunday specifically (M60 close to flipping)
-- Your invite list is small enough that a second launch attempt does not cost you social capital
-- You want the first live public trade to be memorable
-
-The intro copy handles both cases. The FLAT explanation ("sitting out is the correct action") is already in the pinned message.
+No further decision needed. Follow the sequence in `north_first_send.md`.
 
 ## Weekly maintenance (Sunday nights)
 
