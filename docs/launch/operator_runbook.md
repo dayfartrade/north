@@ -46,7 +46,7 @@ Do these in order. Do not skip steps.
 ## Launch decision - LOCKED 2026-08-17
 
 Two-stage warm-up (Option C per `docs/launch/north_first_send.md`):
-- **Stage 1** on Sunday 2026-08-24 22:15 UTC: intro + warm-up welcome, regardless of that Sunday's signal direction.
+- **Stage 1** on Sunday 2026-08-23 22:15 UTC: intro + warm-up welcome, regardless of that Sunday's signal direction.
 - **Stage 2** whenever: first automated directional call fires + Farhad posts a short manual heads-up.
 
 No further decision needed. Follow the sequence in `north_first_send.md`.

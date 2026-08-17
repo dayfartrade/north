@@ -1,12 +1,12 @@
 # NORTH soft-launch - two-stage sequence
 
 *Farhad decision 2026-08-17: Option C, warm-up launch.*
-*Stage 1 is intro + onboarding this Sunday 2026-08-24 regardless of signal direction.*
+*Stage 1 is intro + onboarding this Sunday 2026-08-23 regardless of signal direction.*
 *Stage 2 is the first directional call whenever it fires (could be same day, could be weeks later).*
 
 ---
 
-## Stage 1: warm-up launch (Sunday 2026-08-24 22:15 UTC)
+## Stage 1: warm-up launch (Sunday 2026-08-23 22:15 UTC)
 
 Posts land AFTER the automated weekly-publish workflow has fired at 22:00 UTC (which will publish whatever direction the signal says - probably FLAT again).
 
@@ -77,9 +77,9 @@ This is not advice. Full risk statement in the pinned message.
 
 Then DM the invite list separately with a heads-up ("first live call fired, check the channel").
 
-## Order of operations on Stage 1 day (Sunday 2026-08-24)
+## Order of operations on Stage 1 day (Sunday 2026-08-23)
 
-**T-24 hours (Saturday 2026-08-23 night)**
+**T-24 hours (Saturday 2026-08-22 night)**
 1. `git pull` locally to sync any workflow auto-commits.
 2. `python scripts/launch_readiness.py`. Confirm 8/0/0.
 3. Confirm the two pre-launch one-time steps are done:
@@ -87,18 +87,18 @@ Then DM the invite list separately with a heads-up ("first live call fired, chec
    - Bot has "Pin Messages" permission
 4. Read `docs/launch/north_public_intro.md` one more time.
 
-**T-2 hours (Sunday 2026-08-24 20:00 UTC)**
+**T-2 hours (Sunday 2026-08-23 20:00 UTC)**
 5. Wait for the pre-publish preview at 21:00 UTC to the private channel. Verify it renders cleanly.
 
-**T+0 (Sunday 2026-08-24 22:00 UTC)**
+**T+0 (Sunday 2026-08-23 22:00 UTC)**
 6. Weekly-publish workflow fires. Watch the public channel - the automated Sunday post should appear.
 
-**T+15 min (Sunday 2026-08-24 22:15 UTC)**
+**T+15 min (Sunday 2026-08-23 22:15 UTC)**
 7. Post Message 1 (intro). Verify pin fires (bot should auto-pin).
 8. Post Message 2 (warm-up welcome).
 9. Copy the public channel link. DM the invite list per `docs/launch/invite_message.md`.
 
-**T+2 hours (Monday 2026-08-25 00:00 UTC)**
+**T+2 hours (Monday 2026-08-24 00:00 UTC)**
 10. Check channel for any early DM feedback. Respond via DM (do not publicly reply to feedback).
 
 ## Rollback if Stage 1 goes badly
