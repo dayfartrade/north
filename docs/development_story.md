@@ -466,4 +466,42 @@ Silver Candidate 3 and the Gold basis / Janus transplant remain higher on the qu
 
 ---
 
+## 2026-08-17 (afternoon) — Universe expansion probe. Palladium LONG surfaced and rejected.
+
+After the BB test I moved to queue item 3: universe expansion. The next-agenda memory warned against naive gold-rule transfer to new assets. Fair. But before designing a native signal per asset, I wanted a fast data probe — apply gold v1's exact rule structure to each candidate's own price series and see if any of them show anything worth designing around.
+
+### The probe
+
+Four candidates via yfinance daily bars, 2010-2026: platinum futures (PL=F), palladium futures (PA=F), VanEck Gold Miners (GDX), Junior Miners (GDXJ). Script `scripts/universe_v1_probe.py`.
+
+Platinum and both miner ETFs were weak or actively negative. GDX and GDXJ especially — mean R around -0.33%, cumulative around -110%, drawdowns over 140%. The gold-momentum family does not just translate to mining equities by swapping the ticker.
+
+Palladium LONG-only was the outlier. On the full 16-year sample: n=150, WR 57.3%, mean R +0.635%, Sharpe 1.302, 13/16 positive years, drawdown 30%. That is a genuinely strong-looking number.
+
+But it was surfaced by looking at 8 candidates (4 assets, 2 directions each). That is exactly the kind of look that inflates apparent significance. So I applied the same discipline that killed silver GSR and gold basis: train 2010-2017, OOS 2018-2026, Bonferroni n=8, three gates.
+
+### The OOS test
+
+Script: `scripts/universe_palladium_oos.py`. TRAIN 2010-2017 held up (n=85, mean R +0.757%, 8/8 positive years). OOS 2018-2026 was weaker (n=65, mean R +0.475%, 5/8 positive years, CI [-0.58%, +1.59%], p_adj = 1.0).
+
+Rejected. Gate 1 fails because the CI includes zero. Gate 3 fails because OOS mean R lands at 0.475%, just below the 0.5% floor. Gate 2 (positive years) passes at 62%.
+
+### The pattern I keep seeing
+
+This is the third time we have hit this exact profile:
+
+1. Silver GSR (2026-08-03): +0.115% mean R, CI includes zero, 78% positive years
+2. Gold basis LONG-only (2026-08-03): same shape
+3. Palladium LONG (2026-08-17): +0.475% mean R, CI includes zero, 62% positive years
+
+All three: mean is positive, most years are positive, but per-trade variance is wide enough that the confidence interval blows past zero. All three are underpowered, not flat. That is a real research finding on its own — these adjacent-asset signals form a family that behaves like signal-plus-noise-you-cannot-afford-to-trade-on.
+
+Honest read: these are shadow-log forward-tracking candidates, not ship candidates. The gold basis and silver GSR shadows are already live. Adding palladium would be a third simultaneous shadow, and we would strain the operator surface without new information. Better to let the two current shadows accrue 100+ signals each before adding another.
+
+### What I did not do
+
+Not sweeping palladium parameters. Not adding it to shadow-log yet. Not chasing further transplants to platinum or miners. Full write-up in `docs/experiments/2026-08-17_universe_probe.md`. Result registered as trial #52.
+
+---
+
 *End of current entry. Story continues in subsequent updates.*
