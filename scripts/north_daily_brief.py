@@ -1,10 +1,10 @@
-"""NORTH Daily Brief — midweek position update.
+"""NORTH Daily Brief - midweek position update.
 
 Publishes a 3-section card while a directional weekly call is live:
 
-  🩺 Signal Health         — is the position behaving as expected
-  💰 Cost Radar            — open P&L, MAE, distance to stop
-  ⚠️  What Kills This Call  — the specific price move that flips WIN to LOSS
+  🩺 Signal Health         - is the position behaving as expected
+  💰 Cost Radar            - open P&L, MAE, distance to stop
+  ⚠️  What Kills This Call  - the specific price move that flips WIN to LOSS
 
 If the active call is FLAT: exits silently. No engagement theater on
 sitting-out weeks (per soft_launch_decisions.md).
@@ -154,7 +154,7 @@ def format_card(m: dict) -> str:
     dir_badge = "🔴 *SHORT*" if m["direction"] == "SHORT" else "🟢 *LONG*"
 
     lines = [
-        "📡 *NORTH — Daily Brief*",
+        "📡 *NORTH - Daily Brief*",
         f"_by Knox · {today}_",
         RULE,
         f"Position: {dir_badge}  ·  week {m['week_of']} → {m['week_end']}",
@@ -176,7 +176,7 @@ def format_card(m: dict) -> str:
     lines += [f"  {line}" for line in kill_conditions(m)]
     lines += [
         RULE,
-        "_BETA. Weekly signal, midweek observation only — no new trades._",
+        "_BETA. Weekly signal, midweek observation only - no new trades._",
     ]
     return "\n".join(lines)
 
@@ -211,7 +211,7 @@ def main():
         print("[skip] no active call in far_weekly_calls.jsonl")
         return
     if call.get("direction") == "FLAT":
-        print(f"[skip] active call is FLAT for week {call.get('week_of')} — "
+        print(f"[skip] active call is FLAT for week {call.get('week_of')} - "
               "no midweek brief (per soft-launch decision, no sitting-out theater)")
         return
     if call.get("entry_approx") is None or call.get("stop_price") is None:
@@ -226,7 +226,7 @@ def main():
         print(f"[halt] stale XAUUSD data. Refusing to publish. Use --force to override.")
         sys.exit(2)
     if bars.empty:
-        print("[skip] no bars yet — entry day not started")
+        print("[skip] no bars yet - entry day not started")
         return
 
     metrics = compute_position_metrics(call, bars)

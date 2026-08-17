@@ -1,9 +1,9 @@
 """Telegram card formatter + publisher for FAR Weekly Gold Read (NORTH).
 
 Three message types:
-  1. Weekly call — fires Sunday when a new call is published
-  2. Weekly resolve — fires when prior call's window closes (Friday close or stop)
-  3. Weekly performance — cumulative track record snapshot, fires Sunday
+  1. Weekly call - fires Sunday when a new call is published
+  2. Weekly resolve - fires when prior call's window closes (Friday close or stop)
+  3. Weekly performance - cumulative track record snapshot, fires Sunday
      right before the new call
 
 Card design goals:
@@ -54,7 +54,7 @@ def format_weekly_call(call: dict, track: dict | None = None) -> str:
     sc = call.get("signal_components", {})
 
     lines = [
-        f"⭐ *NORTH — Weekly Gold Read*",
+        f"⭐ *NORTH - Weekly Gold Read*",
         f"_by Knox_  ·  _week of {week_of} → {week_end}_",
         RULE,
         f"{_direction_badge(direction)}  {_dir_emoji(direction)}",
@@ -101,7 +101,7 @@ def format_weekly_call(call: dict, track: dict | None = None) -> str:
         agrees = (direction == 'LONG' and ry < 0) or (direction == 'SHORT' and ry > 0)
         lines.append(f"  Real yield Δ4w   {ry:+6.1f}bps   {_driver_check(direction, agrees)}")
 
-    # Track record — inline compact when data exists
+    # Track record - inline compact when data exists
     if track and track.get("resolved_calls", 0) > 0:
         n = track['resolved_calls']
         wr = track.get('win_rate_pct', 0)
@@ -115,13 +115,13 @@ def format_weekly_call(call: dict, track: dict | None = None) -> str:
         lines += [
             RULE,
             "*Live track record*",
-            "  _Accumulating — first resolve pending._",
+            "  _Accumulating - first resolve pending._",
         ]
 
     lines += [
         RULE,
         f"_Next update: Fri 21:00 UTC (week close outcome)_",
-        "_Not financial advice. BETA product — 16yr backtest passes, live still validating._",
+        "_Not financial advice. BETA product - 16yr backtest passes, live still validating._",
         "_Sample: 363 backtested calls, 13/17 years positive. Live n growing every Sunday._",
     ]
 
@@ -147,7 +147,7 @@ def format_weekly_resolve(prior_call: dict, outcome: dict,
     }.get(exit_reason, exit_reason)
 
     lines = [
-        f"🏁 *NORTH — Week Resolved*",
+        f"🏁 *NORTH - Week Resolved*",
         f"_{week_of}_",
         RULE,
         f"{_direction_badge(direction)}  ·  {result_line}",
@@ -182,7 +182,7 @@ def format_weekly_performance(track: dict, history: list[dict]) -> str:
     cum = track.get("cumulative_return_pct", 0) or 0
 
     lines = [
-        f"📊 *NORTH — Performance Update*",
+        f"📊 *NORTH - Performance Update*",
         f"_as of {datetime.now(timezone.utc).strftime('%Y-%m-%d')}_",
         RULE,
     ]
@@ -238,7 +238,7 @@ def format_weekly_performance(track: dict, history: list[dict]) -> str:
 
     lines += [
         RULE,
-        "_BETA. Small sample — read with humility._",
+        "_BETA. Small sample - read with humility._",
         "_Fresh call posts next in this channel._",
     ]
     return "\n".join(lines)
