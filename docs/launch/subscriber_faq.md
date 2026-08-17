@@ -55,6 +55,9 @@ Because the four conditions have to all agree. In sideways markets or transition
 **Q: How do I know you did not just publish the winning strategies and hide the losers?**
 The registry file (`data/experiments/registry.json`) has 52 trials with git history going back months. Every rejection was pre-registered before it was tested. The pre-reg dates are in the file, visible in `git log`. You cannot post-hoc write "we killed this on 2026-08-03" into a file that git already timestamped when it was committed.
 
+**Q: How do I know the advertised backtest numbers are real?**
+Run them yourself: `python scripts/verify_north_v1_backtest.py`. The script reproduces every number in the intro (win rate, mean return, Sharpe, max drawdown, positive years) from the same Dukascopy XAUUSD data and FRED real-yield data that we use. If the numbers don't match the intro, either the intro is stale or the data has drifted. Either way, you'll know.
+
 **Q: What if the signal starts losing?**
 There is a kill switch. If live behavior diverges from the backtest, publishing halts. The halt criteria and process are in `docs/launch/halt_notice.md`. When it fires, we post on this channel explaining why, and no new calls go out until the reason is resolved or the strategy is retired.
 
