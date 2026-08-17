@@ -11,12 +11,23 @@
 Posts land AFTER the automated weekly-publish workflow has fired at 22:00 UTC (which will publish whatever direction the signal says - probably FLAT again).
 
 **Message 1: intro (pinned)**
-Use `docs/launch/north_public_intro.md` verbatim (currently Version C - practical).
 
-Operator step:
-- Copy contents of `north_public_intro.md`
-- Post to public channel via bot (or paste manually from your account)
-- Tap and hold the message > tap "Pin" (channels do not have a separate bot pin permission, so this is a manual step regardless)
+The source of truth is `docs/launch/north_public_intro.md` but that file is GitHub Markdown (**bold**), which Telegram does not render correctly. Use one of these two paths on launch day:
+
+Path A (Telegram Markdown, best for copy-paste from phone):
+- `python scripts/render_intro_for_telegram.py --format telegram > /tmp/intro.txt`
+- Copy the contents of /tmp/intro.txt into a new Telegram post to the NORTH channel
+- Telegram detects the *bold* markers and renders them properly
+
+Path B (HTML mode, only if sending via bot API programmatically):
+- `python scripts/render_intro_for_telegram.py --format html > /tmp/intro.html`
+- Send via curl/API with `parse_mode=HTML`
+
+Path C (plain, guaranteed to work, no formatting):
+- `python scripts/render_intro_for_telegram.py --format plain > /tmp/intro.txt`
+- Paste as-is; no bold, but no risk of parse error either
+
+Then: tap and hold the message > tap "Pin". Channels do not have a separate bot pin permission, so this manual step is required regardless of send path.
 
 **Message 2: warm-up welcome (unpinned, posted right after intro)**
 
