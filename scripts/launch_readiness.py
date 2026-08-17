@@ -224,6 +224,7 @@ def main() -> None:
         ("Public channel + bot perms", check_public_channel),
         ("weekly-publish workflow", lambda: check_github_workflow("weekly-publish.yml")),
         ("data-refresh workflow", lambda: check_github_workflow("data-refresh.yml")),
+        ("pre-publish-preview workflow", lambda: check_github_workflow("pre-publish-preview.yml")),
     ]
 
     results = []
