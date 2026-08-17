@@ -540,4 +540,40 @@ Full write-up in `docs/experiments/2026-08-17_cross_asset_combo_probe.md`.
 
 ---
 
+## 2026-08-17 (late) - GDX as vehicle for gold v1 signal. LONG amplifies, SHORT destroys.
+
+Second research probe of the same session. Different question than the universe probe. Universe asked whether GDX has its own tradeable momentum (no). This asks what happens if we use GOLD'S signal but trade GDX as the vehicle. Miners are supposed to have operational leverage on gold's move.
+
+### Test
+
+Script: `scripts/gdx_vehicle_probe.py`. For every 2010-2026 week where gold v1 fires directional, compute both the gold trade and the GDX trade over the same window.
+
+### Result
+
+Empirical GDX beta to gold on these specific weeks: 1.38. Lower than the naive 2.0 quoted for miners, but still leveraged.
+
+Split by direction is where it gets interesting:
+
+**LONG only (n=223):**
+- Gold LONG: Sharpe 0.99, mean R +0.30%, cum +67%, DD 12%
+- GDX LONG: Sharpe 1.06, mean R +0.66%, cum +147%, DD 25%
+
+GDX LONG genuinely amplifies. Higher Sharpe, higher return, roughly double the drawdown.
+
+**SHORT only (n=140):**
+- Gold SHORT: Sharpe +0.42, mean R +0.12%, cum +16%, DD 21%
+- GDX SHORT: Sharpe -0.41, mean R -0.26%, cum -37%, DD 67%
+
+GDX SHORT actively destroys. Miners don't fall as hard as gold when gold falls (hedging, sticky costs, alternative revenue). The asymmetry kills the strategy.
+
+### The honest read
+
+Real pattern. Same discipline caveat as every other probe: full-sample, unvalidated, no OOS split, no Bonferroni for having explicitly probed this after gold v1 was known to work.
+
+The follow-up path is clear: OOS test on gold v1 LONG-only traded via GDX. If it holds, could later become a subscriber-facing note ("this week's LONG signal fires; for higher conviction / higher DD tolerance, GDX is a leveraged vehicle for the same trade"). Not a new signal, a vehicle-choice annotation.
+
+Not scheduled. Not urgent. Documented for the record in `docs/experiments/2026-08-17_gdx_vehicle_probe.md`.
+
+---
+
 *End of current entry. Story continues in subsequent updates.*
