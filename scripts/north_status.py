@@ -74,13 +74,19 @@ def check_shadow(label, path, key):
 
 
 def check_data_freshness():
+    # (label, path, is_gitignored, weekend_ok)
+    # is_gitignored=True means the file is intentionally not versioned
+    # (fetched fresh into cache by CI each run). Local staleness is
+    # cosmetic, not a live-pipeline problem.
+    # weekend_ok=True means daily bars naturally lag on Sat/Sun with
+    # no market activity, so weekend staleness is expected.
     paths = [
-        ("XAU/USD 5m", ROOT / "data" / "external" / "dukascopy" / "XAUUSD_5m.csv", "ts"),
-        ("XAG/USD 5m", ROOT / "data" / "external" / "dukascopy" / "XAGUSD_5m.csv", "ts"),
-        ("GC=F daily", ROOT / "data" / "gc" / "GC_1d.csv", "ts"),
+        ("XAU/USD 5m", ROOT / "data" / "external" / "dukascopy" / "XAUUSD_5m.csv", True,  False),
+        ("XAG/USD 5m", ROOT / "data" / "external" / "dukascopy" / "XAGUSD_5m.csv", True,  False),
+        ("GC=F daily", ROOT / "data" / "gc" / "GC_1d.csv",                          False, True),
     ]
     now = pd.Timestamp.now(tz="UTC")
-    for label, p, col in paths:
+    for label, p, is_gitignored, weekend_ok in paths:
         if not p.exists():
             print(f"  {label}: MISSING ({p})")
             continue
@@ -95,7 +101,16 @@ def check_data_freshness():
             if ts.tz is None:
                 ts = ts.tz_localize("UTC")
             age_h = (now - ts).total_seconds() / 3600
-            flag = "STALE" if age_h > 24*3 else "ok"
+
+            # Choose flag with the file's context in mind.
+            if is_gitignored:
+                flag = "local-only (CI fetches fresh)"
+            elif weekend_ok and now.weekday() >= 5 and age_h < 24 * 4:
+                flag = "ok (weekend)"
+            elif age_h > 24 * 3:
+                flag = "STALE"
+            else:
+                flag = "ok"
             print(f"  {label}: last={ts}  age={age_h:.1f}h  [{flag}]")
         except Exception as e:
             print(f"  {label}: read error {type(e).__name__}: {e}")
