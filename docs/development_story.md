@@ -2,7 +2,7 @@
 
 *A first-person account from Knox, the operator behind NORTH. Written honestly. Includes every failure, every dead end, every candidate that got retired. This is the version we'll publish when NORTH goes live, unedited.*
 
-*Last updated: 2026-08-03*
+*Last updated: 2026-08-17*
 
 ---
 
@@ -418,6 +418,51 @@ Six workflows total on GitHub Actions, all with failure-notify. Current v1 proje
 ### The soft-launch stance, in one paragraph
 
 Ship v1 unchanged at the next directional call. Keep v2 and ensemble as private shadow. The v2 filter is measurably better in OOS than in train — that's real signal, not curve fit — but the disciplined path is to run the 26-week forward window before switching what subscribers see. The pre-publish preview and shadow notifications give the operator enough visibility to make that switch decision when the time comes, rather than being surprised by it.
+
+---
+
+## 2026-08-17 — NORTH-BB tested and rejected as v1 replacement
+
+Third consecutive FLAT week going into 2026-08-17. That gave a clear window to work the backlog. Top item was the BB-based entry/exit refinement that had been sitting in `docs/experiments/2026-07-31_north_v2_design.md` unbuilt.
+
+Naming reconciliation first. The doc was titled "NORTH v2 design" but the shipped `v2_shadow` in the weekly publisher is the DXY filter, not this BB idea. Renamed the doc to NORTH-BB to keep the two ideas distinct.
+
+### The test
+
+Built `scripts/north_bb_backtest.py` and `scripts/north_v1_vs_bb_compare.py`. Same v1 signal (M20/M60/MA10-40/RY_chg), but replaced the fixed Monday-open / Friday-close mechanics with Bollinger Band(20, 2) entry on 4H XAUUSD. Long enters on lower-band touch, short on upper-band touch, 48-hour fallback if the market runs away. Exit on the opposing band, 2×ATR stop from actual entry, Friday-close time fallback. Cost model matched to v1 for apples-to-apples.
+
+### The result
+
+363 matched directional weeks over 2010 through mid-2026.
+
+| metric | v1 | NORTH-BB |
+|---|---|---|
+| Win rate | 55.9% | 65.3% |
+| Mean $/trade | $+500 | $+426 |
+| Mean R per trade | +0.227% | +0.147% |
+| Sharpe | +0.767 | +0.787 |
+| Max drawdown | $56k | $39k |
+| Positive years | 13/17 | 12/17 |
+
+BB wins more often but wins smaller. Both ship conditions failed: mean R is below the 0.5% floor set in the design doc, and it doesn't beat v1 either way.
+
+### Why it failed
+
+Two structural issues fell out of the exit and entry breakdowns.
+
+Exits: 71% of BB trades exited on `bb_target`. The band-to-band excursion is typically much smaller than a five-day trend, so we were systematically clipping profits early on the weeks that actually pay.
+
+Entries: 58% of BB trades hit the 48-hour fallback because the market never came back to the entry band. On a strongly trending week, waiting for a pullback that never arrives means entering at a worse price than v1's Monday open.
+
+The net effect is a variance-reduction transformation: smoother equity curve, higher hit rate, smaller drawdown, but lower expected return per trade. That is not what this design was chartered to deliver.
+
+### What I'm not doing next
+
+Not tuning BB parameters to find a passing configuration. That's the after-the-fact fitting the pre-reg discipline exists to prevent. Not stacking in the multi-week extension mechanism as a rescue. It was listed as a "known unknown" in the original design; adding it now would be the same failure mode.
+
+Documented the full result at the bottom of the design doc, including three legitimate follow-up ideas (BB stop only, BB entry with v1 exit, BB/v1 portfolio blend). Each would need its own pre-registration if we ever come back to them.
+
+Silver Candidate 3 and the Gold basis / Janus transplant remain higher on the queue.
 
 ---
 
