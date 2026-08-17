@@ -1,24 +1,28 @@
-# site/archive — abandoned HTML design variants
+# site/archive - staged HTML design variants (not deployed)
 
-These six HTML files were never shipped and are preserved here for reference only.
-Per the soft-launch component decisions (2026-07-31), the public surface for
-NORTH is Telegram only. No website is deployed.
+These six HTML files were built during the 2026-07-31 design phase but not
+deployed. As of 2026-08-17, the launch decision is Telegram-only. The
+website will be activated later when Farhad is satisfied with live
+Telegram results. Activation runbook: `docs/launch/website_activation.md`.
 
-Why kept: the design work embedded in these files (layout choices, color decisions,
-disclosure copy) may be useful if we ever revisit a web presence. Deleting them
-would lose that context; leaving them in `site/` mixed with the older shipped
-pages would confuse "what's live."
+Why kept: `weekly_v3.html` has the Full/Compact toggle that will eventually
+replace the currently-tracked `site/weekly.html`. It just needs to be wired
+to the live JSON data pipeline (`site/data/*.json`, already auto-updated by
+the weekly-publish workflow). The other five files are supporting layout /
+landing designs from the same round.
 
 ## What's here
 
-- `launch_preview.html` — first-cut of the launch landing page
-- `soft_launch.html` — soft-launch landing variant
-- `vision.html` — long-form "what NORTH is" page
-- `weekly_v2_a.html` — weekly card layout variant A
-- `weekly_v2_b.html` — weekly card layout variant B
-- `weekly_v3.html` — weekly card layout, further iteration
+- `launch_preview.html` - first-cut of the launch landing page
+- `soft_launch.html` - soft-launch landing variant
+- `vision.html` - long-form "what NORTH is" page
+- `weekly_v2_a.html` - weekly card layout variant A
+- `weekly_v2_b.html` - weekly card layout variant B
+- `weekly_v3.html` - weekly card layout, further iteration
 
-## Not deleted, not shipped
+## Status: staged, not deployed
 
-If a future session decides to revive a web surface, these are the starting
-point. If it's clear they'll never be used, they can be deleted then.
+The site data pipeline (`site/data/*.json`) refreshes every Sunday whether or
+not the site is deployed. When you activate (per website_activation.md), the
+JSON files already have historical data. Activation is a one-day job, not a
+rebuild.
