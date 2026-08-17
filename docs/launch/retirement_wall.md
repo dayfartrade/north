@@ -1,4 +1,4 @@
-# NORTH — the retirement wall
+# NORTH - the retirement wall
 
 *Auto-generated from `data/experiments/registry.json` on 2026-08-17. 34 rejected trials on record.*
 
@@ -254,6 +254,6 @@ Why this exists: NORTH publishes signals. Signals fail. We show every failure he
 
 ## What is currently live
 
-**NORTH v1** — weekly gold direction call. Published every Sunday 22:00 UTC on the public Telegram channel. Signal is a 4-condition momentum + macro filter (M20, M60, MA10 vs MA40, 20-day change in US 10y real yield). The call publishes for the following Monday-Friday window with a defined entry, stop, and time-based exit. If any condition disagrees, the call is FLAT and no trade is taken that week.
+**NORTH v1** - weekly gold direction call. Published every Sunday 22:00 UTC on the public Telegram channel. Signal is a 4-condition momentum + macro filter (M20, M60, MA10 vs MA40, 20-day change in US 10y real yield). The call publishes for the following Monday-Friday window with a defined entry, stop, and time-based exit. If any condition disagrees, the call is FLAT and no trade is taken that week.
 
 Everything else in this repo is either a retired engine, a shadow-log candidate accruing forward evidence, or an internal research artifact.

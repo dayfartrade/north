@@ -41,7 +41,7 @@ def render(rows: list[dict]) -> str:
     flat_count = sum(1 for r in rows if r.get("direction") == "FLAT")
 
     lines = []
-    lines.append("# NORTH — live track record")
+    lines.append("# NORTH - live track record")
     lines.append("")
     lines.append(f"*Auto-generated from `data/far_weekly_calls.jsonl` on {now}*")
     lines.append("")

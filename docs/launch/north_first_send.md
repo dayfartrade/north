@@ -1,4 +1,4 @@
-# NORTH soft-launch — first send sequence
+# NORTH soft-launch - first send sequence
 
 *The exact messages to publish when the soft-launch trigger fires. Ordered.*
 *Post each to the public Telegram channel (`GOLDTRADER_TG_CHAT_PUBLIC`).*
@@ -14,7 +14,7 @@ Use `docs/launch/north_public_intro.md` verbatim. Post it, then pin it in the ch
 ## Message 2: current state snapshot (unpinned, posted right after intro)
 
 ```
-📊 Current state — NORTH v1
+📊 Current state - NORTH v1
 
 Week of 2026-08-17 to 2026-08-21: FLAT
 (third consecutive FLAT week; signal has not cleared all four conditions since 2026-07-27)
@@ -39,7 +39,7 @@ Already automated via `.github/workflows/weekly-publish.yml`. No manual step. Th
 ## Order of operations on launch day
 
 1. Confirm `data/far_weekly_paused` does NOT exist (kill switch off).
-2. `python scripts/north_status.py --github` — confirm all workflows green.
+2. `python scripts/north_status.py --github` - confirm all workflows green.
 3. Post Message 1 (intro). Pin it.
 4. Post Message 2 (current state). Do not pin.
 5. Wait for Sunday 22:00 UTC weekly-publish workflow to fire the first live call to the public channel.
@@ -51,7 +51,7 @@ Already automated via `.github/workflows/weekly-publish.yml`. No manual step. Th
 
 - `touch data/far_weekly_paused` halts BOTH weekly-publish and daily-brief.
 - Post an honest halt message to the public channel using the template in
-  `docs/launch/halt_notice.md` (needs to be written before launch — see punchlist below).
+  `docs/launch/halt_notice.md` (needs to be written before launch - see punchlist below).
 
 ## Pre-launch punchlist (must all be true before Message 1)
 

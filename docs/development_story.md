@@ -236,7 +236,7 @@ The session found real results, negative and positive. NORTH v2 refinement doesn
 - Site deployment sorted (currently the static pages are not on the live domain)
 - Soft launch when the product is genuinely ready, not on a date
 
-## 2026-08-03 — Silver Candidate 3 rejected. Silver research complete.
+## 2026-08-03 - Silver Candidate 3 rejected. Silver research complete.
 
 Ran Candidate 3 (volatility regime) against 16 years of Dukascopy silver bars. Pre-registered baseline: 20-day annualized realized vol, regimes at <25% (LOW) and >40% (HIGH), SHORT above MA20 in LOW regime, LONG on MA10 upcross in HIGH regime. Stop = 2 x ATR(20). Time exit 15 days. Fills at next-bar open.
 
@@ -256,7 +256,7 @@ Interesting artifact: total dollar P&L of the baseline is +$115K but per-trade R
 
 Silver-native shippable signal: not found this round. Next options: revisit Candidate 2 lookback=180 on fresh out-of-sample split with pre-locked params; pivot to gold basis (Janus transplant on gold data using tools already built); or try a different silver mechanism family (COT-based, cross-market with GDX).
 
-## 2026-08-03 — Janus transplant to gold basis. Baseline rejected. LONG side alive.
+## 2026-08-03 - Janus transplant to gold basis. Baseline rejected. LONG side alive.
 
 Applied Janus's funding-extreme-percentile discipline to gold via futures basis (GC=F close minus XAUUSD spot close). Basis is the paper-vs-physical premium; extreme high = crowded futures positioning, extreme low = deep discount / physical stress. Direction: SHORT gold on high extreme, LONG gold on low extreme.
 
@@ -272,7 +272,7 @@ Under pre-reg discipline this does not ship. What it does earn is a fresh pre-re
 
 Robustness sweep (informational): most variants also INDIST but directionally supportive. lookback=365 and hold=15 clearly worse than baseline (over-averaging kills the signal). pct_0.975_0.025 has the highest per-trade mean and the best per-year positivity (13/17). Files: scripts/gold_basis_janus_transplant.py.
 
-## 2026-08-03 — LONG-only basis fresh OOS test. Rejected by strict gate, underpowered.
+## 2026-08-03 - LONG-only basis fresh OOS test. Rejected by strict gate, underpowered.
 
 Wrote a fresh pre-reg for the LONG-only gold basis mechanism (the post-hoc finding from the transplant baseline). Locked a train/OOS split before touching any results: 2010-2017 for design confirmation, 2018-2026 for the ship gate. Bonferroni n=2 (original two-sided baseline + this LONG-only cut). Gate: OOS ci_low >= 0.005 AND p_adjusted < 0.05 AND >= 60% positive years.
 
@@ -285,12 +285,12 @@ Gate 1 FAIL (ci_low negative, p not below 0.05). Gate 2 PASS (78% positive years
 But this is a different kind of rejection than silver's INDIST-and-flat-mean-R. Here the OOS mean R is legitimately +0.25 with only -2.85R max drawdown across 9 years. The reason CI straddles zero is small n (54 trades over 9 years). If forward tracking grows n to 100+ while maintaining anywhere near this mean, the CI collapses and the mechanism ships.
 
 Two other observations:
-- The train window (2010-2017) was mediocre. The OOS window (2018-2026) is strong. This looks regime-dependent — physical-stress reversal signals may work better in the modern gold environment (post-QT policy uncertainty, central bank buying wave, rate volatility). That's a real hypothesis, not curve-fitting, because we locked the split before testing.
+- The train window (2010-2017) was mediocre. The OOS window (2018-2026) is strong. This looks regime-dependent - physical-stress reversal signals may work better in the modern gold environment (post-QT policy uncertainty, central bank buying wave, rate volatility). That's a real hypothesis, not curve-fitting, because we locked the split before testing.
 - 2024, 2025, and partial-2026 are the strongest years in the OOS window (+$17K, +$40K, +$21K on 5, 10, and 4 trades). The signal is currently HOT.
 
 Recommendation: this becomes a live paper-trade forward test. Publish to research shadow log (not to public Telegram yet), track for 6-12 months, and if forward performance holds anywhere near the OOS profile, propose as a companion LONG signal to NORTH v1. This is the strongest candidate we have found in the current sweep, and it deserves that forward track.
 
-## 2026-08-03 — Silver GSR fresh OOS revisit. Same profile as gold basis.
+## 2026-08-03 - Silver GSR fresh OOS revisit. Same profile as gold basis.
 
 Applied the same discipline to silver GSR z-score reversion (Candidate 2 in the original silver sweep). Locked a single-config pre-reg (lookback=180, |z|>=1.5, hold=10 days, stop=2*ATR(20)) with Bonferroni n=1, and split train 2010-2017 / OOS 2018-2026 before touching results.
 
@@ -302,7 +302,7 @@ Gate 1 FAIL (CI). Gate 2 PASS (positive years). Formal verdict: REJECTED.
 
 This is the same profile as the gold basis LONG-only OOS result: directionally positive mean R, high positive-years percentage, but CI straddles zero due to per-trade variance (best +$164K, worst -$46K in the OOS window). n=131 is bigger than gold basis's 54, but silver's volatility makes each trade wider, so the CI is still underpowered.
 
-Losing years: 2022 (-$19K) and 2025 (-$40K). 2021 and 2023 were the standouts (+$23K, +$26K). The mechanism is not dead — it works in most environments and takes real losses in a couple.
+Losing years: 2022 (-$19K) and 2025 (-$40K). 2021 and 2023 were the standouts (+$23K, +$26K). The mechanism is not dead - it works in most environments and takes real losses in a couple.
 
 Recommendation: add this to the same shadow-log track as gold basis LONG-only. Two candidates with parallel profiles doubles the forward-data collection speed. If either grows n to 100+ while holding its OOS mean R, we have a shippable signal.
 
@@ -312,7 +312,7 @@ Built as scripts/gold_basis_shadow_log.py. Uses Dukascopy XAUUSD (via research.t
 
 Not published to Telegram. Research shadow only. Purpose: grow n from 54 forward to 100+ before considering ship.
 
-## 2026-08-03 — Migration off Hetzner to GitHub Actions
+## 2026-08-03 - Migration off Hetzner to GitHub Actions
 
 The old VPS at Hetzner had been rebuilt around July 22 without notice, our SSH keys wiped, pipeline dead 12 days. Rather than reprovision, we moved the whole scheduled-job stack to GitHub Actions. The workload (weekly publish, daily data refresh, daily shadow-log tick) fits comfortably in the free tier and removes an entire class of "the machine mysteriously changed" problems.
 
@@ -325,9 +325,9 @@ Three workflows are now live and cron-scheduled:
 
 Telegram card design was elevated in the same session: new performance snapshot card (fires between the resolve and the new call each Sunday), tighter driver-agreement grid on the call, removed a hard-coded URL that pointed at an undeployed page, cleaner track-record inline. Publisher now runs a narrative-ordered sequence: resolve last week → performance snapshot → new week's call.
 
-Migration bug worth remembering: the initial data-refresh workflow used a naive urllib fetch for FRED that wrote CSVs in the raw `observation_date,SERIES_ID` schema. The publisher expects `date,value` (normalized by `src/data_fred.snapshot_all`). This blew up compute_current_signal on the first live publish and the fallback emitted a broken FLAT card labeled "week of unknown" to the public channel. Fixed by replacing the inline fetch with `snapshot_all()`. Correction posted to the channel. Lesson: when a formatted-CSV loader exists, always use it — don't rewrite fetchers from scratch.
+Migration bug worth remembering: the initial data-refresh workflow used a naive urllib fetch for FRED that wrote CSVs in the raw `observation_date,SERIES_ID` schema. The publisher expects `date,value` (normalized by `src/data_fred.snapshot_all`). This blew up compute_current_signal on the first live publish and the fallback emitted a broken FLAT card labeled "week of unknown" to the public channel. Fixed by replacing the inline fetch with `snapshot_all()`. Correction posted to the channel. Lesson: when a formatted-CSV loader exists, always use it - don't rewrite fetchers from scratch.
 
-## 2026-08-10 — Second candidate shadow, daily brief, failure alerts
+## 2026-08-10 - Second candidate shadow, daily brief, failure alerts
 
 Shipped three additions to the live product surface in one session.
 
@@ -337,7 +337,7 @@ Shipped three additions to the live product surface in one session.
 
 `.github/workflows/silver-shadow-log.yml` runs at 06:35 UTC daily, right after data-refresh and the gold basis tick. `data-refresh.yml` was extended with a `Fetch XAGUSD 5m` step calling `fetch_dukascopy_symbols.py "XAG/USD"` so silver stops being stale (it had been sitting 21 days stale locally, since data-refresh was gold-only).
 
-First run on GitHub was clean: 814 aligned days (XAG/USD cache starts 2024-01-01 fresh; the local `XAGUSD_5m_historical.csv` was not pushed to the cache), fresh data, z=+1.007, FLAT correctly emitted. Both silver GSR and gold basis LONG-only now accrue forward n in parallel — doubling data-collection speed toward the 100+ trades needed to collapse either CI.
+First run on GitHub was clean: 814 aligned days (XAG/USD cache starts 2024-01-01 fresh; the local `XAGUSD_5m_historical.csv` was not pushed to the cache), fresh data, z=+1.007, FLAT correctly emitted. Both silver GSR and gold basis LONG-only now accrue forward n in parallel - doubling data-collection speed toward the 100+ trades needed to collapse either CI.
 
 ### NORTH Daily Brief
 
@@ -358,30 +358,30 @@ Closed the observability gap. Previously a silently failing GitHub Actions workf
 ### State at end of session
 
 Live pipelines on GitHub Actions:
-- 06:00 UTC — data-refresh (XAUUSD + XAGUSD 5m, GC=F daily, FRED macro)
-- 06:30 UTC — gold basis LONG-only shadow log
-- 06:35 UTC — silver GSR shadow log
-- 12:00 UTC Mon-Fri — daily brief (skips when FLAT)
-- 22:00 UTC Sunday — weekly publish
+- 06:00 UTC - data-refresh (XAUUSD + XAGUSD 5m, GC=F daily, FRED macro)
+- 06:30 UTC - gold basis LONG-only shadow log
+- 06:35 UTC - silver GSR shadow log
+- 12:00 UTC Mon-Fri - daily brief (skips when FLAT)
+- 22:00 UTC Sunday - weekly publish
 - Every workflow now Telegrams on failure
 
 Current weekly call: FLAT for 2026-08-10 → 2026-08-14 (no position). Track record: n=1 resolved, -0.72% cumulative. Two forward-shadow candidates (gold basis LONG, silver GSR) accruing n in parallel.
 
-## 2026-08-10 (afternoon) — Soft-launch readiness push: QA, decision tools, operator surface
+## 2026-08-10 (afternoon) - Soft-launch readiness push: QA, decision tools, operator surface
 
 Ahead of a soft-launch trigger (next directional call, whenever it fires), spent the Monday building out product QA, operator visibility, and the decision-support tools we would need before considering a switch from v1 to a stronger signal.
 
 ### Real Telegram render of the daily brief
 
-Synthesized a SHORT call against real July 2026 XAU/USD data and sent the resulting brief to the private chat. Bold, italic, and code entities parsed correctly on mobile. Verified the layout works before public subscribers see it — no ugly first-fire on the coming Sunday.
+Synthesized a SHORT call against real July 2026 XAU/USD data and sent the resulting brief to the private chat. Bold, italic, and code entities parsed correctly on mobile. Verified the layout works before public subscribers see it - no ugly first-fire on the coming Sunday.
 
 ### Daily brief semantic backtest
 
-`scripts/daily_brief_backtest.py` replays the brief on the last 15 directional weeks: 11 clean verdict-vs-outcome matches, 2 CHOPPING (genuine ambiguity), 2 mismatches. Both mismatches are Thursday-vs-Friday late-move cases the brief cannot forecast — a fundamental limit of a state-based card, not a threshold miscalibration. Verdict thresholds hold up.
+`scripts/daily_brief_backtest.py` replays the brief on the last 15 directional weeks: 11 clean verdict-vs-outcome matches, 2 CHOPPING (genuine ambiguity), 2 mismatches. Both mismatches are Thursday-vs-Friday late-move cases the brief cannot forecast - a fundamental limit of a state-based card, not a threshold miscalibration. Verdict thresholds hold up.
 
 ### Kill-switch drill + parity fix
 
-`touch data/far_weekly_paused` cleanly halts the weekly publisher (exit 2, no publish). The new daily brief was missing this check — added the same guard so a single halt file stops both surfaces. If we need to pull the emergency brake mid-week, we now can.
+`touch data/far_weekly_paused` cleanly halts the weekly publisher (exit 2, no publish). The new daily brief was missing this check - added the same guard so a single halt file stops both surfaces. If we need to pull the emergency brake mid-week, we now can.
 
 ### v1 → v2 filter analysis (the key finding of the session)
 
@@ -393,35 +393,35 @@ Synthesized a SHORT call against real July 2026 XAU/USD data and sent the result
 | v2 kept mean/wk | $+252           | $+1,030       |
 | v2 filtered subset mean/wk | $+147 | $-254 |
 
-The v2 DXY filter has BIGGER uplift in OOS than in the train window. That is the opposite of overfitting — if the filter had been curve-fit on 2010-2017, its OOS performance would degrade, not improve. This is real edge.
+The v2 DXY filter has BIGGER uplift in OOS than in the train window. That is the opposite of overfitting - if the filter had been curve-fit on 2010-2017, its OOS performance would degrade, not improve. This is real edge.
 
 Ensemble filters much less (~7-11% vs v2's 25%) and its backtest Sharpe advantage over v1 comes from variance reduction rather than mean uplift. For soft launch, v2 is the cleaner "next-step" candidate. The pre-reg 26-week forward window still applies, but the historical evidence supports it more strongly than we knew before this analysis.
 
 ### Pre-publish preview (Sunday 21:00 UTC private)
 
-`scripts/pre_publish_preview.py` + `.github/workflows/pre-publish-preview.yml` fire one hour before every Sunday 22:00 public publish. Sends a private-channel card showing what v1 is about to publish, what v2 shadow says, what ensemble says, and any divergence flag. Gives the operator a review-and-halt window. The 2026-07-27 SHORT that lost -0.72% would have shown a divergence flag ("v1 says SHORT but v2 says FLAT, ensemble split 1-1") — a real early-warning surface. First live fire on GitHub via workflow_dispatch delivered `message_id 151` to the private chat.
+`scripts/pre_publish_preview.py` + `.github/workflows/pre-publish-preview.yml` fire one hour before every Sunday 22:00 public publish. Sends a private-channel card showing what v1 is about to publish, what v2 shadow says, what ensemble says, and any divergence flag. Gives the operator a review-and-halt window. The 2026-07-27 SHORT that lost -0.72% would have shown a divergence flag ("v1 says SHORT but v2 says FLAT, ensemble split 1-1") - a real early-warning surface. First live fire on GitHub via workflow_dispatch delivered `message_id 151` to the private chat.
 
 ### Shadow signal notifications
 
-Both gold basis and silver GSR shadow scripts now Telegram the private chat when a signal is emitted or resolves. Was previously a silent surface — a signal could fire and go unnoticed for days. Small helper `notify_private()` in each script, best-effort send, silent no-op on missing creds.
+Both gold basis and silver GSR shadow scripts now Telegram the private chat when a signal is emitted or resolves. Was previously a silent surface - a signal could fire and go unnoticed for days. Small helper `notify_private()` in each script, best-effort send, silent no-op on missing creds.
 
 ### Operator status probe
 
-`python scripts/north_status.py [--github]` — one-shot health check that prints: latest weekly call + track record, shadow log counts, data freshness per source, kill-switch state, Telegram creds sanity, and (with `--github`) last run status per workflow. Pre-launch runbook.
+`python scripts/north_status.py [--github]` - one-shot health check that prints: latest weekly call + track record, shadow log counts, data freshness per source, kill-switch state, Telegram creds sanity, and (with `--github`) last run status per workflow. Pre-launch runbook.
 
 ### State at end of Monday session
 
 Live pipelines: same as previous entry, plus new pre-publish-preview.yml at Sunday 21:00 UTC.
 
-Six workflows total on GitHub Actions, all with failure-notify. Current v1 projection for the week of 2026-08-17 is FLAT (v1, v2, and ensemble all agree). Soft-launch trigger — first directional weekly call — remains in queue.
+Six workflows total on GitHub Actions, all with failure-notify. Current v1 projection for the week of 2026-08-17 is FLAT (v1, v2, and ensemble all agree). Soft-launch trigger - first directional weekly call - remains in queue.
 
 ### The soft-launch stance, in one paragraph
 
-Ship v1 unchanged at the next directional call. Keep v2 and ensemble as private shadow. The v2 filter is measurably better in OOS than in train — that's real signal, not curve fit — but the disciplined path is to run the 26-week forward window before switching what subscribers see. The pre-publish preview and shadow notifications give the operator enough visibility to make that switch decision when the time comes, rather than being surprised by it.
+Ship v1 unchanged at the next directional call. Keep v2 and ensemble as private shadow. The v2 filter is measurably better in OOS than in train - that's real signal, not curve fit - but the disciplined path is to run the 26-week forward window before switching what subscribers see. The pre-publish preview and shadow notifications give the operator enough visibility to make that switch decision when the time comes, rather than being surprised by it.
 
 ---
 
-## 2026-08-17 — NORTH-BB tested and rejected as v1 replacement
+## 2026-08-17 - NORTH-BB tested and rejected as v1 replacement
 
 Third consecutive FLAT week going into 2026-08-17. That gave a clear window to work the backlog. Top item was the BB-based entry/exit refinement that had been sitting in `docs/experiments/2026-07-31_north_v2_design.md` unbuilt.
 
@@ -466,15 +466,15 @@ Silver Candidate 3 and the Gold basis / Janus transplant remain higher on the qu
 
 ---
 
-## 2026-08-17 (afternoon) — Universe expansion probe. Palladium LONG surfaced and rejected.
+## 2026-08-17 (afternoon) - Universe expansion probe. Palladium LONG surfaced and rejected.
 
-After the BB test I moved to queue item 3: universe expansion. The next-agenda memory warned against naive gold-rule transfer to new assets. Fair. But before designing a native signal per asset, I wanted a fast data probe — apply gold v1's exact rule structure to each candidate's own price series and see if any of them show anything worth designing around.
+After the BB test I moved to queue item 3: universe expansion. The next-agenda memory warned against naive gold-rule transfer to new assets. Fair. But before designing a native signal per asset, I wanted a fast data probe - apply gold v1's exact rule structure to each candidate's own price series and see if any of them show anything worth designing around.
 
 ### The probe
 
 Four candidates via yfinance daily bars, 2010-2026: platinum futures (PL=F), palladium futures (PA=F), VanEck Gold Miners (GDX), Junior Miners (GDXJ). Script `scripts/universe_v1_probe.py`.
 
-Platinum and both miner ETFs were weak or actively negative. GDX and GDXJ especially — mean R around -0.33%, cumulative around -110%, drawdowns over 140%. The gold-momentum family does not just translate to mining equities by swapping the ticker.
+Platinum and both miner ETFs were weak or actively negative. GDX and GDXJ especially - mean R around -0.33%, cumulative around -110%, drawdowns over 140%. The gold-momentum family does not just translate to mining equities by swapping the ticker.
 
 Palladium LONG-only was the outlier. On the full 16-year sample: n=150, WR 57.3%, mean R +0.635%, Sharpe 1.302, 13/16 positive years, drawdown 30%. That is a genuinely strong-looking number.
 
@@ -494,7 +494,7 @@ This is the third time we have hit this exact profile:
 2. Gold basis LONG-only (2026-08-03): same shape
 3. Palladium LONG (2026-08-17): +0.475% mean R, CI includes zero, 62% positive years
 
-All three: mean is positive, most years are positive, but per-trade variance is wide enough that the confidence interval blows past zero. All three are underpowered, not flat. That is a real research finding on its own — these adjacent-asset signals form a family that behaves like signal-plus-noise-you-cannot-afford-to-trade-on.
+All three: mean is positive, most years are positive, but per-trade variance is wide enough that the confidence interval blows past zero. All three are underpowered, not flat. That is a real research finding on its own - these adjacent-asset signals form a family that behaves like signal-plus-noise-you-cannot-afford-to-trade-on.
 
 Honest read: these are shadow-log forward-tracking candidates, not ship candidates. The gold basis and silver GSR shadows are already live. Adding palladium would be a third simultaneous shadow, and we would strain the operator surface without new information. Better to let the two current shadows accrue 100+ signals each before adding another.
 

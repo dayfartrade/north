@@ -1,4 +1,4 @@
-# NORTH halt notice — template
+# NORTH halt notice - template
 
 *Post this to the public Telegram channel when the kill switch is activated.*
 *Fill in the bracketed fields, keep the tone the same.*
@@ -8,20 +8,20 @@
 ## Standard halt notice
 
 ```
-⛔ NORTH — publishing halted [YYYY-MM-DD HH:MM UTC]
+⛔ NORTH - publishing halted [YYYY-MM-DD HH:MM UTC]
 
 The kill switch is on. No new weekly calls or daily briefs will publish
 until this halt clears.
 
-Reason: [one sentence — what triggered the halt]
+Reason: [one sentence - what triggered the halt]
 Trigger: [manual / drift monitor / data pipeline failure / other]
 
 What this means for anyone in the live position (if applicable):
-[free text — usually "the trade that's currently open stays open on its
+[free text - usually "the trade that's currently open stays open on its
 original stop and time exit; we just aren't publishing new calls after it"]
 
 What has to happen for publishing to resume:
-[list the specific gates — e.g., "review the drift analysis and confirm
+[list the specific gates - e.g., "review the drift analysis and confirm
 the strategy still matches its backtest", "resolve the data source
 issue and re-run the last publish preview", "fix the identified bug
 and re-test the pipeline end-to-end"]
@@ -33,7 +33,7 @@ Repo audit trail:
 - Last publish: [link to jsonl commit]
 - Drift monitor last run: [link]
 
-— Farhad + Knox
+- Farhad + Knox
 ```
 
 ## What NOT to say in a halt notice

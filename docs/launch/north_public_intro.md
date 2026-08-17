@@ -1,4 +1,4 @@
-# NORTH — public channel intro (pinned message)
+# NORTH - public channel intro (pinned message)
 
 *Draft copy for the pinned message in the public Telegram channel at soft launch.*
 *Length target: fits in one Telegram message (~4000 chars). Currently ~2400 chars.*
@@ -6,7 +6,7 @@
 
 ---
 
-**NORTH — weekly gold direction call**
+**NORTH - weekly gold direction call**
 
 Every Sunday at 22:00 UTC I publish one call for the coming week on gold: LONG, SHORT, or FLAT. Nothing else. No intraday alerts, no push notifications, no urgency theater. If the signal doesn't fire, I say FLAT and we sit out the week.
 

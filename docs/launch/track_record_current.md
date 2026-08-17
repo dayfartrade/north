@@ -1,6 +1,6 @@
-# NORTH — live track record
+# NORTH - live track record
 
-*Auto-generated from `data/far_weekly_calls.jsonl` on 2026-08-17 08:04 UTC*
+*Auto-generated from `data/far_weekly_calls.jsonl` on 2026-08-17 08:11 UTC*
 
 ## Current call
 

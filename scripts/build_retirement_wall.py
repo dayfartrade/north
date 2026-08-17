@@ -1,6 +1,6 @@
 """Generate the public-facing retirement wall from the experiments registry.
 
-Output: docs/launch/retirement_wall.md — every rejected/retired experiment
+Output: docs/launch/retirement_wall.md - every rejected/retired experiment
 in one honest list, ready to link from the Telegram intro pin.
 
 The purpose is transparency. NORTH promises to show every failure, not just
@@ -59,7 +59,7 @@ def render() -> str:
     rejected.sort(key=sort_key, reverse=True)
 
     lines = []
-    lines.append("# NORTH — the retirement wall")
+    lines.append("# NORTH - the retirement wall")
     lines.append("")
     lines.append(f"*Auto-generated from `data/experiments/registry.json` on {now}. "
                  f"{len(rejected)} rejected trials on record.*")
@@ -102,7 +102,7 @@ def render() -> str:
     lines.append("")
     lines.append("## What is currently live")
     lines.append("")
-    lines.append("**NORTH v1** — weekly gold direction call. Published every Sunday 22:00 UTC "
+    lines.append("**NORTH v1** - weekly gold direction call. Published every Sunday 22:00 UTC "
                  "on the public Telegram channel. Signal is a 4-condition momentum + macro "
                  "filter (M20, M60, MA10 vs MA40, 20-day change in US 10y real yield). The "
                  "call publishes for the following Monday-Friday window with a defined entry, "
