@@ -15,9 +15,8 @@ Use `docs/launch/north_public_intro.md` verbatim (currently Version C - practica
 
 Operator step:
 - Copy contents of `north_public_intro.md`
-- Post to public channel via bot
-- If bot has pin permission (per pre-launch step 2): it will pin automatically
-- If not: tap "pin" in the Telegram app after the bot posts
+- Post to public channel via bot (or paste manually from your account)
+- Tap and hold the message > tap "Pin" (channels do not have a separate bot pin permission, so this is a manual step regardless)
 
 **Message 2: warm-up welcome (unpinned, posted right after intro)**
 
@@ -94,8 +93,8 @@ Then DM the invite list separately with a heads-up ("first live call fired, chec
 6. Weekly-publish workflow fires. Watch the public channel - the automated Sunday post should appear.
 
 **T+15 min (Sunday 2026-08-23 22:15 UTC)**
-7. Post Message 1 (intro). Verify pin fires (bot should auto-pin).
-8. Post Message 2 (warm-up welcome).
+7. Post Message 1 (intro). Tap and hold > Pin (~3 seconds).
+8. Post Message 2 (warm-up welcome) - do NOT pin.
 9. Copy the public channel link. DM the invite list per `docs/launch/invite_message.md`.
 
 **T+2 hours (Monday 2026-08-24 00:00 UTC)**
@@ -114,8 +113,8 @@ Post an honest halt notice to the public channel using `docs/launch/halt_notice.
 - [x] `docs/launch/north_public_intro.md` locked to Version C
 - [x] `docs/launch/retirement_wall.md` regenerates auto on every publish
 - [x] `docs/launch/track_record_current.md` regenerates auto on every publish
-- [ ] Public Telegram channel renamed to "NORTH" (Farhad step, one-time)
-- [ ] Bot has "Pin Messages" permission on the channel (Farhad step, one-time)
+- [ ] Public Telegram channel renamed to "NORTH" (Farhad step, one-time, in Telegram app)
+- [x] Bot pin permission: N/A for channels (not a separate permission); Farhad pins Message 1 manually on launch day
 - [x] `GOLDTRADER_TG_CHAT_PUBLIC` GitHub secret matches the channel ID (verified via successful publish on 2026-08-16 and later runs)
 - [x] Kill switch removed if present (`data/far_weekly_paused` does not exist)
 - [x] Halt notice template written at `docs/launch/halt_notice.md`

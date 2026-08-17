@@ -171,8 +171,8 @@ def check_public_channel() -> tuple[str, str]:
         if not can_post:
             return RESULT_FAIL, "bot is admin but cannot post messages"
         msg = f'channel "{title}" ok, bot is admin with can_post_messages'
-        if not mem["result"].get("can_edit_messages"):
-            msg += " (note: no edit/pin/delete perms; Farhad must pin manually)"
+        # Channels do not have a separate pin permission; Message 1 is pinned
+        # manually on launch day (documented in operator_runbook.md).
         return RESULT_PASS, msg
     except Exception as e:
         return RESULT_FAIL, f"channel check error: {type(e).__name__}: {e}"
