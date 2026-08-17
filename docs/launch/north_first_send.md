@@ -7,9 +7,9 @@
 
 ## Message 1: pin this first (before any weekly call)
 
-Use `docs/launch/north_public_intro.md` verbatim. Post it, then pin it in the channel. This is the "what NORTH is" message that every new subscriber sees at the top.
+Use `docs/launch/north_public_intro.md` verbatim (currently Version C - practical). Post it, then pin it in the channel. This is the "what NORTH is" message every new subscriber sees at the top.
 
-**Operator step:** copy contents of `north_public_intro.md`, send via `sendMessage`, then call `pinChatMessage`.
+**Operator step:** if bot has pin permission (pre-launch step 2), it will pin automatically after posting. If not, tap "pin" in the Telegram app after the bot posts.
 
 ## Message 2: current state snapshot (unpinned, posted right after intro)
 

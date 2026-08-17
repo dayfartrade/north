@@ -5,9 +5,10 @@
 
 ---
 
-## Pre-launch one-time step (2026-08-17 pending)
+## Pre-launch one-time steps (2026-08-17 pending)
 
-Rename the public Telegram channel from "Gold Day Trader - Live Alerts" to "NORTH". This is a Farhad-only action via the Telegram app (channel > tap name > Edit > save). Bot cannot rename.
+1. Rename the public Telegram channel from "Gold Day Trader - Live Alerts" to "NORTH". Farhad-only via Telegram app (channel > tap name > Edit > save). Bot cannot rename.
+2. Grant bot pin permission: Telegram app > channel > Administrators > @GOLDDAYTARDER_bot > toggle "Pin Messages" on. After this, bot auto-pins Message 1 on launch day.
 
 ## Sunday launch day - operator sequence
 
