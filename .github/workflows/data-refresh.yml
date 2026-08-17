@@ -98,7 +98,12 @@ jobs:
               echo "No data changes to commit"
           else
               git commit -m "data: refresh $(date -u +%Y-%m-%d) via github-actions"
-              git push
+              # Retry pull-rebase-push up to 3 times to survive concurrent pushes.
+              for attempt in 1 2 3; do
+                  git pull --rebase origin main && git push && break
+                  echo "push attempt $attempt failed, retrying"
+                  sleep $((attempt * 5))
+              done
           fi
 
       - name: Notify Telegram on failure

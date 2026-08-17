@@ -102,7 +102,11 @@ jobs:
               echo "No log changes to commit"
           else
               git commit -m "publish: weekly call $(date -u +%Y-%m-%d) via github-actions"
-              git push
+              for attempt in 1 2 3; do
+                  git pull --rebase origin main && git push && break
+                  echo "push attempt $attempt failed, retrying"
+                  sleep $((attempt * 5))
+              done
           fi
 
       - name: Notify Telegram on failure

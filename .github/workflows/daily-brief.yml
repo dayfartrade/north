@@ -65,7 +65,11 @@ jobs:
               echo "No brief log changes to commit"
           else
               git commit -m "brief: daily brief tick $(date -u +%Y-%m-%d)"
-              git push
+              for attempt in 1 2 3; do
+                  git pull --rebase origin main && git push && break
+                  echo "push attempt $attempt failed, retrying"
+                  sleep $((attempt * 5))
+              done
           fi
 
       - name: Notify Telegram on failure
