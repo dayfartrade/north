@@ -178,6 +178,20 @@ def check_public_channel() -> tuple[str, str]:
         return RESULT_FAIL, f"channel check error: {type(e).__name__}: {e}"
 
 
+def check_intro_backtest() -> tuple[str, str]:
+    """Run the verify_north_v1_backtest.py script; PASS if it exits 0."""
+    try:
+        r = subprocess.run(
+            [sys.executable, str(ROOT / "scripts" / "verify_north_v1_backtest.py")],
+            capture_output=True, text=True, timeout=300
+        )
+        if r.returncode == 0:
+            return RESULT_PASS, "all intro numbers match backtest"
+        return RESULT_FAIL, f"verify script failed (rc={r.returncode}); run manually to see which metric drifted"
+    except Exception as e:
+        return RESULT_WARN, f"verify script error {type(e).__name__}: {e}"
+
+
 def check_github_workflow(workflow_file: str) -> tuple[str, str]:
     token_path = ROOT / ".github-token"
     if not token_path.exists():
@@ -220,6 +234,7 @@ def main() -> None:
         ("Launch docs present", check_launch_docs_exist),
         ("Retirement wall fresh", check_retirement_wall_fresh),
         ("Track record fresh", check_track_record_fresh),
+        ("Intro backtest numbers verified", check_intro_backtest),
         ("Telegram bot alive", check_telegram_bot),
         ("Public channel + bot perms", check_public_channel),
         ("weekly-publish workflow", lambda: check_github_workflow("weekly-publish.yml")),
