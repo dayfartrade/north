@@ -504,4 +504,40 @@ Not sweeping palladium parameters. Not adding it to shadow-log yet. Not chasing 
 
 ---
 
+## 2026-08-17 (evening) - Cross-asset combo probe. Diversification is real but does not create alpha.
+
+Follow-up from the universe probe earlier the same day. Palladium LONG-only failed its OOS discipline test but was not statistically flat, only underpowered. Question: do gold v1 and palladium LONG fire on complementary weeks such that combining them into a portfolio gets you variance reduction?
+
+### The test
+
+Script: `scripts/cross_asset_combo_probe.py`. For every week 2010-2026, compute both signals. Report overlap, correlation, and portfolio metrics.
+
+### The result
+
+Overlap is 10.7% of weeks. Correlation of same-week returns on the 89 both-fire weeks is +0.149. Very low. These are mostly-uncorrelated signals identifying different market conditions.
+
+The 50/50 blend (weight each leg when it fires, full weight when only one fires) shows:
+- n = 424 trades (vs 363 gold-alone, vs 150 palladium-alone)
+- Sharpe 0.974 (vs 0.778 gold, vs 1.302 palladium)
+- Cum R +130% (highest of the three)
+- Max DD 21.3% (lower than palladium alone)
+
+### The honest read
+
+The diversification benefit is real. Two low-correlation signals combined get you a variance-reduced portfolio with a Sharpe between the two individual Sharpes. That is what diversification does.
+
+But this does not validate palladium. The blend's Sharpe is a weighted average, not a new source of edge. Palladium's own OOS test failed (mean R 0.475%, CI includes zero). Combining an unvalidated signal with a validated one just dresses up the unvalidated one with the validated one's average, and calls it "proof."
+
+If we shipped the blend to subscribers now, we would be violating exactly the discipline that has kept 34 dead strategies dead.
+
+### What this changes for the soft launch
+
+Nothing. NORTH publishes gold v1. Full stop.
+
+If palladium ever accrues enough forward evidence to pass its own OOS test independently, then re-running this combo probe would be the right way to consider a two-asset product. Until then, this is a research finding about the structure of the signal universe, not a shipping decision.
+
+Full write-up in `docs/experiments/2026-08-17_cross_asset_combo_probe.md`.
+
+---
+
 *End of current entry. Story continues in subsequent updates.*
