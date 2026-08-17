@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# NORTH pre-commit hook: refuse em-dashes in staged files.
+#
+# To enable: git config core.hooksPath .githooks
+# To bypass in emergency: git commit --no-verify (but fix afterward)
+
+python scripts/check_em_dashes.py
