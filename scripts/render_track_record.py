@@ -104,7 +104,7 @@ def render(rows: list[dict]) -> str:
     lines.append("This is a small sample. NORTH v1 has been live since 2026-07-22. Any conclusion "
                  "drawn from fewer than ~25 resolved directional trades is noise. The 16-year "
                  "historical backtest is our best current estimate of expected behavior, and it "
-                 "showed ~59% win rate on directional weeks with ~0.23% mean return per trade "
+                 "showed 55.9% win rate on directional weeks with +0.23% mean return per trade "
                  "after costs. Live results should converge toward that over quarters and years, "
                  "not weeks.")
     lines.append("")

@@ -13,10 +13,11 @@ Hey - soft-launching a small thing.
 It's called NORTH. One gold call per week, published Sunday night.
 LONG, SHORT, or FLAT for the coming Monday-Friday. That's it.
 
-Backtest since 2010: 56% win rate on the weeks it fires directional,
-+0.23% average per trade after costs, ~5% worst drawdown of notional.
-Passive gold over the same window did better in raw return but with 3x
-the drawdown. NORTH sits out about half the time.
+Backtest since 2010: 55.9% win rate on the weeks it fires directional,
++0.23% average per trade after costs, worst drawdown of $56,043 trading
+one gold contract per week (about 5.6% of a $1M account). Passive gold
+over the same window did better in raw return but with about 3x the
+drawdown. NORTH sits out about half the time.
 
 It's free. I built it with an AI collaborator (Knox) who does the
 research and I do the direction and the honest review. Everything is
@@ -27,7 +28,9 @@ No signal service does this. Read it before you decide:
 [link to retirement_wall.md]
 
 The channel is: [Telegram channel link]
-Sunday's first call went out already, was FLAT. Next Sunday too, probably.
+Sunday's call was LONG for this week (first directional call after
+three weeks FLAT). Entry, stop, and exit rule are all in the automated
+post at the top of the channel.
 
 If you want in, join the channel. If it's not for you, no reply needed.
 ```

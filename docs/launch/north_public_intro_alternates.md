@@ -39,7 +39,7 @@ I tested 52 strategies for trading gold. Killed 34 of them. This channel publish
 
 **What survived (NORTH v1):** a 4-condition weekly filter on gold. Momentum agrees short and long, moving averages agree, real-yield direction agrees. All four or nothing. Published every Sunday 22:00 UTC.
 
-**Backtest 2010-2026:** 56% win rate on the weeks it fires directional. +0.23% average per trade. 5% worst drawdown. Sits out about half the time.
+**Backtest 2010-2026:** 55.9% win rate on the weeks it fires directional. +0.23% average per trade. Worst drawdown $56,043 on one contract per week, about 5.6% of a $1M account. Sits out about half the time.
 
 **Live since:** 2026-07-22. First trade lost 0.72%. Three FLAT weeks since. That's expected.
 
@@ -84,7 +84,7 @@ Only fires when a directional call is open. Shows signal health, open P&L, dista
 **How the signal decides:**
 Four conditions on daily gold prices. LONG needs all four bullish (4-week momentum positive, 12-week momentum positive, short MA above long MA, US 10-year real yield falling over 20 days). SHORT needs all four bearish. FLAT otherwise. That's the entire rule. No hidden knobs.
 
-**Backtest 2010-2026:** 55.9% win rate on directional weeks, +0.23% mean return per trade after costs, 5.6% worst drawdown of notional. Passive gold beat NORTH in raw return but with 3x the drawdown. NORTH is designed to sit out the messy weeks.
+**Backtest 2010-2026:** 55.9% win rate on directional weeks, +0.23% mean return per trade after costs, worst drawdown $56,043 trading one contract per week (about 5.6% of a $1M account). Passive gold beat NORTH in raw return but with about 3x the drawdown. NORTH is designed to sit out the messy weeks.
 
 **Live since 2026-07-22.** Current record: 1 directional call, -0.72%. Full track record:
 github.com/dayfartrade/north/blob/main/docs/launch/track_record_current.md

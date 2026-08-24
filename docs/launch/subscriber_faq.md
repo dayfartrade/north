@@ -37,7 +37,7 @@ Entry Monday NY open (or reference price at publish). Stop is 2x the 20-day ATR 
 That is the entire rule. No hidden knobs, no discretion, no override.
 
 **Q: What is the backtest?**
-2010-2026 gold data. Win rate 55.9% on directional weeks, +0.23% mean return per trade after costs, Sharpe 0.77, largest drawdown 5.6% of notional. Sits out about half the time (FLAT).
+2010-2026 gold data. Win rate 55.9% on directional weeks, +0.23% mean return per trade after costs, Sharpe 0.77, largest drawdown $56,043 trading one gold contract per week (about 5.6% of a $1M account). Sits out about half the time (FLAT).
 
 **Q: Would passive gold have made more?**
 Yes, in raw return. But with about 3x the drawdown. NORTH captured 62% of buy-and-hold gold's P&L with 37% of the drawdown. That is the tradeoff.

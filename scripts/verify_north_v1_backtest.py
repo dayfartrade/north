@@ -5,7 +5,7 @@ message and the retirement wall. If they don't match what's on the
 channel, the claim is wrong.
 
 This is the honesty backstop. The intro says "55.9% win rate, +0.23%
-mean return, Sharpe 0.77, drawdown 5.6% of notional." This script
+mean return, Sharpe 0.77, drawdown $56,043 (5.6% of a $1M account)." This script
 recomputes those numbers from the same Dukascopy data anyone can
 download.
 
