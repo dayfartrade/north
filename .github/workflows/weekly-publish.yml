@@ -96,14 +96,20 @@ jobs:
                   data/far_weekly_v2_shadow.jsonl \
                   data/far_weekly_ensemble_shadow.jsonl \
                   site/data/*.json \
+                  site/feed.xml \
+                  site/api/*.json \
                   docs/launch/track_record_current.md \
                   docs/launch/retirement_wall.md 2>/dev/null || true
           if git diff --cached --quiet; then
               echo "No log changes to commit"
           else
               git commit -m "publish: weekly call $(date -u +%Y-%m-%d) via github-actions"
+              # --autostash covers any tracked-but-unstaged files the publish
+              # script may have written that aren't in the add list above.
+              # Without it, rebase refuses with "cannot pull with rebase:
+              # You have unstaged changes" and the push retry loop is useless.
               for attempt in 1 2 3; do
-                  git pull --rebase origin main && git push && break
+                  git pull --rebase --autostash origin main && git push && break
                   echo "push attempt $attempt failed, retrying"
                   sleep $((attempt * 5))
               done
