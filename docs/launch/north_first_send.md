@@ -6,6 +6,20 @@
 
 ---
 
+## Actual status (updated 2026-08-24)
+
+The Sunday 2026-08-23 22:51 UTC auto-publish signaled **LONG** (first
+directional call after three weeks FLAT). The Telegram post landed
+successfully in the public channel. The workflow's git-push failed
+(separate bug, tracked). Farhad did NOT execute the manual Stage 1 or
+Stage 2 steps that night.
+
+**Both stages now execute together on 2026-08-24** using the catch-up
+sequence at the bottom of this document. The Stage 1 and Stage 2
+sections below are preserved as the reference for future launches.
+
+---
+
 ## Stage 1: warm-up launch (Sunday 2026-08-23 22:15 UTC)
 
 Posts land AFTER the automated weekly-publish workflow has fired at 22:00 UTC (which will publish whatever direction the signal says - probably FLAT again).
@@ -130,3 +144,106 @@ Post an honest halt notice to the public channel using `docs/launch/halt_notice.
 - [x] Kill switch removed if present (`data/far_weekly_paused` does not exist)
 - [x] Halt notice template written at `docs/launch/halt_notice.md`
 - [ ] Farhad has invite list ready for Stage 1 DMs
+
+---
+
+## Catch-up sequence for 2026-08-24 (Stage 1 + Stage 2 combined)
+
+Context: the Sunday 2026-08-23 22:51 UTC auto-publish sent a LONG call
+to the public channel. The channel is renamed to "NORTH". No pinned
+intro, no welcome, no invite DMs went out that night. Anyone landing in
+the channel right now sees a bare directional card with no context.
+
+Three posts, in this order. All plain text (Telegram Markdown may be
+used for `*bold*` per `scripts/render_intro_for_telegram.py`).
+
+### Post 1 - intro (pinned)
+
+Render and paste, then pin manually:
+
+```
+python scripts/render_intro_for_telegram.py --format telegram > /tmp/intro.txt
+```
+
+Copy `/tmp/intro.txt` contents into a new post in the NORTH channel.
+Then tap and hold the message > "Pin" > "Notify all members" is optional.
+
+### Post 2 - warm-up welcome (unpinned, posted right after Post 1)
+
+Copy verbatim:
+
+```
+This channel is now live for a small invite list. Welcome.
+
+Where we are:
+
+- Last night's automated Sunday post is a LONG call on gold for this
+  week (2026-08-24 to 08-28). It is the first directional call from
+  NORTH v1 in about a month. The four signal conditions all lined up
+  bullish. Full mechanics (entry, stop, exit rule) are in the automated
+  post further down in the channel.
+- The two published weeks before that (2026-08-10 and 2026-08-17) were
+  both FLAT. That is the signal doing exactly what it is supposed to
+  do when the four conditions disagree.
+- The only prior directional call (2026-07-27 SHORT) resolved at
+  -0.72%. Documented on the track record page.
+
+What happens next:
+
+- Mid-week updates fire Mon-Fri around 12:00 UTC while this LONG
+  position is open. They show signal health, open P&L, and distance to
+  the stop.
+- Friday close: the position exits automatically at 21:00 UTC, or the
+  stop hits earlier.
+- The following Sunday 22:00 UTC: the next call publishes (LONG, SHORT,
+  or FLAT again).
+
+If you were invited by Farhad and want to give feedback: DM him.
+Everything is under active development and honest bad news is welcome.
+
+Repo: github.com/dayfartrade/north
+Track record: github.com/dayfartrade/north/blob/main/docs/launch/track_record_current.md
+Retirement wall: github.com/dayfartrade/north/blob/main/docs/launch/retirement_wall.md
+```
+
+### Post 3 - Stage 2 mechanics + sizing note (unpinned, right after Post 2)
+
+Copy verbatim:
+
+```
+Quick mechanics + sizing note on the LONG call above.
+
+Direction: LONG gold, this week only (2026-08-24 to 08-28).
+Reference entry: ~$4602 (Monday NY open).
+Stop: $4401 (2x the 20-day ATR from entry, ~4.4% below entry).
+Exit: Friday 21:00 UTC close, or the stop hits earlier.
+
+If you trade it, size for less than 1% account loss on a full
+stop-out. That means position size = account / 4.4 or smaller.
+
+This is not advice. Full risk disclaimer in the pinned intro above.
+```
+
+### Post-post: DM the invite list
+
+Use `docs/launch/invite_message.md` Version A (updated 2026-08-24 to
+reference the LONG going out). Send one-to-one, not broadcast.
+
+### Order of operations checklist (do in this order)
+
+1. `git pull` locally to make sure track_record and retirement_wall are current.
+2. `python scripts/render_intro_for_telegram.py --format telegram > /tmp/intro.txt`.
+3. Open NORTH channel in Telegram app.
+4. Post 1 (intro). Tap and hold > Pin.
+5. Post 2 (welcome).
+6. Post 3 (Stage 2 mechanics note).
+7. DM invite list per `invite_message.md`.
+8. Check channel for early feedback via DM later today.
+
+### Rollback if anything looks wrong
+
+If after posting you notice a factual error or a formatting break:
+- Edit the post in Telegram (long-press > Edit) rather than deleting.
+- If it is worse than that, do NOT keep publishing. Halt with
+  `touch data/far_weekly_paused` and post the halt notice from
+  `docs/launch/halt_notice.md`.

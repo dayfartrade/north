@@ -1,6 +1,6 @@
 # NORTH - the retirement wall
 
-*Auto-generated from `data/experiments/registry.json` on 2026-08-17. 34 rejected trials on record.*
+*Auto-generated from `data/experiments/registry.json` on 2026-08-24. 34 rejected trials on record.*
 
 Why this exists: NORTH publishes signals. Signals fail. We show every failure here so subscribers can judge the discipline honestly. If it isn't on this list, we haven't tested it. If it is, here's what happened and why we killed it.
 

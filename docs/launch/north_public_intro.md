@@ -1,3 +1,4 @@
+---
 # NORTH - public channel intro (pinned message)
 
 *Selected 2026-08-17: Version C (practical). Farhad's pick.*
@@ -33,7 +34,7 @@ Four conditions on daily gold prices. LONG needs all four bullish (4-week moment
 
 **Backtest 2010-2026:** 55.9% win rate on directional weeks, +0.23% mean return per trade after costs. Worst cumulative drawdown across 16 years: $56,043 trading one gold contract per week (about 5.6% of a $1M account). Passive buy-and-hold gold beat NORTH's total P&L but with roughly 3x the drawdown. NORTH is designed to sit out the messy weeks.
 
-**Live since 2026-07-22.** Current record: 1 directional call, -0.72%. Full track record:
+**Live since 2026-07-22.** Full track record and current open position:
 github.com/dayfartrade/north/blob/main/docs/launch/track_record_current.md
 
 **52 strategies tested, 34 killed:**
