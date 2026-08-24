@@ -57,10 +57,15 @@ def to_telegram_markdown(md: str) -> str:
 
 def to_html(md: str) -> str:
     body = strip_frontmatter(md)
-    # Escape HTML entities first
+    # Strip leading > blockquote markers before HTML escape so they don't
+    # show up as literal > characters after escaping.
+    body = re.sub(r"^> ?", "", body, flags=re.MULTILINE)
+    # Escape HTML entities.
     body = body.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
-    # **bold** -> <b>bold</b>
+    # **bold** -> <b>bold</b> (run before single-*)
     body = re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", body)
+    # *italic* -> <i>italic</i>
+    body = re.sub(r"\*(.+?)\*", r"<i>\1</i>", body)
     return body
 
 
