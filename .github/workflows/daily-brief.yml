@@ -66,7 +66,8 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/north_daily_brief.jsonl \
                   site/data/far_weekly_current.json \
-                  site/data/far_weekly_price_series.json 2>/dev/null || true
+                  site/data/far_weekly_price_series.json \
+                  site/data/far_daily_briefs.json 2>/dev/null || true
           if git diff --cached --quiet; then
               echo "No brief log or site JSON changes to commit"
           else
