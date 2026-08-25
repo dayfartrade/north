@@ -12,9 +12,12 @@ Emits the following files consumed by the NORTH site (Rook):
 
   2. site/data/far_weekly_price_series.json - hourly OHLC for the active
      week window (week_of Monday 00:00 UTC through week_end Friday 21:00
-     UTC), resampled from Dukascopy XAUUSD 5m. Format:
-       [{ "time_utc": <int epoch seconds>, "open": float,
-          "high": float, "low": float, "close": float }, ...]
+     UTC), resampled from Dukascopy XAUUSD 5m. Envelope matches the
+     pattern used by far_weekly_history.json so the client can assert
+     the series matches the active week before rendering:
+       { "week_of": "YYYY-MM-DD", "week_end": "YYYY-MM-DD",
+         "series": [ { "time_utc": <int epoch seconds>, "open": float,
+                       "high": float, "low": float, "close": float }, ... ] }
      time_utc is Unix epoch seconds so lightweight-charts consumes it
      directly.
 
@@ -405,11 +408,17 @@ def refresh(dry_run: bool = False) -> None:
         else:
             print(f"[dry-run] would write live_pnl_pct={live_pnl}")
 
+    price_series_payload = {
+        "week_of": week_of,
+        "week_end": week_end,
+        "series": series,
+    }
     if not dry_run:
         SITE_PRICE_SERIES.parent.mkdir(parents=True, exist_ok=True)
         SITE_PRICE_SERIES.write_text(
-            json.dumps(series, separators=(",", ":")), encoding="utf-8")
-        print(f"[wrote] {SITE_PRICE_SERIES.name} ({len(series)} points)")
+            json.dumps(price_series_payload, separators=(",", ":")),
+            encoding="utf-8")
+        print(f"[wrote] {SITE_PRICE_SERIES.name} ({len(series)} points, envelope)")
         SITE_DAILY_BRIEFS.write_text(
             json.dumps(briefs, indent=2, default=str), encoding="utf-8")
         print(f"[wrote] {SITE_DAILY_BRIEFS.name} ({len(briefs)} entries)")
