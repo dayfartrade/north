@@ -83,6 +83,10 @@ jobs:
               python scripts/far_weekly_gold_read_publish.py
           fi
 
+      - name: Refresh site JSON (live_pnl_pct + hourly OHLC series)
+        run: python scripts/north_site_refresh.py
+        continue-on-error: true
+
       - name: Regenerate public track record + retirement wall
         run: |
           python scripts/render_track_record.py

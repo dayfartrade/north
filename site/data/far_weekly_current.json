@@ -1,22 +1,24 @@
 {
   "type": "call",
-  "signal_date_utc": "2026-08-14T00:00:00+00:00",
-  "week_of": "2026-08-17",
-  "week_end": "2026-08-21",
-  "direction": "FLAT",
+  "signal_date_utc": "2026-08-21T00:00:00+00:00",
+  "week_of": "2026-08-24",
+  "week_end": "2026-08-28",
+  "direction": "LONG",
   "instrument": "GC (Gold Futures) or GLD ETF",
   "signal_components": {
-    "M20_pct": 8.974,
-    "M60_pct": -2.976,
+    "M20_pct": 13.656,
+    "M60_pct": 1.423,
     "MA10_above_MA40": true,
-    "RY_chg_20d_bps": 10.0
+    "RY_chg_20d_bps": -2.0
   },
-  "current_price": 4374.2,
-  "atr_20d": 90.78,
-  "message": "No signal this week. FLAT (no position).",
-  "published_utc": "2026-08-16T22:48:50.128515+00:00",
+  "current_price": 4602.06,
+  "atr_20d": 100.53,
+  "entry_approx": 4602.06,
+  "stop_price": 4401.0,
+  "exit_type": "Friday close (time exit) or stop hit",
+  "expected_atr_move": 100.53,
+  "published_utc": "2026-08-23T22:51:46.477376+00:00",
   "pre_reg_ref": "2026-07-22_far_weekly_gold_read_prereg.md",
   "confidence_disclaimer": "BETA \u2014 3 of 6 pre-reg gates borderline failed. Live-tracking is the final validation. Position size accordingly.",
-  "performance_sent": true,
   "telegram_sent": true
 }
