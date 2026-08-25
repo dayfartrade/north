@@ -22,7 +22,7 @@
   "confidence_disclaimer": "BETA \u2014 3 of 6 pre-reg gates borderline failed. Live-tracking is the final validation. Position size accordingly.",
   "telegram_sent": true,
   "live_pnl_pct": 0.898,
-  "live_updated_utc": "2026-08-25T17:00:21.066289+00:00",
+  "live_updated_utc": "2026-08-25T17:03:31.268490+00:00",
   "primary_risk": {
     "sentence": "Stop 2.41x ATR away with 76h to close. Primary risk is a Friday-close reversal.",
     "severity": "low",
