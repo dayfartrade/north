@@ -1,0 +1,151 @@
+[
+  {
+    "date": "2026-08-24",
+    "openPnlPct": 1.684,
+    "distanceStopAtr": 2.771,
+    "gates": [
+      {
+        "name": "M20",
+        "value": 14.89,
+        "ok": true
+      },
+      {
+        "name": "M60",
+        "value": 4.355,
+        "ok": true
+      },
+      {
+        "name": "MA",
+        "value": true,
+        "ok": true
+      },
+      {
+        "name": "RY",
+        "value": -3.0,
+        "ok": true
+      }
+    ],
+    "event": null,
+    "commentary": "On track, +1.68% in the money. Gates 4/4."
+  },
+  {
+    "date": "2026-08-25",
+    "openPnlPct": 0.898,
+    "distanceStopAtr": 2.411,
+    "gates": [
+      {
+        "name": "M20",
+        "value": 15.374,
+        "ok": true
+      },
+      {
+        "name": "M60",
+        "value": 3.783,
+        "ok": true
+      },
+      {
+        "name": "MA",
+        "value": true,
+        "ok": true
+      },
+      {
+        "name": "RY",
+        "value": 0.0,
+        "ok": false
+      }
+    ],
+    "event": null,
+    "commentary": "On track, +0.90% in the money. Gates 3/4."
+  },
+  {
+    "date": "2026-08-26",
+    "openPnlPct": null,
+    "distanceStopAtr": null,
+    "gates": [
+      {
+        "name": "M20",
+        "value": 15.374,
+        "ok": true
+      },
+      {
+        "name": "M60",
+        "value": 3.783,
+        "ok": true
+      },
+      {
+        "name": "MA",
+        "value": true,
+        "ok": true
+      },
+      {
+        "name": "RY",
+        "value": 0.0,
+        "ok": false
+      }
+    ],
+    "event": null,
+    "commentary": "Upcoming session, position unchanged. Gates 3/4."
+  },
+  {
+    "date": "2026-08-27",
+    "openPnlPct": null,
+    "distanceStopAtr": null,
+    "gates": [
+      {
+        "name": "M20",
+        "value": 15.374,
+        "ok": true
+      },
+      {
+        "name": "M60",
+        "value": 3.783,
+        "ok": true
+      },
+      {
+        "name": "MA",
+        "value": true,
+        "ok": true
+      },
+      {
+        "name": "RY",
+        "value": 0.0,
+        "ok": false
+      }
+    ],
+    "event": {
+      "name": "CLAIMS",
+      "timeUtc": "2026-08-27T12:30:00+00:00",
+      "impact": "low"
+    },
+    "commentary": "Upcoming session, position unchanged. Gates 3/4."
+  },
+  {
+    "date": "2026-08-28",
+    "openPnlPct": null,
+    "distanceStopAtr": null,
+    "gates": [
+      {
+        "name": "M20",
+        "value": 15.374,
+        "ok": true
+      },
+      {
+        "name": "M60",
+        "value": 3.783,
+        "ok": true
+      },
+      {
+        "name": "MA",
+        "value": true,
+        "ok": true
+      },
+      {
+        "name": "RY",
+        "value": 0.0,
+        "ok": false
+      }
+    ],
+    "event": null,
+    "commentary": "Upcoming session, position unchanged. Gates 3/4."
+  }
+]
