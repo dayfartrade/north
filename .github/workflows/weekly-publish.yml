@@ -87,6 +87,12 @@ jobs:
         run: python scripts/north_site_refresh.py
         continue-on-error: true
 
+      - name: Snapshot call history to Telegram DM + GitHub Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python scripts/backup_calls_snapshot.py
+        continue-on-error: true
+
       - name: Regenerate public track record + retirement wall
         run: |
           python scripts/render_track_record.py
