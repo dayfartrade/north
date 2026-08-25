@@ -20,5 +20,7 @@
   "published_utc": "2026-08-23T22:51:46.477376+00:00",
   "pre_reg_ref": "2026-07-22_far_weekly_gold_read_prereg.md",
   "confidence_disclaimer": "BETA \u2014 3 of 6 pre-reg gates borderline failed. Live-tracking is the final validation. Position size accordingly.",
-  "telegram_sent": true
+  "telegram_sent": true,
+  "live_pnl_pct": 0.997,
+  "live_updated_utc": "2026-08-25T16:52:51.651389+00:00"
 }
