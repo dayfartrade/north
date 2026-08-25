@@ -1,23 +1,38 @@
-"""Weekly backup of NORTH call history to two separate storage systems.
+"""Weekly backup of NORTH research corpus to two separate storage systems.
 
-Rationale: `data/far_weekly_calls.jsonl` is the source of truth for
-every directional and FLAT call ever published. Losing it erases the
-track record. This script snapshots it to two off-tree destinations
-so no single failure can lose the calls:
+Rationale: never lose any call history or research artifact. Snapshots
+the R&D corpus to two off-tree destinations so no single failure can
+erase state needed for future analysis:
 
   1. Telegram DM to operator's private chat (GOLDTRADER_TG_CHAT).
      Off-platform from GitHub. Survives full repo loss.
 
-  2. GitHub Release on dayfartrade/north, tagged `calls-snapshot-<week>`
-     with the JSONL + site JSONs attached as release assets. Separate
-     storage layer from the git tree. Survives force-push or branch
-     corruption or tree damage. Immutable per week.
+  2. GitHub Release on dayfartrade/north, tagged `snapshot-<week>` with
+     the same assets attached. Separate storage layer from the git
+     tree. Survives force-push or branch corruption. Immutable per week.
 
-Both are free and use credentials already present in the repo. Runs
-weekly from the weekly-publish workflow immediately after the publisher
-lands the new call. Idempotent: if the week's release already exists,
-skips the GitHub side but always sends the Telegram DM (so a manual
-rerun still gives operator a fresh copy).
+What gets shipped each run:
+  - `far_weekly_calls.jsonl` (source-of-truth call history, sent raw
+    so it's directly readable without extraction).
+  - `far_weekly_current.json` + `far_weekly_history.json` (site payloads).
+  - `north_research_corpus_<week>.tar.gz` bundling:
+      data/*.jsonl, data/*.json (all live/state logs)
+      data/experiments/, data/tracker/, data/calendar/, data/alerts/,
+        data/logs/, data/backtests/  (research artifacts)
+      site/data/*.json  (all site payloads incl. price series + briefs)
+      docs/experiments/  (pre-registration docs)
+      docs/development_story.md, docs/launch/  (narrative + launch kit)
+      memory/  (operator memory files, local runs only)
+
+Excluded (regenerable from source or covered by separate one-shot
+backups): data/external/ (Dukascopy 5m, 441MB, has its own tar.gz
+snapshot from 2026-07), data/gc/ (yfinance-regenerable), data/macro/
+(FRED-regenerable).
+
+Both destinations are free and use credentials already present. Runs
+weekly from weekly-publish immediately after publish. Idempotent: skips
+GitHub side if the week's release already exists, always sends Telegram
+(safe for manual reruns).
 
 Usage:
     python scripts/backup_calls_snapshot.py
@@ -26,9 +41,11 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import io
 import json
 import os
 import sys
+import tarfile
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -40,8 +57,26 @@ ROOT = Path(__file__).resolve().parent.parent
 CALLS_JSONL = ROOT / "data" / "far_weekly_calls.jsonl"
 SITE_CURRENT = ROOT / "site" / "data" / "far_weekly_current.json"
 SITE_HISTORY = ROOT / "site" / "data" / "far_weekly_history.json"
+MEMORY_DIR = Path.home() / ".claude" / "projects" / "C--golddaytrador" / "memory"
 
 GITHUB_REPO = "dayfartrade/north"
+
+# Paths to bundle into the research corpus tarball. Relative to ROOT.
+# Directories are added recursively; loose files are added by name.
+CORPUS_PATHS = [
+    "data/experiments",
+    "data/tracker",
+    "data/calendar",
+    "data/alerts",
+    "data/logs",
+    "data/backtests",
+    "site/data",
+    "docs/experiments",
+    "docs/launch",
+    "docs/development_story.md",
+]
+
+# Any loose files at data/*.jsonl or data/*.json are added dynamically.
 
 
 def load_calls() -> list[dict]:
@@ -200,12 +235,48 @@ def github_upload_asset(upload_url: str, filename: str,
         raise RuntimeError(f"asset upload failed for {filename}: {code} {resp}")
 
 
-def build_files_bundle() -> list[tuple[str, bytes]]:
-    """Return list of (filename, content_bytes) to attach to both destinations."""
+def build_research_tarball(week: str | None) -> tuple[str, bytes, list[str]]:
+    """Build the R&D corpus tarball in-memory. Returns (filename, bytes, index)."""
+    stamp = week or datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    tar_name = f"north_research_corpus_{stamp}.tar.gz"
+    buf = io.BytesIO()
+    added: list[str] = []
+    with tarfile.open(fileobj=buf, mode="w:gz") as tf:
+        # 1. Loose data files at data/*.jsonl and data/*.json
+        for pattern in ("*.jsonl", "*.json"):
+            for f in sorted((ROOT / "data").glob(pattern)):
+                arc = f.relative_to(ROOT).as_posix()
+                tf.add(str(f), arcname=arc)
+                added.append(arc)
+        # 2. Curated directories + docs/development_story.md
+        for rel in CORPUS_PATHS:
+            src = ROOT / rel
+            if not src.exists():
+                continue
+            arc = src.relative_to(ROOT).as_posix()
+            tf.add(str(src), arcname=arc)
+            added.append(arc)
+        # 3. Operator memory (local only; CI runners won't have this path)
+        if MEMORY_DIR.exists():
+            tf.add(str(MEMORY_DIR), arcname="memory")
+            added.append("memory/")
+    return tar_name, buf.getvalue(), added
+
+
+def build_files_bundle(week: str | None) -> list[tuple[str, bytes]]:
+    """Return list of (filename, content_bytes) to attach to both destinations.
+
+    Raw call history + site JSONs are sent uncompressed so they can be read
+    directly. The full research corpus tarball is sent alongside.
+    """
     bundle = []
     for src in (CALLS_JSONL, SITE_CURRENT, SITE_HISTORY):
         if src.exists():
             bundle.append((src.name, src.read_bytes()))
+    tar_name, tar_bytes, index = build_research_tarball(week)
+    print(f"[corpus] {tar_name} = {len(tar_bytes)/1024:.1f} KB, "
+          f"{len(index)} paths bundled")
+    bundle.append((tar_name, tar_bytes))
     return bundle
 
 
@@ -216,10 +287,10 @@ def build_caption(calls: list[dict], week: str | None) -> str:
                       and c.get("outcome", {}).get("result") == "resolved")
     now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     week_str = week or "unknown"
-    return (f"<b>NORTH calls snapshot</b>\n"
+    return (f"<b>NORTH backup</b>\n"
             f"Week: {week_str}\n"
             f"Total calls: {n_total} ({n_resolved} resolved)\n"
-            f"Backup: {now}")
+            f"Snapshot: {now}")
 
 
 def build_release_body(calls: list[dict], week: str | None) -> str:
@@ -228,24 +299,30 @@ def build_release_body(calls: list[dict], week: str | None) -> str:
                       if c.get("type") == "call"
                       and c.get("outcome", {}).get("result") == "resolved")
     now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
-    return (f"Snapshot of NORTH call history as of {now}.\n\n"
+    return (f"Snapshot of NORTH research corpus as of {now}.\n\n"
             f"- Active week: `{week or 'unknown'}`\n"
             f"- Total calls: {n_total}\n"
             f"- Resolved: {n_resolved}\n\n"
-            f"Attached: `far_weekly_calls.jsonl` (source of truth), "
-            f"`far_weekly_current.json`, `far_weekly_history.json`.\n\n"
+            f"### Assets\n\n"
+            f"- `far_weekly_calls.jsonl` (source-of-truth call history)\n"
+            f"- `far_weekly_current.json`, `far_weekly_history.json` (site payloads)\n"
+            f"- `north_research_corpus_<week>.tar.gz` (bundle: all live logs, "
+            f"experiment registry, pre-reg docs, launch kit, development story, "
+            f"operator memory when built locally)\n\n"
             f"Emitted by `scripts/backup_calls_snapshot.py` from the "
-            f"weekly-publish workflow.")
+            f"weekly-publish workflow. See script docstring for the exact "
+            f"included/excluded paths.")
 
 
 def run(dry_run: bool = False) -> int:
     calls = load_calls()
     week = latest_call_week(calls)
-    bundle = build_files_bundle()
+    bundle = build_files_bundle(week)
     if not bundle:
         print("[skip] no files to back up")
         return 0
-    print(f"[bundle] {len(bundle)} files: {[n for n, _ in bundle]} "
+    print(f"[bundle] {len(bundle)} attachments: "
+          f"{[(n, f'{len(b)//1024}KB') for n, b in bundle]} "
           f"(latest week={week})")
 
     tg_token, tg_chat, gh_token = resolve_credentials()
@@ -276,7 +353,7 @@ def run(dry_run: bool = False) -> int:
     if not gh_token:
         print("[github] missing GITHUB_TOKEN / .github-token, skip")
     else:
-        tag = f"calls-snapshot-{week or datetime.now(timezone.utc).strftime('%Y-%m-%d')}"
+        tag = f"snapshot-{week or datetime.now(timezone.utc).strftime('%Y-%m-%d')}"
         if dry_run:
             print(f"[github] dry-run: would create release {tag} with "
                   f"{len(bundle)} assets")
@@ -288,7 +365,7 @@ def run(dry_run: bool = False) -> int:
         else:
             try:
                 body = build_release_body(calls, week)
-                release = github_create_release(tag, f"NORTH calls snapshot {week}",
+                release = github_create_release(tag, f"NORTH snapshot {week}",
                                                   body, gh_token)
                 for fname, content in bundle:
                     github_upload_asset(release["upload_url"], fname,
