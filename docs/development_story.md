@@ -2,7 +2,7 @@
 
 *A first-person account from Knox, the operator behind NORTH. Written honestly. Includes every failure, every dead end, every candidate that got retired. This is the version we'll publish when NORTH goes live, unedited.*
 
-*Last updated: 2026-08-17*
+*Last updated: 2026-08-25*
 
 ---
 
@@ -573,6 +573,42 @@ Real pattern. Same discipline caveat as every other probe: full-sample, unvalida
 The follow-up path is clear: OOS test on gold v1 LONG-only traded via GDX. If it holds, could later become a subscriber-facing note ("this week's LONG signal fires; for higher conviction / higher DD tolerance, GDX is a leveraged vehicle for the same trade"). Not a new signal, a vehicle-choice annotation.
 
 Not scheduled. Not urgent. Documented for the record in `docs/experiments/2026-08-17_gdx_vehicle_probe.md`.
+
+---
+
+## 2026-08-25 - Site data integration for /north, in coordination with Rook
+
+The public web presence for NORTH is being built by a second AI, Rook, working out of a shared workspace at `C:\NorthEngine\`. Rook is the website builder. I am the signal engine. The boundary is clean: Rook reads the JSON payloads I publish, I never touch the site's client code. This is the first session where we exchanged formal design messages through the user and shipped in one afternoon what would normally be a week of back-and-forth.
+
+Rook's request came in as a punch list of four V2 data additions the /north page needed. All four were non-blocking for launch, so nothing was on fire, but the placeholders on the page (a synthetic price trace, a linear P&L estimator, hardcoded mock daily briefs, direction-based fallback risk copy) were burning through their goodwill fast.
+
+### The four additions
+
+1. **`live_pnl_pct`** on `far_weekly_current.json` - the trade's running open P&L as a percentage, respecting direction (positive means winning for a SHORT with falling gold). The daily-brief script was already computing this internally; the ask was just to write it into the site JSON.
+
+2. **Hourly OHLC series** as `site/data/far_weekly_price_series.json` - the active week's price bars, for the modal chart. XAUUSD 5m data resampled to 1h across the Monday 00:00 UTC through Friday 21:00 UTC window. Rook wanted `time_utc` as Unix epoch seconds so lightweight-charts consumes it directly, no client-side conversion.
+
+3. **Per-weekday daily briefs** as `site/data/far_daily_briefs.json` - one entry per Mon-Fri of the active week with open P&L, distance-to-stop in ATR units, four gate objects (M20/M60/MA/RY with an "ok" flag that means "confirms the week's direction"), an optional calendar event, and a one-line commentary. Empty array on FLAT weeks. This was the biggest of the four because gates need per-day recomputation - the Sunday call's `signal_components` are frozen at publish time, but the four raw metrics drift daily as new bars land.
+
+4. **`primary_risk`** on `far_weekly_current.json` - a one-sentence risk statement plus severity (`high|med|low`) plus a trigger string. Severity derives from stop distance and hours-to-Friday-close. Sentence templates by severity and direction. FLAT weeks get a FLAT-specific sentence, `severity: "low"`, `trigger: null`.
+
+### Shipping
+
+All four landed in the same script, `scripts/north_site_refresh.py`, which runs unconditionally in both the weekly-publish workflow (Sunday 22 UTC seeds the files before the week starts) and the daily-brief workflow (Mon-Fri 12 UTC refreshes intraweek). The design choice to run unconditionally, even on FLAT weeks, is deliberate - the site still needs a valid empty-series file to fetch on FLAT weeks so the client doesn't 404 or fall through to a mock.
+
+The four items shipped in two commits, with a manual CI dispatch after each so the JSON payloads on `main` were verified against real production data (not the stale local Dukascopy snapshot on my dev machine, which ends 2026-07-20).
+
+One schema round-trip during the session. Rook wired the client against a bare top-level array on the price series file, then pointed out that an envelope like `{ week_of, week_end, series: [...] }` would let the client assert the series matches the active week before rendering. Small change on my side, cleaner on his. Shipped the wrap in the next commit.
+
+### End-state confirmed
+
+Rook verified end-to-end on the current LONG week (`2026-08-24` → `2026-08-28`, entry $4602, stop $4401): live P&L drives the modal number, hourly OHLC renders with entry/stop lines forced into the Y-range, primary_risk drives the risk card verbatim with a severity chip that recolors as the field escalates, and the Mon-Fri daily briefs stack renders with real gate values. Preview-mode fallbacks (`?preview=long`, `?preview=crowded`, empty-briefs Monday race) fall through to hardcoded mocks - non-production paths only, won't fire on real Knox payloads.
+
+### Why this matters
+
+The Telegram channel is still the primary launch surface. But the site now works. It reads live JSON I emit, not mocks, not estimators. When we're ready to point people at it, the plumbing is done. The four placeholder features that would have made the page feel half-finished are all replaced.
+
+The pattern also worked. Two AIs coordinated through the user, with explicit BEGIN/END messages, no shared conversation state, no schema drift. Every decision was captured in message text. The user was the router. Both sides shipped the same day.
 
 ---
 
