@@ -30,17 +30,17 @@
   },
   {
     "date": "2026-08-25",
-    "openPnlPct": 0.898,
-    "distanceStopAtr": 2.411,
+    "openPnlPct": 1.142,
+    "distanceStopAtr": 2.523,
     "gates": [
       {
         "name": "M20",
-        "value": 15.374,
+        "value": 15.654,
         "ok": true
       },
       {
         "name": "M60",
-        "value": 3.783,
+        "value": 4.034,
         "ok": true
       },
       {
@@ -55,21 +55,21 @@
       }
     ],
     "event": null,
-    "commentary": "On track, +0.90% in the money. Gates 3/4."
+    "commentary": "On track, +1.14% in the money. Gates 3/4."
   },
   {
     "date": "2026-08-26",
-    "openPnlPct": null,
-    "distanceStopAtr": null,
+    "openPnlPct": 0.471,
+    "distanceStopAtr": 2.216,
     "gates": [
       {
         "name": "M20",
-        "value": 15.374,
+        "value": 13.209,
         "ok": true
       },
       {
         "name": "M60",
-        "value": 3.783,
+        "value": 3.738,
         "ok": true
       },
       {
@@ -84,7 +84,7 @@
       }
     ],
     "event": null,
-    "commentary": "Upcoming session, position unchanged. Gates 3/4."
+    "commentary": "Chopping near flat (+0.47%). Gates 3/4."
   },
   {
     "date": "2026-08-27",
@@ -93,12 +93,12 @@
     "gates": [
       {
         "name": "M20",
-        "value": 15.374,
+        "value": 13.209,
         "ok": true
       },
       {
         "name": "M60",
-        "value": 3.783,
+        "value": 3.738,
         "ok": true
       },
       {
@@ -126,12 +126,12 @@
     "gates": [
       {
         "name": "M20",
-        "value": 15.374,
+        "value": 13.209,
         "ok": true
       },
       {
         "name": "M60",
-        "value": 3.783,
+        "value": 3.738,
         "ok": true
       },
       {
