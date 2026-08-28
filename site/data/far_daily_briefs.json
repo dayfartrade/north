@@ -59,17 +59,17 @@
   },
   {
     "date": "2026-08-26",
-    "openPnlPct": 0.471,
-    "distanceStopAtr": 2.216,
+    "openPnlPct": 0.459,
+    "distanceStopAtr": 2.21,
     "gates": [
       {
         "name": "M20",
-        "value": 13.209,
+        "value": 13.196,
         "ok": true
       },
       {
         "name": "M60",
-        "value": 3.738,
+        "value": 3.727,
         "ok": true
       },
       {
@@ -84,21 +84,21 @@
       }
     ],
     "event": null,
-    "commentary": "Chopping near flat (+0.47%). Gates 3/4."
+    "commentary": "Chopping near flat (+0.46%). Gates 3/4."
   },
   {
     "date": "2026-08-27",
-    "openPnlPct": null,
-    "distanceStopAtr": null,
+    "openPnlPct": -0.172,
+    "distanceStopAtr": 1.921,
     "gates": [
       {
         "name": "M20",
-        "value": 13.209,
+        "value": 11.899,
         "ok": true
       },
       {
         "name": "M60",
-        "value": 3.738,
+        "value": 2.976,
         "ok": true
       },
       {
@@ -117,21 +117,21 @@
       "timeUtc": "2026-08-27T12:30:00+00:00",
       "impact": "low"
     },
-    "commentary": "Upcoming session, position unchanged. Gates 3/4."
+    "commentary": "Chopping near flat (-0.17%). Gates 3/4."
   },
   {
     "date": "2026-08-28",
-    "openPnlPct": null,
-    "distanceStopAtr": null,
+    "openPnlPct": -3.303,
+    "distanceStopAtr": 0.488,
     "gates": [
       {
         "name": "M20",
-        "value": 13.209,
+        "value": 10.062,
         "ok": true
       },
       {
         "name": "M60",
-        "value": 3.738,
+        "value": 2.851,
         "ok": true
       },
       {
@@ -146,6 +146,6 @@
       }
     ],
     "event": null,
-    "commentary": "Upcoming session, position unchanged. Gates 3/4."
+    "commentary": "Within half an ATR of stop, -3.30% open. Gates 3/4."
   }
 ]
