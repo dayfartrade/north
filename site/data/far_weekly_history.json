@@ -1,106 +1,151 @@
-[
-  {
-    "type": "call",
-    "signal_date_utc": "2026-07-20T00:00:00+00:00",
-    "week_of": "2026-07-27",
-    "week_end": "2026-07-31",
-    "direction": "SHORT",
-    "instrument": "GC (Gold Futures) or GLD ETF",
-    "signal_components": {
-      "M20_pct": -4.137,
-      "M60_pct": -14.44,
-      "MA10_above_MA40": false,
-      "RY_chg_20d_bps": 7.0
+{
+  "product_name": "FAR Weekly Gold Read",
+  "status": "BETA",
+  "operator": "Knox",
+  "since_utc": "2026-07-22T12:06:48.413223+00:00",
+  "resolved_calls": 2,
+  "wins": 0,
+  "losses": 2,
+  "win_rate_pct": 0.0,
+  "cumulative_return_pct": -4.03,
+  "history": [
+    {
+      "type": "call",
+      "signal_date_utc": "2026-07-20T00:00:00+00:00",
+      "week_of": "2026-07-27",
+      "week_end": "2026-07-31",
+      "direction": "SHORT",
+      "instrument": "GC (Gold Futures) or GLD ETF",
+      "signal_components": {
+        "M20_pct": -4.137,
+        "M60_pct": -14.44,
+        "MA10_above_MA40": false,
+        "RY_chg_20d_bps": 7.0
+      },
+      "current_price": 4014.24,
+      "atr_20d": 98.52,
+      "entry_approx": 4014.24,
+      "stop_price": 4211.29,
+      "exit_type": "Friday close (time exit) or stop hit",
+      "expected_atr_move": 98.52,
+      "published_utc": "2026-07-22T12:06:48.413223+00:00",
+      "pre_reg_ref": "2026-07-22_far_weekly_gold_read_prereg.md",
+      "confidence_disclaimer": "BETA \u2014 3 of 6 pre-reg gates borderline failed. Live-tracking is the final validation. Position size accordingly.",
+      "telegram_sent": true,
+      "outcome": {
+        "result": "resolved",
+        "exit_price": 4043.24,
+        "exit_reason": "friday_close",
+        "net_return_pct": -0.722,
+        "resolved_utc": "2026-08-03T12:33:08.526192+00:00"
+      },
+      "resolve_sent": true
     },
-    "current_price": 4014.24,
-    "atr_20d": 98.52,
-    "entry_approx": 4014.24,
-    "stop_price": 4211.29,
-    "exit_type": "Friday close (time exit) or stop hit",
-    "expected_atr_move": 98.52,
-    "published_utc": "2026-07-22T12:06:48.413223+00:00",
-    "pre_reg_ref": "2026-07-22_far_weekly_gold_read_prereg.md",
-    "confidence_disclaimer": "BETA \u2014 3 of 6 pre-reg gates borderline failed. Live-tracking is the final validation. Position size accordingly.",
-    "telegram_sent": true,
-    "outcome": {
-      "result": "resolved",
-      "exit_price": 4043.24,
-      "exit_reason": "friday_close",
-      "net_return_pct": -0.722,
-      "resolved_utc": "2026-08-03T12:33:08.526192+00:00"
+    {
+      "type": "call",
+      "signal_date_utc": "2026-08-07T00:00:00+00:00",
+      "week_of": "2026-08-10",
+      "week_end": "2026-08-14",
+      "direction": "FLAT",
+      "instrument": "GC (Gold Futures) or GLD ETF",
+      "signal_components": {
+        "M20_pct": 5.335,
+        "M60_pct": -4.373,
+        "MA10_above_MA40": true,
+        "RY_chg_20d_bps": 9.0
+      },
+      "current_price": 4340.4,
+      "atr_20d": 92.62,
+      "message": "No signal this week. FLAT (no position).",
+      "published_utc": "2026-08-09T23:05:50.143487+00:00",
+      "pre_reg_ref": "2026-07-22_far_weekly_gold_read_prereg.md",
+      "confidence_disclaimer": "BETA \u2014 3 of 6 pre-reg gates borderline failed. Live-tracking is the final validation. Position size accordingly.",
+      "performance_sent": true,
+      "telegram_sent": true,
+      "outcome": {
+        "result": "FLAT_no_position",
+        "net_return_pct": 0.0
+      }
     },
-    "resolve_sent": true
-  },
-  {
-    "type": "call",
-    "signal_date_utc": "2026-08-07T00:00:00+00:00",
-    "week_of": "2026-08-10",
-    "week_end": "2026-08-14",
-    "direction": "FLAT",
-    "instrument": "GC (Gold Futures) or GLD ETF",
-    "signal_components": {
-      "M20_pct": 5.335,
-      "M60_pct": -4.373,
-      "MA10_above_MA40": true,
-      "RY_chg_20d_bps": 9.0
+    {
+      "type": "call",
+      "signal_date_utc": "2026-08-14T00:00:00+00:00",
+      "week_of": "2026-08-17",
+      "week_end": "2026-08-21",
+      "direction": "FLAT",
+      "instrument": "GC (Gold Futures) or GLD ETF",
+      "signal_components": {
+        "M20_pct": 8.974,
+        "M60_pct": -2.976,
+        "MA10_above_MA40": true,
+        "RY_chg_20d_bps": 10.0
+      },
+      "current_price": 4374.2,
+      "atr_20d": 90.78,
+      "message": "No signal this week. FLAT (no position).",
+      "published_utc": "2026-08-16T22:48:50.128515+00:00",
+      "pre_reg_ref": "2026-07-22_far_weekly_gold_read_prereg.md",
+      "confidence_disclaimer": "BETA \u2014 3 of 6 pre-reg gates borderline failed. Live-tracking is the final validation. Position size accordingly.",
+      "performance_sent": true,
+      "telegram_sent": true,
+      "outcome": {
+        "result": "FLAT_no_position",
+        "net_return_pct": 0.0
+      }
     },
-    "current_price": 4340.4,
-    "atr_20d": 92.62,
-    "message": "No signal this week. FLAT (no position).",
-    "published_utc": "2026-08-09T23:05:50.143487+00:00",
-    "pre_reg_ref": "2026-07-22_far_weekly_gold_read_prereg.md",
-    "confidence_disclaimer": "BETA \u2014 3 of 6 pre-reg gates borderline failed. Live-tracking is the final validation. Position size accordingly.",
-    "performance_sent": true,
-    "telegram_sent": true,
-    "outcome": {
-      "result": "FLAT_no_position",
-      "net_return_pct": 0.0
+    {
+      "type": "call",
+      "signal_date_utc": "2026-08-21T00:00:00+00:00",
+      "week_of": "2026-08-24",
+      "week_end": "2026-08-28",
+      "direction": "LONG",
+      "instrument": "GC (Gold Futures) or GLD ETF",
+      "signal_components": {
+        "M20_pct": 13.656,
+        "M60_pct": 1.423,
+        "MA10_above_MA40": true,
+        "RY_chg_20d_bps": -2.0
+      },
+      "current_price": 4602.06,
+      "atr_20d": 100.53,
+      "entry_approx": 4602.06,
+      "stop_price": 4401.0,
+      "exit_type": "Friday close (time exit) or stop hit",
+      "expected_atr_move": 100.53,
+      "published_utc": "2026-08-23T22:51:46.477376+00:00",
+      "pre_reg_ref": "2026-07-22_far_weekly_gold_read_prereg.md",
+      "confidence_disclaimer": "BETA \u2014 3 of 6 pre-reg gates borderline failed. Live-tracking is the final validation. Position size accordingly.",
+      "telegram_sent": true,
+      "outcome": {
+        "result": "resolved",
+        "exit_price": 4450.06,
+        "exit_reason": "friday_close",
+        "net_return_pct": -3.303,
+        "resolved_utc": "2026-08-30T22:05:24.640742+00:00"
+      },
+      "resolve_sent": true
+    },
+    {
+      "type": "call",
+      "signal_date_utc": "2026-08-28T00:00:00+00:00",
+      "week_of": "2026-08-31",
+      "week_end": "2026-09-04",
+      "direction": "FLAT",
+      "instrument": "GC (Gold Futures) or GLD ETF",
+      "signal_components": {
+        "M20_pct": 10.062,
+        "M60_pct": 2.851,
+        "MA10_above_MA40": true,
+        "RY_chg_20d_bps": 0.0
+      },
+      "current_price": 4450.06,
+      "atr_20d": 105.73,
+      "message": "No signal this week. FLAT (no position).",
+      "published_utc": "2026-08-30T22:05:25.305507+00:00",
+      "pre_reg_ref": "2026-07-22_far_weekly_gold_read_prereg.md",
+      "confidence_disclaimer": "BETA \u2014 3 of 6 pre-reg gates borderline failed. Live-tracking is the final validation. Position size accordingly.",
+      "performance_sent": true,
+      "telegram_sent": true
     }
-  },
-  {
-    "type": "call",
-    "signal_date_utc": "2026-08-14T00:00:00+00:00",
-    "week_of": "2026-08-17",
-    "week_end": "2026-08-21",
-    "direction": "FLAT",
-    "instrument": "GC (Gold Futures) or GLD ETF",
-    "signal_components": {
-      "M20_pct": 8.974,
-      "M60_pct": -2.976,
-      "MA10_above_MA40": true,
-      "RY_chg_20d_bps": 10.0
-    },
-    "current_price": 4374.2,
-    "atr_20d": 90.78,
-    "message": "No signal this week. FLAT (no position).",
-    "published_utc": "2026-08-16T22:48:50.128515+00:00",
-    "pre_reg_ref": "2026-07-22_far_weekly_gold_read_prereg.md",
-    "confidence_disclaimer": "BETA \u2014 3 of 6 pre-reg gates borderline failed. Live-tracking is the final validation. Position size accordingly.",
-    "performance_sent": true,
-    "telegram_sent": true
-  },
-  {
-    "type": "call",
-    "signal_date_utc": "2026-08-21T00:00:00+00:00",
-    "week_of": "2026-08-24",
-    "week_end": "2026-08-28",
-    "direction": "LONG",
-    "instrument": "GC (Gold Futures) or GLD ETF",
-    "signal_components": {
-      "M20_pct": 13.656,
-      "M60_pct": 1.423,
-      "MA10_above_MA40": true,
-      "RY_chg_20d_bps": -2.0
-    },
-    "current_price": 4602.06,
-    "atr_20d": 100.53,
-    "entry_approx": 4602.06,
-    "stop_price": 4401.0,
-    "exit_type": "Friday close (time exit) or stop hit",
-    "expected_atr_move": 100.53,
-    "published_utc": "2026-08-23T22:51:46.477376+00:00",
-    "pre_reg_ref": "2026-07-22_far_weekly_gold_read_prereg.md",
-    "confidence_disclaimer": "BETA \u2014 3 of 6 pre-reg gates borderline failed. Live-tracking is the final validation. Position size accordingly.",
-    "telegram_sent": true
-  }
-]
+  ]
+}

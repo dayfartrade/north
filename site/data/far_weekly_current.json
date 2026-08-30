@@ -1,31 +1,27 @@
 {
   "type": "call",
-  "signal_date_utc": "2026-08-21T00:00:00+00:00",
-  "week_of": "2026-08-24",
-  "week_end": "2026-08-28",
-  "direction": "LONG",
+  "signal_date_utc": "2026-08-28T00:00:00+00:00",
+  "week_of": "2026-08-31",
+  "week_end": "2026-09-04",
+  "direction": "FLAT",
   "instrument": "GC (Gold Futures) or GLD ETF",
   "signal_components": {
-    "M20_pct": 13.656,
-    "M60_pct": 1.423,
+    "M20_pct": 10.062,
+    "M60_pct": 2.851,
     "MA10_above_MA40": true,
-    "RY_chg_20d_bps": -2.0
+    "RY_chg_20d_bps": 0.0
   },
-  "current_price": 4602.06,
-  "atr_20d": 100.53,
-  "entry_approx": 4602.06,
-  "stop_price": 4401.0,
-  "exit_type": "Friday close (time exit) or stop hit",
-  "expected_atr_move": 100.53,
-  "published_utc": "2026-08-23T22:51:46.477376+00:00",
+  "current_price": 4450.06,
+  "atr_20d": 105.73,
+  "message": "No signal this week. FLAT (no position).",
+  "published_utc": "2026-08-30T22:05:25.305507+00:00",
   "pre_reg_ref": "2026-07-22_far_weekly_gold_read_prereg.md",
   "confidence_disclaimer": "BETA \u2014 3 of 6 pre-reg gates borderline failed. Live-tracking is the final validation. Position size accordingly.",
+  "performance_sent": true,
   "telegram_sent": true,
-  "live_pnl_pct": -3.303,
-  "live_updated_utc": "2026-08-28T21:50:20.189646+00:00",
   "primary_risk": {
-    "sentence": "Stop is 0.49x ATR away with 0h to Friday close. One volatile session flips this to a loss.",
-    "severity": "high",
-    "trigger": "Intraday break below $4,401.00 or Friday close below $4,602.06"
+    "sentence": "No position this week. Primary risk is missing a directional move that develops without our M20/M60/MA/RY setup.",
+    "severity": "low",
+    "trigger": null
   }
 }

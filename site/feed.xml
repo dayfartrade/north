@@ -6,10 +6,57 @@
     <atom:link href="https://faractionradar.com/feed.xml" rel="self" type="application/rss+xml"/>
     <description>One directional gold call per week. Long, short, or flat. Published Sunday · resolved Friday close. By Knox.</description>
     <language>en-us</language>
-    <lastBuildDate>Wed, 29 Jul 2026 05:48:22 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 30 Aug 2026 22:05:27 +0000</lastBuildDate>
     <ttl>1440</ttl>
     <item>
-      <title>Week 2026-07-27: SHORT · entry $4,014.24</title>
+      <title>Week 2026-08-31: FLAT</title>
+      <link>https://faractionradar.com/track-record</link>
+      <guid isPermaLink="false">https://faractionradar.com/track-record#2026-08-31</guid>
+      <pubDate>Sun, 30 Aug 2026 22:05:25 +0000</pubDate>
+      <description>Direction: FLAT
+Week: 2026-08-31 to 2026-09-04
+Signal drivers: M20=10.062%, M60=2.851%, RY_chg=0.0bps
+
+Full details, backtest, position calculator: https://faractionradar.com/track-record</description>
+    </item>
+    <item>
+      <title>Week 2026-08-24: LONG · entry $4,602.06</title>
+      <link>https://faractionradar.com/track-record</link>
+      <guid isPermaLink="false">https://faractionradar.com/track-record#2026-08-24</guid>
+      <pubDate>Sun, 23 Aug 2026 22:51:46 +0000</pubDate>
+      <description>Direction: LONG
+Week: 2026-08-24 to 2026-08-28
+Entry (approx): $4,602.06
+Stop: $4,401.00
+ATR(20d): $100.53
+Signal drivers: M20=13.656%, M60=1.423%, RY_chg=-2.0bps
+
+Full details, backtest, position calculator: https://faractionradar.com/track-record</description>
+    </item>
+    <item>
+      <title>Week 2026-08-17: FLAT</title>
+      <link>https://faractionradar.com/track-record</link>
+      <guid isPermaLink="false">https://faractionradar.com/track-record#2026-08-17</guid>
+      <pubDate>Sun, 16 Aug 2026 22:48:50 +0000</pubDate>
+      <description>Direction: FLAT
+Week: 2026-08-17 to 2026-08-21
+Signal drivers: M20=8.974%, M60=-2.976%, RY_chg=10.0bps
+
+Full details, backtest, position calculator: https://faractionradar.com/track-record</description>
+    </item>
+    <item>
+      <title>Week 2026-08-10: FLAT</title>
+      <link>https://faractionradar.com/track-record</link>
+      <guid isPermaLink="false">https://faractionradar.com/track-record#2026-08-10</guid>
+      <pubDate>Sun, 09 Aug 2026 23:05:50 +0000</pubDate>
+      <description>Direction: FLAT
+Week: 2026-08-10 to 2026-08-14
+Signal drivers: M20=5.335%, M60=-4.373%, RY_chg=9.0bps
+
+Full details, backtest, position calculator: https://faractionradar.com/track-record</description>
+    </item>
+    <item>
+      <title>Week 2026-07-27: SHORT · entry $4,014.24 · resolved -0.72%</title>
       <link>https://faractionradar.com/track-record</link>
       <guid isPermaLink="false">https://faractionradar.com/track-record#2026-07-27</guid>
       <pubDate>Wed, 22 Jul 2026 12:06:48 +0000</pubDate>
@@ -19,6 +66,8 @@ Entry (approx): $4,014.24
 Stop: $4,211.29
 ATR(20d): $98.52
 Signal drivers: M20=-4.137%, M60=-14.44%, RY_chg=7.0bps
+
+OUTCOME: -0.722% (friday_close)
 
 Full details, backtest, position calculator: https://faractionradar.com/track-record</description>
     </item>

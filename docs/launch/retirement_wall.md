@@ -1,6 +1,6 @@
 # NORTH - the retirement wall
 
-*Auto-generated from `data/experiments/registry.json` on 2026-08-24. 34 rejected trials on record.*
+*Auto-generated from `data/experiments/registry.json` on 2026-08-30. 34 rejected trials on record.*
 
 Why this exists: NORTH publishes signals. Signals fail. We show every failure here so subscribers can judge the discipline honestly. If it isn't on this list, we haven't tested it. If it is, here's what happened and why we killed it.
 
@@ -176,73 +176,73 @@ Why this exists: NORTH publishes signals. Signals fail. We show every failure he
 
 - **Verdict:** rejected
 - **Resolved:** ?
-- **Why:** Backfilled from 2026-07-07 sweep — 12 hypotheses tested and rejected without per-variant SR recording
+- **Why:** Backfilled from 2026-07-07 sweep â€” 12 hypotheses tested and rejected without per-variant SR recording
 
 ### `backfill_2026_07_07_rejected_02`
 
 - **Verdict:** rejected
 - **Resolved:** ?
-- **Why:** Backfilled from 2026-07-07 sweep — 12 hypotheses tested and rejected without per-variant SR recording
+- **Why:** Backfilled from 2026-07-07 sweep â€” 12 hypotheses tested and rejected without per-variant SR recording
 
 ### `backfill_2026_07_07_rejected_03`
 
 - **Verdict:** rejected
 - **Resolved:** ?
-- **Why:** Backfilled from 2026-07-07 sweep — 12 hypotheses tested and rejected without per-variant SR recording
+- **Why:** Backfilled from 2026-07-07 sweep â€” 12 hypotheses tested and rejected without per-variant SR recording
 
 ### `backfill_2026_07_07_rejected_04`
 
 - **Verdict:** rejected
 - **Resolved:** ?
-- **Why:** Backfilled from 2026-07-07 sweep — 12 hypotheses tested and rejected without per-variant SR recording
+- **Why:** Backfilled from 2026-07-07 sweep â€” 12 hypotheses tested and rejected without per-variant SR recording
 
 ### `backfill_2026_07_07_rejected_05`
 
 - **Verdict:** rejected
 - **Resolved:** ?
-- **Why:** Backfilled from 2026-07-07 sweep — 12 hypotheses tested and rejected without per-variant SR recording
+- **Why:** Backfilled from 2026-07-07 sweep â€” 12 hypotheses tested and rejected without per-variant SR recording
 
 ### `backfill_2026_07_07_rejected_06`
 
 - **Verdict:** rejected
 - **Resolved:** ?
-- **Why:** Backfilled from 2026-07-07 sweep — 12 hypotheses tested and rejected without per-variant SR recording
+- **Why:** Backfilled from 2026-07-07 sweep â€” 12 hypotheses tested and rejected without per-variant SR recording
 
 ### `backfill_2026_07_07_rejected_07`
 
 - **Verdict:** rejected
 - **Resolved:** ?
-- **Why:** Backfilled from 2026-07-07 sweep — 12 hypotheses tested and rejected without per-variant SR recording
+- **Why:** Backfilled from 2026-07-07 sweep â€” 12 hypotheses tested and rejected without per-variant SR recording
 
 ### `backfill_2026_07_07_rejected_08`
 
 - **Verdict:** rejected
 - **Resolved:** ?
-- **Why:** Backfilled from 2026-07-07 sweep — 12 hypotheses tested and rejected without per-variant SR recording
+- **Why:** Backfilled from 2026-07-07 sweep â€” 12 hypotheses tested and rejected without per-variant SR recording
 
 ### `backfill_2026_07_07_rejected_09`
 
 - **Verdict:** rejected
 - **Resolved:** ?
-- **Why:** Backfilled from 2026-07-07 sweep — 12 hypotheses tested and rejected without per-variant SR recording
+- **Why:** Backfilled from 2026-07-07 sweep â€” 12 hypotheses tested and rejected without per-variant SR recording
 
 ### `backfill_2026_07_07_rejected_10`
 
 - **Verdict:** rejected
 - **Resolved:** ?
-- **Why:** Backfilled from 2026-07-07 sweep — 12 hypotheses tested and rejected without per-variant SR recording
+- **Why:** Backfilled from 2026-07-07 sweep â€” 12 hypotheses tested and rejected without per-variant SR recording
 
 ### `backfill_2026_07_07_rejected_11`
 
 - **Verdict:** rejected
 - **Resolved:** ?
-- **Why:** Backfilled from 2026-07-07 sweep — 12 hypotheses tested and rejected without per-variant SR recording
+- **Why:** Backfilled from 2026-07-07 sweep â€” 12 hypotheses tested and rejected without per-variant SR recording
 
 ### `backfill_2026_07_07_rejected_12`
 
 - **Verdict:** rejected
 - **Resolved:** ?
-- **Why:** Backfilled from 2026-07-07 sweep — 12 hypotheses tested and rejected without per-variant SR recording
+- **Why:** Backfilled from 2026-07-07 sweep â€” 12 hypotheses tested and rejected without per-variant SR recording
 
 ### `janus_q4_trailing_stop`
 

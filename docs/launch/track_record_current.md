@@ -1,29 +1,29 @@
 # NORTH - live track record
 
-*Auto-generated from `data/far_weekly_calls.jsonl` on 2026-08-24 06:48 UTC*
+*Auto-generated from `data/far_weekly_calls.jsonl` on 2026-08-30 22:05 UTC*
 
 ## Current call
 
-- **Week:** 2026-08-24 to 2026-08-28
-- **Direction:** LONG
-- **Entry approx:** $4602.06
-- **Stop:** $4401.0
-- **Reference price at publish:** $4602.06
+- **Week:** 2026-08-31 to 2026-09-04
+- **Direction:** FLAT
+- **Reference price at publish:** $4450.06
+- **Note:** No trade this week. Signal did not clear all four conditions. Sitting out is the correct action, not a missed opportunity.
 
 ## Cumulative record
 
-- **Weeks published:** 4
+- **Weeks published:** 5
 - **Directional calls (LONG/SHORT):** 2
-- **FLAT weeks:** 2
-- **Directional calls resolved:** 1
-- **Wins:** 0/1 (0% hit rate)
-- **Cumulative return (net of costs):** -0.72%
+- **FLAT weeks:** 3
+- **Directional calls resolved:** 2
+- **Wins:** 0/2 (0% hit rate)
+- **Cumulative return (net of costs):** -4.03%
 
 ## Recent resolves
 
 | Week | Direction | Entry | Exit | Reason | Net % |
 |---|---|---|---|---|---|
 | 2026-07-27 | SHORT | $4014.24 | $4043.24 | friday_close | -0.72% |
+| 2026-08-24 | LONG | $4602.06 | $4450.06 | friday_close | -3.30% |
 
 ## Honesty statement
 

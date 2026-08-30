@@ -475,6 +475,26 @@
       "sr_per_period": 0.113,
       "n_observations": 131,
       "notes": "Fresh pre-reg of Silver GSR z-score reversion, single-config (lookback=180, |z|>=1.5, hold=10d, stop=2*ATR20). Bonferroni n=1 (prior 27-way sweep counted as informational). Train 2010-2017 / OOS 2018-2026 split. TRAIN n=40, mean R +0.153, 3/3 positive years. OOS n=131, mean R +0.115, WR 51.1%, DD -9.53R, total +$79,580, 7/9 positive years (77.8%). Bootstrap CI [-0.057, +0.288], p_adj 0.189, ci_low fails 0.005. VERDICT: rejected by Gate 1 (CI significance), passes Gate 2 (positive years). Same profile as gold_basis_long_only_oos_v1 \u2014 underpowered, not flat. High per-trade variance (best +$164K, worst -$46K) widens CI. 2022 (-$19K) and 2025 (-$40K) were losing years, rest positive. Files: scripts/silver_gsr_oos_revisit.py. Candidate for shadow-log forward tracking alongside gold basis LONG-only."
+    },
+    {
+      "id": "universe_palladium_long_v1_signal",
+      "registered_utc": "2026-08-17T05:45:00Z",
+      "resolved_utc": "2026-08-17T06:15:00Z",
+      "layer": "strategy_engine_weekly",
+      "verdict": "rejected_gate1_gate3_underpowered",
+      "sr_per_period": 0.181,
+      "n_observations": 65,
+      "notes": "Universe expansion probe: applied gold v1 rule (M20/M60/MA10-40/RY_chg, weekly cycle, 2xATR stop) to platinum, palladium, GDX, GDXJ. Full-sample probe surfaced palladium LONG (n=150, mean R +0.635%, Sharpe 1.302, 13/16 positive years). OOS discipline (train 2010-2017 / OOS 2018-2026, Bonferroni n=8): TRAIN n=85, mean R +0.757%, 8/8 positive years, p_adj 0.060. OOS n=65, mean R +0.475%, 5/8 positive years, WR 55.4%, CI [-0.577%, +1.593%], p_adj 1.000. Gate 1 FAIL (CI includes 0), Gate 2 PASS (62% pos yrs), Gate 3 FAIL (mean R below 0.5% floor). VERDICT: rejected, same underpowered-positive profile as silver_gsr_oos_revisit_v1 and gold_basis_long_only_oos_v1. Platinum, GDX, GDXJ all weak or negative on the probe. Not adding to shadow-log rotation (two shadows already accruing). Files: scripts/universe_v1_probe.py, scripts/universe_palladium_oos.py, docs/experiments/2026-08-17_universe_probe.md, data/universe/*.csv."
+    },
+    {
+      "id": "north_bb_v1_replacement_test",
+      "registered_utc": "2026-07-31T00:00:00Z",
+      "resolved_utc": "2026-08-17T05:30:00Z",
+      "layer": "strategy_engine_weekly",
+      "verdict": "rejected_below_ship_threshold_and_below_v1",
+      "sr_per_period": 0.109,
+      "n_observations": 363,
+      "notes": "BB(20,2) entry/exit on 4H XAUUSD, same v1 signal (M20/M60/MA10-40/RY_chg). Long enters on lower-band touch, short on upper-band touch, 48h fallback to market. Exit at opposing BB, 2*ATR stop from actual entry, Friday close time fallback. Same cost model as v1 ($5 RT, 100 oz). Window 2010-01-01 to 2026-07-20, 363 matched directional weeks. BB: WR 65.3%, mean R +0.147%, Sharpe 0.787, max DD $38,660, 12/17 positive years. v1 same window: WR 55.9%, mean R +0.227%, Sharpe 0.767, max DD $56,043, 13/17 positive years. Ship trigger (mean R >= 0.5% AND > v1): both conditions FAIL. Diagnosis: 71% of BB exits are bb_target (systematic early-clip), 58% of entries hit 48h fallback (market never returned to band). BB is a variance-reduction transformation, not an alpha enhancement. Files: scripts/north_bb_backtest.py, scripts/north_v1_vs_bb_compare.py, docs/experiments/2026-07-31_north_v2_design.md. Result JSON: data/experiments/north_bb_2015_2023.json. Not scheduled for parameter tuning \u2014 that would be after-the-fact fitting. Follow-up ideas (each needs its own pre-reg): BB stop only, BB entry with v1 exit, BB/v1 portfolio blend."
     }
   ]
 }
