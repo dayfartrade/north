@@ -1,7 +1,8 @@
 {
   "sample_start": "2010-04-05",
   "sample_end": "2026-07-13",
-  "total_calls": 363,
+  "total_calls": 850,
+  "total_calls_note": "Weekly decisions across the sample window, including 487 FLAT weeks. Prior schema used total_calls == 363; that number is now exposed as directional_trades.",
   "directional_trades": 363,
   "cumulative_pnl": 181598.0,
   "max_drawdown": -56043.0,
@@ -29,5 +30,6 @@
     "recover": "2026-06-22",
     "weeks": 12,
     "amount": -56043.0
-  }
+  },
+  "small_sample_note": "Small samples deviate widely from long-run expectations. About 19.4% of 2-trade sequences from a 55.9% WR strategy come out 0W-2L."
 }

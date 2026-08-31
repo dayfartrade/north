@@ -79,7 +79,7 @@ Data leak / branding drift:
 
 Priority order:
 
-1. **Track-record completeness.** The site shows W/L record and cum return, but omits the 16-year backtest context (55.9% WR, Sharpe 0.77, $56K max DD, 13/17 positive years). A first-time visitor cannot calibrate whether 0-2 is normal (it is: 44.1% of two-trade sequences from a 55.9% WR strategy are 0-2). Adding a "vs 16-yr backtest" strip next to the live W/L would land the honesty framing without changing our data emit.
+1. **Track-record completeness.** The site shows W/L record and cum return, but omits the 16-year backtest context (55.9% WR, Sharpe 0.77, $56K max DD, 13/17 positive years). A first-time visitor cannot calibrate whether 0-2 is normal (it is: about 19.4% of two-trade sequences from a 55.9% WR strategy come out 0-2 - not exotic). Adding a "vs 16-yr backtest" strip next to the live W/L would land the honesty framing without changing our data emit.
 2. **Backtest equity curve.** `site/data/far_weekly_backtest_curve.json` already exists and is static. Chart it.
 3. **Retirement wall.** `docs/launch/retirement_wall.md` and `site/data/registry.json` both auto-regen. Wire the ledger route to render one of them.
 4. **Nav 404s.** Either hide the nav items that don't have pages, or ship stub pages, so we don't advertise dead routes.

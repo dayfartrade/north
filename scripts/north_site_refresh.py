@@ -10,6 +10,12 @@ Emits the following files consumed by the NORTH site (Rook):
      On FLAT weeks live_pnl_pct is absent; primary_risk is still emitted
      with a FLAT-specific sentence + severity=low + trigger=null.
 
+  4. site/data/far_weekly_backtest_summary.json - updates one field:
+       small_sample_note   - one-sentence live-vs-backtest calibration
+                             recomputed from calls history each run
+                             (exact-match binomial probability of the
+                             observed W/L pattern under p=0.559).
+
   2. site/data/far_weekly_price_series.json - hourly OHLC for the active
      week window (week_of Monday 00:00 UTC through week_end Friday 21:00
      UTC), resampled from Dukascopy XAUUSD 5m. Envelope matches the
@@ -57,8 +63,11 @@ CALLS_LOG = ROOT / "data" / "far_weekly_calls.jsonl"
 SITE_CURRENT = ROOT / "site" / "data" / "far_weekly_current.json"
 SITE_PRICE_SERIES = ROOT / "site" / "data" / "far_weekly_price_series.json"
 SITE_DAILY_BRIEFS = ROOT / "site" / "data" / "far_daily_briefs.json"
+SITE_BACKTEST_SUMMARY = ROOT / "site" / "data" / "far_weekly_backtest_summary.json"
 XAUUSD_5M = ROOT / "data" / "external" / "dukascopy" / "XAUUSD_5m.csv"
 CALENDAR_CSV = ROOT / "data" / "calendar" / "events.csv"
+
+BACKTEST_WIN_RATE = 0.559  # 16-year backtest win rate; used for small-sample note
 
 _spec = importlib.util.spec_from_file_location(
     "far_backtest", str(ROOT / "scripts" / "far_weekly_gold_read.py"))
@@ -359,6 +368,76 @@ def compute_primary_risk(call: dict, live_pnl: float | None,
     }
 
 
+def compute_small_sample_note() -> str:
+    """One-sentence note calibrating the live W/L record against the 55.9%
+    backtest base rate. Auto-updates as new directional trades resolve.
+
+    Reads calls history, counts resolved directional wins/losses, then quotes
+    the exact-match binomial probability of the observed pattern. If the
+    outcome is zero wins or all wins, phrasing shifts accordingly.
+    """
+    from math import comb
+
+    if not CALLS_LOG.exists():
+        return ("No resolved directional trades yet. 16-year backtest "
+                "reference: 55.9% win rate on 363 directional trades.")
+
+    with open(CALLS_LOG, encoding="utf-8") as f:
+        rows = [json.loads(l) for l in f if l.strip()]
+
+    resolved_dir = [
+        r for r in rows
+        if r.get("type") == "call"
+        and r.get("direction") in ("LONG", "SHORT")
+        and (r.get("outcome") or {}).get("result") == "resolved"
+    ]
+    n = len(resolved_dir)
+    wins = sum(
+        1 for r in resolved_dir
+        if (r.get("outcome") or {}).get("net_return_pct", 0) > 0
+    )
+    losses = n - wins
+
+    if n == 0:
+        return ("No resolved directional trades yet. 16-year backtest "
+                "reference: 55.9% win rate on 363 directional trades.")
+
+    p = BACKTEST_WIN_RATE
+    exact_prob = comb(n, wins) * (p ** wins) * ((1 - p) ** losses)
+    pct = round(exact_prob * 100, 1)
+
+    pattern = f"{wins}W-{losses}L"
+    return (
+        f"Small samples deviate widely from long-run expectations. "
+        f"About {pct}% of {n}-trade sequences from a 55.9% WR strategy "
+        f"come out {pattern}."
+    )
+
+
+def refresh_backtest_summary(dry_run: bool = False) -> None:
+    """Update the small_sample_note field on far_weekly_backtest_summary.json.
+
+    The rest of the file is static (16-year backtest constants); this field
+    is the only one that changes as new directional trades resolve.
+    """
+    if not SITE_BACKTEST_SUMMARY.exists():
+        print(f"[warn] {SITE_BACKTEST_SUMMARY} missing, cannot update note")
+        return
+    summary = json.loads(SITE_BACKTEST_SUMMARY.read_text(encoding="utf-8"))
+    note = compute_small_sample_note()
+    if summary.get("small_sample_note") == note:
+        print(f"[backtest_summary] small_sample_note unchanged")
+        return
+    summary["small_sample_note"] = note
+    if not dry_run:
+        SITE_BACKTEST_SUMMARY.write_text(
+            json.dumps(summary, indent=2, default=str) + "\n",
+            encoding="utf-8")
+        print(f"[wrote] {SITE_BACKTEST_SUMMARY.name} small_sample_note updated")
+    else:
+        print(f"[dry-run] would update small_sample_note: {note}")
+
+
 def refresh(dry_run: bool = False) -> None:
     call = load_active_call()
     if call is None:
@@ -433,6 +512,7 @@ def main() -> None:
     args = ap.parse_args()
     print(f"[north_site_refresh] {datetime.now(timezone.utc).isoformat()}")
     refresh(dry_run=args.dry_run)
+    refresh_backtest_summary(dry_run=args.dry_run)
 
 
 if __name__ == "__main__":
