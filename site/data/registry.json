@@ -495,6 +495,15 @@
       "sr_per_period": 0.109,
       "n_observations": 363,
       "notes": "BB(20,2) entry/exit on 4H XAUUSD, same v1 signal (M20/M60/MA10-40/RY_chg). Long enters on lower-band touch, short on upper-band touch, 48h fallback to market. Exit at opposing BB, 2*ATR stop from actual entry, Friday close time fallback. Same cost model as v1 ($5 RT, 100 oz). Window 2010-01-01 to 2026-07-20, 363 matched directional weeks. BB: WR 65.3%, mean R +0.147%, Sharpe 0.787, max DD $38,660, 12/17 positive years. v1 same window: WR 55.9%, mean R +0.227%, Sharpe 0.767, max DD $56,043, 13/17 positive years. Ship trigger (mean R >= 0.5% AND > v1): both conditions FAIL. Diagnosis: 71% of BB exits are bb_target (systematic early-clip), 58% of entries hit 48h fallback (market never returned to band). BB is a variance-reduction transformation, not an alpha enhancement. Files: scripts/north_bb_backtest.py, scripts/north_v1_vs_bb_compare.py, docs/experiments/2026-07-31_north_v2_design.md. Result JSON: data/experiments/north_bb_2015_2023.json. Not scheduled for parameter tuning \u2014 that would be after-the-fact fitting. Follow-up ideas (each needs its own pre-reg): BB stop only, BB entry with v1 exit, BB/v1 portfolio blend."
+    },
+    {
+      "id": "far_weekly_gold_read_v3",
+      "registered_utc": "2026-08-31T18:00:00Z",
+      "layer": "strategy_engine_weekly",
+      "verdict": "pre_registered",
+      "sr_per_period": null,
+      "n_observations": null,
+      "notes": "FAR Weekly v3: v2 + real-yield-level floor (LONG requires RY_level >= 0.25%, SHORT requires RY_level <= 1.50%). Pre-reg: docs/experiments/2026-08-31_far_weekly_v3_ry_level_prereg.md. Motivation: today's v1 fire-rate analysis showed v1's entire alpha lives in the v2-confirmed subset, and the v2-skipped subset loses money in aggregate. Follow-on predictor probe found the v2-skipped losers cluster at low absolute real-yield levels (median 0.12%). Regime-transition indicator analysis independently found LONG regimes tend to end at negative real yields. Two independent analyses converge on RY_level as an additional filter. Thresholds locked BEFORE any v3 backtest (0.25% floor at midpoint of v2-skipped winners' and losers' medians, 1.50% ceiling for symmetry). No live effect; v3 will run as SHADOW only starting when v2's forward window closes 2027-01-22 or v2 rejects earlier. Bonferroni-N incremented for probing 6 features to surface RY_level. NOT yet backtested; if retrospective split-sample (TRAIN 2010-2018, OOS 2019-2026) fails v3 rejects immediately."
     }
   ]
 }
