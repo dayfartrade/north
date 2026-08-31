@@ -27,10 +27,10 @@ Working sections:
 
 Nav bar routes that 404 today:
 
-- `/north/methodology`, `/north/blog`, `/north/how-it-works`, `/north/daily`
-- `/ledger`, `/ledger/archive`, `/live-read`
+- `/live-read` (real 404; may be intentional section header, TBD)
+- `/compass` (dropdown parent; probably intentional, dropdowns don't need a landing)
 
-The visible nav ("COMPASS ▾", "Ledger", "Blog", "Methodology", "Operator Access") is aspirational scaffolding. Only the `/north` main page is populated.
+**Correction to earlier audit note:** the original probe list here used the wrong paths. `/methodology`, `/blog`, and `/track-record/archive` all render 200. The "Ledger Archive" nav item links to `/track-record/archive` (engine-chooser page), not `/ledger/archive`. Retirement wall lives at `/north/retirement-wall` as a peer of the live track record, not under the `/ledger` namespace. The nav is more populated than I initially claimed.
 
 Content from the launch-kit vision that is not on the site yet:
 
@@ -82,7 +82,7 @@ Priority order:
 1. **Track-record completeness.** The site shows W/L record and cum return, but omits the 16-year backtest context (55.9% WR, Sharpe 0.77, $56K max DD, 13/17 positive years). A first-time visitor cannot calibrate whether 0-2 is normal (it is: about 19.4% of two-trade sequences from a 55.9% WR strategy come out 0-2 - not exotic). Adding a "vs 16-yr backtest" strip next to the live W/L would land the honesty framing without changing our data emit.
 2. **Backtest equity curve.** `site/data/far_weekly_backtest_curve.json` already exists and is static. Chart it.
 3. **Retirement wall.** `docs/launch/retirement_wall.md` and `site/data/registry.json` both auto-regen. Wire the ledger route to render one of them.
-4. **Nav 404s.** Either hide the nav items that don't have pages, or ship stub pages, so we don't advertise dead routes.
+4. **Nav 404s.** Mostly a non-issue after re-probing. Only `/live-read` remains as a real 404 (may be intentional). See correction note above.
 5. **Consider making a page dedicated to the current week's Daily Read history** so subscribers can see the LONG week's daily briefs even after the trade is resolved. Right now the daily briefs are only visible on Telegram; the site drops them at week close.
 
 ## What I explicitly did NOT do
