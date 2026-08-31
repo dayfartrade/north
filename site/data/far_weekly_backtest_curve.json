@@ -1,6 +1,6 @@
 {
   "product": "FAR Weekly Gold Read",
-  "sample": "2010-01-01 to 2026-07-20 (16.5 years)",
+  "sample": "2010-04-05 to 2026-07-13 (16.3 years)",
   "n_trades": 363,
   "equity_curve": [
     {
@@ -3430,6 +3430,11 @@
     "entry_price": 1096.09,
     "final_cum_pct": 265.007,
     "note": "Buy 1 GC contract at first day open, mark-to-market at each backtest trade date.",
-    "final_equity_dollars": 290470.7
-  }
+    "final_equity_dollars": 290470.7,
+    "max_drawdown_dollars": 134490.0,
+    "max_drawdown_peak_date": "2026-03-02",
+    "max_drawdown_trough_date": "2026-07-13",
+    "max_drawdown_pct_of_final": 46.3
+  },
+  "sample_note": "Trading window from first fired signal (2010-04-05) through last resolved trade (2026-07-13). Raw data window is longer (2010-01-01 to 2026-07-20) to allow the 60-day signal warmup. Buy-and-hold entry_price is quoted from the raw-data start, per its own note field."
 }
