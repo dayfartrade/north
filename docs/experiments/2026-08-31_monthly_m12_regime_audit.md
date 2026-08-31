@@ -107,7 +107,7 @@ If the live product ever ships to the ensemble, we should be honest about what w
 
 ## Follow-ups (queued, not urgent)
 
-1. **Regime-conditional Sharpe.** Split the 16-year backtest into "M12 LONG" periods and "M12 SHORT" periods. Compute ensemble Sharpe separately. If Sharpe is much higher in one regime, we're really discovering a directional bias not a voting mechanism.
+1. **Regime-conditional Sharpe.** Split the 16-year backtest into "M12 LONG" periods and "M12 SHORT" periods. Compute ensemble Sharpe separately. If Sharpe is much higher in one regime, we're really discovering a directional bias not a voting mechanism. **DONE 2026-08-31: see `docs/experiments/2026-08-31_m12_regime_split_ensemble.md`. Finding: v2 wins in every cell; ensemble matches v1 in M12 LONG regime, only beats v1 in M12 SHORT regime. Ensemble's headline appeal is regime-conditional.**
 2. **Alternative aggregators.** If M12 is contributing noise more than signal (stuck LONG for years), consider:
  - Drop M12 entirely, ensemble becomes 2-way v1+v2 (unanimous only)
  - Replace M12 with a regime detector that only fires on genuinely trending regimes

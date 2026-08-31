@@ -71,7 +71,7 @@ Also on 2026-07-22, we shipped FAR Weekly Gold Read v1. Now called NORTH.
 
 Mechanism: four conditions on gold weekly. 4-week momentum sign, 12-week momentum sign, 10/40-day moving average crossover, 20-day change in US 10-year real yield. All four must agree for a directional call, otherwise FLAT. Entry Monday NY open, stop at 2x ATR(20-day), exit Friday 21:00 UTC or stop hit.
 
-Backtest 2010 to 2026: Sharpe 0.77, win rate 55.9%, positive in 13 of 17 years, captured 62% of buy-and-hold P&L with 37% of the drawdown.
+Backtest 2010 to 2026: Sharpe 0.77, win rate 55.9%, positive in 13 of 17 years, captured 62% of buy-and-hold P&L with 42% of the drawdown.
 
 3 of 6 pre-reg gates borderline failed. Training-window Sharpe (0.478) narrowly missed the 0.5 gate. Extended 16-year sample cleared two of the three borderline gates on supplementary analysis. Shipped as BETA with the disclosure that live tracking is the final validation.
 

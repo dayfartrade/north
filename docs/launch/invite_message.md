@@ -16,7 +16,7 @@ LONG, SHORT, or FLAT for the coming Monday-Friday. That's it.
 Backtest since 2010: 55.9% win rate on the weeks it fires directional,
 +0.23% average per trade after costs, worst drawdown of $56,043 trading
 one gold contract per week (about 5.6% of a $1M account). Passive gold
-over the same window did better in raw return but with about 3x the
+over the same window did better in raw return but with about 2.4x the
 drawdown. NORTH sits out about half the time.
 
 It's free. I built it with an AI collaborator (Knox) who does the

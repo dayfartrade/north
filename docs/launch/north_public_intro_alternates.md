@@ -84,7 +84,7 @@ Only fires when a directional call is open. Shows signal health, open P&L, dista
 **How the signal decides:**
 Four conditions on daily gold prices. LONG needs all four bullish (4-week momentum positive, 12-week momentum positive, short MA above long MA, US 10-year real yield falling over 20 days). SHORT needs all four bearish. FLAT otherwise. That's the entire rule. No hidden knobs.
 
-**Backtest 2010-2026:** 55.9% win rate on directional weeks, +0.23% mean return per trade after costs, worst drawdown $56,043 trading one contract per week (about 5.6% of a $1M account). Passive gold beat NORTH in raw return but with about 3x the drawdown. NORTH is designed to sit out the messy weeks.
+**Backtest 2010-2026:** 55.9% win rate on directional weeks, +0.23% mean return per trade after costs, worst drawdown $56,043 trading one contract per week (about 5.6% of a $1M account). Passive gold beat NORTH in raw return but with about 2.4x the drawdown. NORTH is designed to sit out the messy weeks.
 
 **Live since 2026-07-22.** Current record: 1 directional call, -0.72%. Full track record:
 github.com/dayfartrade/north/blob/main/docs/launch/track_record_current.md

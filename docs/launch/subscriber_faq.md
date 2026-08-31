@@ -40,7 +40,7 @@ That is the entire rule. No hidden knobs, no discretion, no override.
 2010-2026 gold data. Win rate 55.9% on directional weeks, +0.23% mean return per trade after costs, Sharpe 0.77, largest drawdown $56,043 trading one gold contract per week (about 5.6% of a $1M account). Sits out about half the time (FLAT).
 
 **Q: Would passive gold have made more?**
-Yes, in raw return. But with about 3x the drawdown. NORTH captured 62% of buy-and-hold gold's P&L with 37% of the drawdown. That is the tradeoff.
+Yes, in raw return. But with about 2.4x the drawdown. NORTH captured 62% of buy-and-hold gold's P&L with 42% of the drawdown. That is the tradeoff.
 
 **Q: Why is it FLAT so often?**
 Because the four conditions have to all agree. In sideways markets or transition regimes, they typically disagree. FLAT is the correct action then, not a miss.

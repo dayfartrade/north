@@ -105,7 +105,13 @@ def build_index(calls: list[dict]) -> dict:
 
 
 def briefs_for_week(all_briefs: list[dict], week_of: str) -> list[dict]:
-    """Dedupe brief entries by calendar date, last-write-wins."""
+    """Dedupe brief entries by calendar date, last-write-wins.
+
+    Prefers the `site_shape` field if the brief was captured after the
+    2026-08-31 field-snapshot upgrade (gates/event/commentary all live).
+    Falls back to the raw metrics block for older briefs, which lands
+    nulls for the fields that weren't captured at the time.
+    """
     week_briefs = [b for b in all_briefs if b.get("week_of") == week_of]
     by_day = {}
     for b in sorted(week_briefs, key=lambda x: x.get("brief_utc", "")):
@@ -114,14 +120,22 @@ def briefs_for_week(all_briefs: list[dict], week_of: str) -> list[dict]:
             by_day[day] = b
     out = []
     for day in sorted(by_day.keys()):
-        m = by_day[day].get("metrics") or {}
+        rec = by_day[day]
+        site_shape = rec.get("site_shape")
+        if site_shape and isinstance(site_shape, dict):
+            entry = dict(site_shape)
+            # Enforce date consistency in case site_shape captured with
+            # a different reference day than the brief_utc timestamp
+            entry["date"] = day
+            out.append(entry)
+            continue
+        m = rec.get("metrics") or {}
         out.append({
             "date": day,
             "openPnlPct": m.get("pnl_pct"),
             "distanceStopAtr": m.get("stop_dist_atr"),
-            # gates/event/commentary not captured in the raw brief log.
-            # Left null on purpose so the archive matches what was
-            # actually persisted at the time.
+            # gates/event/commentary not captured in the raw brief log
+            # for pre-2026-08-31 weeks.
             "gates": None,
             "event": None,
             "commentary": None,

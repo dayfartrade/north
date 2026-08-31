@@ -187,6 +187,45 @@ def append_brief_log(rec: dict):
         f.write(json.dumps(rec, default=str) + "\n")
 
 
+def compute_site_shape_brief(call: dict, bars: pd.DataFrame,
+                              now_utc: pd.Timestamp) -> dict | None:
+    """Build the site-shaped brief object for TODAY only.
+
+    Mirrors the schema Rook's DailyReadCard consumes:
+      {date, openPnlPct, distanceStopAtr, gates, event, commentary}
+
+    Persisted alongside the raw metrics so that when the history
+    archive emitter (scripts/build_history_archive.py) runs on
+    resolve, it can populate the archived detail page with the same
+    field set the reader saw on the live day. Historical weeks
+    (pre-2026-09-06) will still show nulls; this closes the gap
+    going forward.
+
+    Returns None if compute_daily_briefs cannot produce a usable
+    entry for today (missing bars, empty briefs, etc.). Never raises.
+    """
+    try:
+        import importlib.util
+        spec = importlib.util.spec_from_file_location(
+            "north_site_refresh", str(ROOT / "scripts" / "north_site_refresh.py"))
+        nsr = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(nsr)
+
+        # compute_daily_briefs expects the full week's 5m bars, not
+        # since-entry bars. Load fresh.
+        week_bars = nsr.load_week_bars(call["week_of"], call["week_end"])
+        briefs = nsr.compute_daily_briefs(call, week_bars, now_utc)
+        today_str = now_utc.strftime("%Y-%m-%d")
+        for b in briefs:
+            if b.get("date") == today_str:
+                return b
+        return None
+    except Exception as exc:
+        print(f"[site_shape] compute failed non-fatally: "
+              f"{type(exc).__name__}: {exc}")
+        return None
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--dry-run", action="store_true",
@@ -244,17 +283,21 @@ def main():
     r = send(card, audience=args.audience)
     print(f"[telegram] {r}")
 
+    now = pd.Timestamp.now(tz="UTC")
+    site_shape = compute_site_shape_brief(call, bars, now)
     rec = {
-        "brief_utc": datetime.now(timezone.utc).isoformat(),
+        "brief_utc": now.isoformat(),
         "week_of": call["week_of"],
         "direction": call["direction"],
         "audience": args.audience,
         "metrics": {k: (round(v, 4) if isinstance(v, float) else v)
                     for k, v in metrics.items()},
+        "site_shape": site_shape,
         "telegram_ok": bool(r.get("ok") if isinstance(r, dict) else False),
     }
     append_brief_log(rec)
-    print(f"[log] appended to {DAILY_BRIEF_LOG.name}")
+    site_shape_note = "with site_shape" if site_shape else "without site_shape"
+    print(f"[log] appended to {DAILY_BRIEF_LOG.name} ({site_shape_note})")
 
 
 if __name__ == "__main__":
