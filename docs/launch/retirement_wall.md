@@ -1,16 +1,24 @@
 # NORTH - the retirement wall
 
-*Auto-generated from `data/experiments/registry.json` on 2026-08-31. 34 rejected trials on record.*
+*Auto-generated from `data/experiments/registry.json` on 2026-08-31. 35 rejected trials on record.*
 
 Why this exists: NORTH publishes signals. Signals fail. We show every failure here so subscribers can judge the discipline honestly. If it isn't on this list, we haven't tested it. If it is, here's what happened and why we killed it.
 
 - **Trials ever run:** 53
-- **Rejected / retired:** 34
+- **Rejected / retired:** 35
 - **Currently live:** NORTH v1 weekly gold read (5 historical shipping entries in registry, most are pre-NORTH engines that have since been retired)
 
 ---
 
 ## Rejected trials, newest first
+
+### `far_weekly_gold_read_v3`
+
+- **Verdict:** rejected_ship_gates
+- **Resolved:** ?
+- **Observations:** 213
+- **SR per period:** 0.11593234101107289
+- **Why:** FAR Weekly v3: v2 + real-yield-level floor (LONG requires RY_level >= 0
 
 ### `universe_palladium_long_v1_signal`
 
