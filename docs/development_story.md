@@ -2,7 +2,7 @@
 
 *A first-person account from Knox, the operator behind NORTH. Written honestly. Includes every failure, every dead end, every candidate that got retired. This is the version we'll publish when NORTH goes live, unedited.*
 
-*Last updated: 2026-08-25*
+*Last updated: 2026-08-31*
 
 ---
 
@@ -387,10 +387,10 @@ Synthesized a SHORT call against real July 2026 XAU/USD data and sent the result
 
 `scripts/v1_vs_v2_filter_analysis.py` and `scripts/ensemble_vs_v1_analysis.py` decompose the v2 (DXY-confirmed) and ensemble filters against v1. The critical result:
 
-|                 | Train 2010-2017 | OOS 2018-2026 |
+| | Train 2010-2017 | OOS 2018-2026 |
 |-----------------|-----------------|---------------|
-| v1 mean/wk      | $+223           | $+717         |
-| v2 kept mean/wk | $+252           | $+1,030       |
+| v1 mean/wk | $+223 | $+717 |
+| v2 kept mean/wk | $+252 | $+1,030 |
 | v2 filtered subset mean/wk | $+147 | $-254 |
 
 The v2 DXY filter has BIGGER uplift in OOS than in the train window. That is the opposite of overfitting - if the filter had been curve-fit on 2010-2017, its OOS performance would degrade, not improve. This is real edge.
@@ -609,6 +609,66 @@ Rook verified end-to-end on the current LONG week (`2026-08-24` → `2026-08-28`
 The Telegram channel is still the primary launch surface. But the site now works. It reads live JSON I emit, not mocks, not estimators. When we're ready to point people at it, the plumbing is done. The four placeholder features that would have made the page feel half-finished are all replaced.
 
 The pattern also worked. Two AIs coordinated through the user, with explicit BEGIN/END messages, no shared conversation state, no schema drift. Every decision was captured in message text. The user was the router. Both sides shipped the same day.
+
+---
+
+---
+
+## 2026-08-31 - First live LONG loss and one week of site-live data
+
+The LONG signal fired on 2026-08-21 for the week of 2026-08-24 to 08-28. All four gates were bullish: 4-week momentum +13.66%, 12-week momentum +1.42%, MA10 above MA40, real-yield 20-day change -2 basis points. The strongest LONG setup we'd published since the pre-reg went live. Entry proxy $4,602, stop $4,401 (2 x ATR20), Friday time-exit.
+
+The trade behaved through Thursday. Monday closed +0.84%, Tuesday +0.78%, Wednesday -0.08%, Thursday +0.17%. Then Friday flushed. -2.69% close-to-close, intraday low $4,451.80 within $50 (half an ATR) of the stop before recovering to close at $4,478.10. Exit at $4,450.06 via the time-exit gate. Net: **-3.30%**.
+
+That makes two live directional trades resolved. Both losses. Cumulative -4.02%.
+
+I wrote up the full post-mortem in `docs/experiments/2026-08-31_long_postmortem.md`. The signal rules behaved exactly as pre-registered, no bug, no data issue, no early-warning window we missed. The stop worked; MAE reached 0.49 ATR from it and held. This was a normal loss inside the distribution of a 55.9% win-rate strategy - two consecutive losses starting from zero occur about 20% of the time on that base rate. It is not evidence of anything yet.
+
+### What the shadow signals said
+
+Same three-way comparison I've been logging in parallel since July. Reconstructed offline because the 2026-08-21 shadow-log entry got dropped when the git-push step of the weekly-publish workflow failed on 08-23 (documented in prior session; the fix landed the following day but only reconstructed the public call, not the shadow rows). Numbers:
+
+| variant | direction | why |
+|---|---|---|
+| **v1 (live product)** | **LONG** | All 4 conditions bullish |
+| v2 shadow | **FLAT** | DXY 20-day change ≈ 0. v2 requires DXY weakening for LONG confirmation |
+| Ensemble | **LONG** | v1 LONG + monthly M12 LONG (+37%) outvote v2's FLAT |
+
+Rolled up across both live directional trades:
+
+- v1 (live): -0.72% + -3.30% = **-4.02%** on 2 trades
+- v2 shadow: 0% + 0% = **0%** (both filtered to FLAT)
+- Ensemble: 0% + -3.30% = **-3.30%** (SHORT week was FLAT via three-way split; LONG week was still LONG)
+
+Both live losers were exactly the failure mode v2 was designed to catch: v1 firing without dollar confirmation. If this pattern holds through the 26-week pre-reg forward window - another 24 directional trades minimum - the case for v2 ship gets substantially stronger. Right now it's N=2 and suggestive.
+
+The ensemble is more interesting because it did NOT help on the LONG. Monthly M12's +37% year-over-year bullish read overrode v2's caution. That is the majority rule working as designed, but it means the ensemble is not simply a "better v2" - it drags along whatever monthly M12 says, and monthly M12 is stuck LONG through a gold bull market. Worth an audit at N=6+ directional whether monthly is adding signal or just going along with v1.
+
+### Operational finding: shadow log gap
+
+The `data/far_weekly_v2_shadow.jsonl` and `data/far_weekly_ensemble_shadow.jsonl` logs have no entry for signal_date 2026-08-21. The state-reconstruction script that fixed the failed publish only re-appended the public call. I left the gap in place - filling an append-only log after the fact would compromise the forward-validation guarantee that makes the shadow useful. The reconstruction in the post-mortem is the record.
+
+Follow-up: the same failure mode can recur. The weekly-publish workflow should commit shadow-log rows in the same atomic push as the call. Or the state-reconstruction script should include the shadow logs. Not doing either right now - filed as a queue item, not urgent.
+
+## Site went live for real
+
+The Telegram channel started 2026-08-24. The web frontend went live on the FAR domain around the same time. Not on GitHub Pages (the runbook's Option 1); Rook deployed to `https://www.faractionradar.com/north` as a Next.js app fronted by Cloudflare. `readnorth.com` is parked at HugeDomains, not us; `dayfartrade.github.io/north/` returns 404 because Pages was never enabled on the repo.
+
+One week later, the deployed site works. It renders the current call, the signal breakdown with week-over-week deltas, a 4-of-4 conditions meter with hint text ("LEAN BULL 3/4 bull · needs 1 more bull"), the recent-calls timeline with net returns, the daily-read panel with proper empty-state copy, the thesis and primary-risk widgets, and a track-record footer. The FLAT state has a good headline: "NO TRADABLE EDGE / STANDING DOWN". Honest. Not defensive.
+
+What's not on the site yet, per the launch-kit vision: the 16-year backtest equity curve, backtest headline numbers (55.9% WR, Sharpe 0.77, $56K max DD), the retirement wall (34 rejected / 52 tested), a "how the signal works" explainer, RSS/Telegram footer links, and the v2/ensemble shadow companion signals. The nav bar advertises routes (`/methodology`, `/blog`, `/ledger`, `/live-read`) that all 404 today; that's aspirational scaffolding.
+
+I did not edit the site. The workspace boundary with Rook stands: he owns the surface, I own the data. Full audit in `docs/experiments/2026-08-31_site_liveweek_audit.md`. Anything I want changed goes through the user as a ping to Rook.
+
+Data pipeline: no incidents in the live week. Zero failed workflow runs in the last 7 days. Weekly-publish executed cleanly on 2026-08-30. All site JSON files are current: `far_weekly_current.json` (FLAT with primary_risk), `far_weekly_history.json` (5 entries), `far_weekly_price_series.json` (empty envelope for FLAT), `far_daily_briefs.json` (empty for FLAT), `registry.json` (52 experiments), `latest.json`, `calls.json`, `feed.xml`. Everything the site consumes is fresh and correct.
+
+One small data-model drift I noticed: `far_weekly_history.json` still carries `"product_name": "FAR Weekly Gold Read"` at the top level. Rook isn't rendering that field (the site says "NORTH" everywhere), but it's a cosmetic legacy leak. Non-blocking; noted for a future cleanup pass.
+
+### Where we are
+
+Two directional trades, both losers, one week of clean site operation. The pre-reg forward validation window has 24 more directional trades to run before we can say anything statistical about v1 vs v2 vs ensemble. In the meantime, everything works. The rules held. The stop held. The site rendered a loss without any UI change. The workflow ran without any operator intervention. This is what "no drama" looks like when a live product takes a loss.
+
+Next big decision point is the third resolved directional trade - if it's another loss, that's 0-3 which is inside the noise band for a 55.9% strategy (about 9% probability) but starts to be worth explicitly reminding the honesty page. If it wins, we're 1-3 and normal. Either way, no rule changes until the pre-reg window closes.
 
 ---
 
