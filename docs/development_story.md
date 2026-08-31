@@ -672,4 +672,110 @@ Next big decision point is the third resolved directional trade - if it's anothe
 
 ---
 
+---
+
+## 2026-08-31 afternoon - The v2 case sharpened by three research passes
+
+Same session, later in the day. Farhad closed the Rook audit-follow-up queue with an explicit "what else can be done" and picked three items. Two doc corrections and one big research thread. The research thread produced the sharpest finding of the year on the v2 shadow candidate.
+
+### Housekeeping: 42% of buy-hold's drawdown, not 37%
+
+The equity-curve JSON I shipped Rook this morning computed buy-and-hold's max drawdown at $134,490 (peak 2026-03-02, trough 2026-07-13, from gold's summer selloff). NORTH's max DD is $56,043. Ratio 41.7%, round to 42%. The launch kit and pinned Telegram intro carried an older "37%" number from a snapshot when buy-hold DD was around $150k.
+
+Site strip already reads the fresh number from `far_weekly_backtest_curve.json`. Corrected the launch kit (`docs/development_story.md`, `docs/launch/subscriber_faq.md`, `docs/launch/north_public_intro.md`, `north_public_intro_alternates.md`, `invite_message.md`) so all doc-side surfaces match the site. Old "3x drawdown" phrasing (implying 33% ratio) updated to "2.4x". Telegram pin is private and not touched (feedback rule: solo channel, no audience).
+
+Buy-hold benchmark memory refreshed with current numbers and the reconciliation to the old stored figure.
+
+### Feature: daily briefs now persist site-shape in the log
+
+The archived detail pages Rook built for `/north/week/<week_of>` were rendering with `gates: null` and `commentary: null` on the historical LONG week because the raw daily-brief log only captured the metrics block (pnl, stop distance, ATR), not the site-shaped brief object (with gates, event, commentary). Fixed forward. `scripts/north_daily_brief.py` now computes a single-day site-shaped brief inline via a helper that reuses `compute_daily_briefs` from `north_site_refresh.py` and picks today's entry. Persists that alongside the raw metrics.
+
+Archive emitter (`scripts/build_history_archive.py`) prefers the `site_shape` field when present, falls back to the raw metrics for pre-2026-08-31 briefs where the field was not captured. Historical weeks stay null (honest), future weeks get rich detail pages automatically starting the first directional call after 2026-09-06.
+
+Failure is non-fatal - if `compute_daily_briefs` throws for any reason, the log entry still writes with `site_shape: null`.
+
+### Research pass 1: M12 regime-split ensemble analysis
+
+The morning post-mortem noticed that monthly M12 momentum has been LONG uninterrupted since 2023-03-17 (1,221 days). Wrote it up as an audit doc questioning whether the ensemble's 3-way vote is really a 3-way vote or effectively "v1 with M12 as a constant tiebreaker."
+
+The regime-split analysis put numbers on it. Full backtest 2010-2026, all three variants, partitioned by M12 regime at signal_date:
+
+| variant | full sample | M12 LONG | M12 SHORT |
+|---|---|---|---|
+| v1 | Sharpe 0.70, WR 54.9%, cum $167,906 | 0.67, 57.5%, $135,090 | 0.77, 49.5%, $32,816 |
+| **v2** | **Sharpe 0.97, WR 57.8%, cum $176,445** | **0.91, 60.9%, $135,945** | **1.09, 51.7%, $40,500** |
+| ensemble | Sharpe 0.74, WR 55.9%, cum $166,953 | 0.67, 58.3%, $130,402 | 0.89, 51.0%, $36,551 |
+
+Three things fall out.
+
+First, v2 wins in every cell. Every partition, every metric. The DXY filter is a robust improvement over v1 regardless of M12 direction. This is the strongest cross-regime evidence yet that v2 is a legitimate v1 replacement candidate.
+
+Second, ensemble matches v1 in M12 LONG regime (Sharpe 0.67 vs 0.67), only beats v1 in M12 SHORT regime (0.89 vs 0.77). The ensemble's headline appeal is regime-conditional. Its whole edge over v1 lives in the M12 SHORT regime we haven't been in for 3+ years.
+
+Third, the 26-week ensemble shadow window that started 2026-07-22 is entirely inside the current M12 LONG streak. So the ensemble's forward validation is measuring "how well ensemble tracks v1" - not "whether ensemble is better than v1." The pre-reg's ship gate assumed we'd get a mixed-regime sample. We won't.
+
+Doc: `docs/experiments/2026-08-31_m12_regime_split_ensemble.md`.
+
+### Research pass 2: M12 regime persistence
+
+Followed up with a persistence audit. How often does M12 flip, what's the streak-length distribution, and what's the base rate for a flip out of the current LONG streak in the next 26 weeks?
+
+51 LONG streaks + 50 SHORT streaks across 16 years. The distribution is heavily right-skewed: median LONG streak is 3 days, median SHORT is 6 days (most flips are single-day whipsaws), but a few long structural regimes dominate the time-in-regime. Top LONG streaks: current 868 days (open), then 531 days (2019-2021 COVID), 397 days (2010-2012). Top SHORT: 369 days (2013-2015 gold bear), 189 days (2015 continuation).
+
+The current LONG streak is **longer than any prior LONG streak by 337 days**. Unprecedented in the sample. Every prior streak eventually flipped, so the current one will too, eventually. But there's no comparable base rate for "how long past this point does it typically last" - because no prior streak reached this point.
+
+Rough qualitative estimate: <20% chance of an M12 flip in the pre-reg forward window (through 2027-01-22). Not zero, but the ensemble's shadow window will almost certainly stay in M12 LONG.
+
+Doc: `docs/experiments/2026-08-31_m12_regime_persistence.md`.
+
+### Research pass 3: v1 fire-rate split by v2 confirmation
+
+The sharpest finding. Instead of comparing v1 to v2 head-to-head, I partitioned every v1 directional trade by whether v2 confirmed it (DXY aligned) or v2 said FLAT (DXY not aligned, so v1 fired alone). Then measured performance per subset.
+
+The numbers were more emphatic than I expected.
+
+| subset | n | WR | Sharpe | cum P&L |
+|---|---|---|---|---|
+| v1 + v2 confirmed | 258 | 57.8% | 0.97 | **+$176,445** |
+| v1 - v2 skipped | 86 | 46.5% | -0.14 | **-$8,538** |
+
+The v2-skipped subset of v1 trades LOSES MONEY IN AGGREGATE over 16 years. Not "underperforms." Not "lower Sharpe." Negative Sharpe, cumulative loss.
+
+v1's entire alpha lives in the v2-confirmed subset. The 258 v2-confirmed trades produce every dollar of profit and then some (the skipped subset drags the composite down by ~$8k).
+
+LONG side is where it's starkest:
+
+| subset | n | WR | Sharpe |
+|---|---|---|---|
+| v1 LONG + v2 confirmed | 149 | 61.7% | **1.26** |
+| v1 LONG - v2 skipped | 56 | 46.4% | -0.22 |
+
+v2 skips 27% of v1 LONGs, and those 27% are the low-quality quarter that drags v1's headline Sharpe down. The v2-confirmed LONG subset runs at a 1.26 Sharpe, the strongest metric anywhere in the NORTH backtest.
+
+SHORT side is less dramatic but consistent: skipped SHORTs are essentially flat (+$739 cumulative on 30 trades), confirmed SHORTs run at 0.57 Sharpe.
+
+**Live check.** Both live losers to date (2026-07-27 SHORT, 2026-08-24 LONG) were v2-skipped v1 trades. If v2 had been the live product, both would have been avoided. Cumulative live P&L would be 0% instead of -4.02%. N=2 doesn't move the prior on its own but the direction is consistent with the backtest pattern.
+
+Doc: `docs/experiments/2026-08-31_v1_fire_rate_by_v2.md`.
+
+### The reframing
+
+The three research passes together reframe v2 in a specific way.
+
+v2 is not "a better v1." v2 is "v1 minus the losing quarter." The DXY filter is doing exactly one job: dropping the 25% of v1 firings that are collectively unprofitable. The remaining 75% is where v1's alpha has always lived.
+
+This also explains the ensemble finding. Ensemble's majority-rule aggregator lets monthly M12 outvote v2 on v1 LONGs when M12 is LONG (all the time, for 3+ years). Which means ensemble keeps the v2-skipped losers in the mix. Which is why ensemble in the current regime performs essentially the same as v1. The vote is not adding filtering; it's cancelling filtering.
+
+**Case for v2 elevation is now very strong on the backtest side.** Both regimes agree. Live check (n=2) is consistent. The pre-reg 26-week forward window has 22 more directional trades to run and that is still the honest gate for ship. I'm not shipping v2 early. But when the window closes in early 2027 and v2 has held up live, the elevation case will land much harder than the pre-reg alone anticipated.
+
+### End-of-day state
+
+- Live product: NORTH v1 running, FLAT this week, 2 directional losses cumulative -4.02%.
+- Shadow candidates: v2 remains the strongest, ensemble downgraded in my mental model to "smoke test that will just track v1 through the current regime."
+- Website: audit queue fully drained. Rook shipped equity curve, retirement wall, and daily-read history detail pages this session. Vega joined the team as SEO reviewer; standing rule now that URL/route/label changes route through her.
+- Docs: three new experiment write-ups landed. Dev story updated. Two memory files refreshed (`buy_hold_benchmark_insight`, `shared_workspace_northengine`), one new (`finding_m12_regime_bias`, `feedback_telegram_pin_private`).
+- Nothing pushed but archived. Nothing pending on my side. Waiting for the next directional trade (or a course correction from Farhad).
+
+---
+
 *End of current entry. Story continues in subsequent updates.*
