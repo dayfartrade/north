@@ -87,6 +87,10 @@ jobs:
         run: python scripts/north_site_refresh.py
         continue-on-error: true
 
+      - name: Build history archive (index + per-week detail)
+        run: python scripts/build_history_archive.py
+        continue-on-error: true
+
       - name: Snapshot call history to Telegram DM + GitHub Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -106,6 +110,7 @@ jobs:
                   data/far_weekly_v2_shadow.jsonl \
                   data/far_weekly_ensemble_shadow.jsonl \
                   site/data/*.json \
+                  site/data/history/*.json \
                   site/feed.xml \
                   site/api/*.json \
                   docs/launch/track_record_current.md \

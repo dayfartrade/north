@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "weeks": [
+    {
+      "week_of": "2026-08-31",
+      "week_end": "2026-09-04",
+      "direction": "FLAT",
+      "outcome": null,
+      "has_detail": false
+    },
+    {
+      "week_of": "2026-08-24",
+      "week_end": "2026-08-28",
+      "direction": "LONG",
+      "outcome": {
+        "net_return_pct": -3.303,
+        "exit_reason": "friday_close"
+      },
+      "has_detail": true
+    },
+    {
+      "week_of": "2026-08-17",
+      "week_end": "2026-08-21",
+      "direction": "FLAT",
+      "outcome": null,
+      "has_detail": false
+    },
+    {
+      "week_of": "2026-08-10",
+      "week_end": "2026-08-14",
+      "direction": "FLAT",
+      "outcome": null,
+      "has_detail": false
+    },
+    {
+      "week_of": "2026-07-27",
+      "week_end": "2026-07-31",
+      "direction": "SHORT",
+      "outcome": {
+        "net_return_pct": -0.722,
+        "exit_reason": "friday_close"
+      },
+      "has_detail": true
+    }
+  ]
+}
