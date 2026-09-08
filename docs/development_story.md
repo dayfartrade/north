@@ -829,13 +829,109 @@ The only piece of the adaptive-stop question still open is intraday-granularity 
 Doc: `docs/experiments/2026-09-08_v1_v2_adaptive_stop_probe.md`.
 Script: `scripts/v1_v2_adaptive_stop_probe.py`.
 
-### End-of-day state
+### End-of-day state (morning)
 
 - Live product: NORTH v1, FLAT this week, 2 directional losses cumulative -4.02%. SPRT still CONTINUE.
 - v2 shadow: still tracking. Forward window through 2027-01-22.
 - Ensemble shadow: still tracking. Same window.
 - Rook heartbeat fix pending Vega deploy this week.
-- Nothing burning. Nothing pending on operator side.
+
+### Extended session: full-day research push
+
+The operator asked to keep going and draft a full day of work. Four more probes ran back-to-back. Together they produced the strongest single convergent finding of any session in the project so far.
+
+### 5m intraday trailing (closing the earlier probe's open gap)
+
+The daily-close adaptive-stop probe from the morning had one honest caveat: 2xATR trailing checked only at daily close cannot lock in much MFE, and the daily-only result doesn't answer whether trailing works at all. We have 1.19M 5m XAUUSD bars covering 2010-onward. I wired them into the weekly backtest and reran trailing at 5m granularity across five distances plus a delayed-activation variant.
+
+Result: `trail_1.5x_5m` beats the fixed 2x baseline on Sharpe for both v1 and v2, and cuts max drawdown to less than half (v2: DD $22k vs baseline $50k). On v2 it matches the best fixed multiplier (`fixed_1x` at Sharpe 1.24) with a very different risk profile.
+
+This partially reverses the morning finding. The morning was right that adaptive doesn't help at daily granularity. But at 5m granularity, at 1.5x trailing distance, it does. Combined ranking: for v3-class candidates, three exit-rule contenders now exist (`fixed_1x`, `fixed_2p5x`, `trail_1p5x_5m`), each with a different Sharpe / drawdown / cum P&L profile.
+
+Doc: `docs/experiments/2026-09-08_v1_v2_intraday_trailing_probe.md`.
+
+### v1 signal-component ablation
+
+Never done. v1 fires when four conditions AND together: M20 sign, M60 sign, MA10/MA40 cross, RY_chg direction. Nobody had ever tested which of the four is doing the work.
+
+Twelve variants: full v1 baseline, four drop-one variants, four only-one variants, two drop-two pairs. All backtested through the same engine.
+
+The load-bearing ranking:
+
+| component | removing costs Sharpe | interpretation |
+|---|---|---|
+| RY_chg | +0.48 | Single most important |
+| M60 | +0.31 | Second most important |
+| MA10/40 | +0.06 | Nearly redundant with M60 |
+| M20 | **-0.07** | Removing it IMPROVES Sharpe |
+
+M20 is dead weight in v1's conjunction. Removing it raises Sharpe from 0.77 to 0.83 and cumulative P&L from $180k to $218k. The 41 additional trades that M20-removal enables are on aggregate positive. Something about the 20-day momentum requirement is filtering out trades that other components correctly flag as good.
+
+Doc: `docs/experiments/2026-09-08_v1_signal_component_ablation.md`.
+
+### Alternative M12 aggregators
+
+The ensemble uses monthly M12 (12-month price momentum sign) as its third vote. Memory says the ensemble is behaving as "v1 minus SHORT signals" in the current regime because M12 has been LONG-stuck since 2023. Question: is there a better monthly aggregator? And how far out of consensus is M12 right now?
+
+Six variants tested: M3, M6, M12 (baseline), M24, recency-weighted M12, multi-timeframe consensus of M3+M6+M12.
+
+Two big findings.
+
+First, four of six aggregators currently point SHORT while M12 has been LONG for 868 consecutive days. M6 flipped SHORT 30 days ago. M12_rw flipped SHORT 32 days ago. Multi-consensus flipped SHORT 30 days ago. M3 has been SHORT for 65 days. Only M12 and M24 (the slowest ones) still say LONG. The signals are diverging right now, and the shipped ensemble uses the slowest of the six.
+
+Second, `ensemble[M6]` genuinely beats `ensemble[M12]` on Sharpe (0.92 vs 0.80) with cum P&L $193k vs $178k. But still: v2 alone (Sharpe 1.04) beats every ensemble variant regardless of aggregator. **The ensemble as a structural approach is worse than v2 alone.** The monthly filter subtracts alpha rather than adds it in every configuration tested. A future ensemble candidate would need to use M6 not M12, and even then it wouldn't beat v2.
+
+Doc: `docs/experiments/2026-09-08_m12_aggregator_alternatives.md`.
+
+### Live vs backtest distribution audit
+
+Pulled every published call from `far_weekly_calls.jsonl` (n=6) and compared their M20, M60, RY_chg, ATR, and price values to the 2010-2026 backtest signal-date sample.
+
+The result stopped me for a minute. Every live ATR reading is at the 97th or 98th percentile of the full 16-year sample. Every live price is far outside any prior bar ($4,014-$4,602 vs backtest median $1,562). Only the recent 52 weeks of backtest have comparable ATR. Gold went through a structural repricing in 2024-2026 and every subsequent live call is in a regime the majority of the backtest sample doesn't cover.
+
+Then the M20 pattern: 4 of 6 live signals have M20 above the 85th percentile of full-history distribution. Two are at the 96th, 98th, and 100th percentiles. The one live LONG we've resolved (2026-08-24, -3.30%) had M20 at the 100th percentile. Highest 20-day momentum ever recorded in v1's training data. That's a genuine outlier trade.
+
+This is not a halt trigger. The rule adapts (ATR-based sizing scales naturally). But it's a real observation. Live is in a fundamentally different volatility regime than 15 of the 16 backtest years.
+
+Doc: `docs/experiments/2026-09-08_live_vs_backtest_distribution.md`.
+
+### v1 by-year Sharpe and M20 percentile bucketing
+
+The distribution audit motivated two follow-ups: does v1's edge hold in the recent regime specifically, and are extreme-M20 trades systematically worse?
+
+By year, v1 has been mixed but with a strong recent tail. 2010-2012 great. 2013-2017 rough (five bad years including 2017 at Sharpe -1.78). 2018-2019 great. 2020-2023 mixed. 2024-2026 the best three consecutive years in v1's history: rolling 2-year Sharpe hit 2.07 (2024-2025) and 1.97 (2025-2026). v1 loves the current market.
+
+Then the M20 bucketing. I split all 360 v1 backtest trades by direction, then by M20 quintile within each direction.
+
+LONG side: the top 20% M20 bucket (Q5, M20 range 7.16-15.76%) has WR 46.7%, mean -$1,126, and Sharpe -0.67. The bucket loses $50,683 cumulative over 45 trades. Q1-Q4 all run at Sharpe 1.45-1.84. This is a cliff, not a gradient.
+
+The 2026-08-24 live LONG loser had M20 = 13.66%. Sits right in the middle of the Q5 bucket. Consistent with the historical pattern.
+
+SHORT side shows no clean extreme pattern. The bad bucket is Q3 (moderate M20), not the extremes. Not symmetric.
+
+Doc: `docs/experiments/2026-09-08_v1_regime_and_m20_slices.md`.
+
+### The convergent finding
+
+Four independent analyses today identified the same weak point in v1: extreme high M20 on the LONG side.
+
+- Component ablation says removing M20 entirely improves Sharpe.
+- M12 aggregator work shows M6 flipped SHORT because 3-6 month price action has weakened while 20-day momentum stayed strong; the gap between the two is where the pain lives.
+- Live distribution audit shows 4 of 6 recent live signals at extreme high M20.
+- M20 bucket analysis shows the top-quintile M20 LONGs have Sharpe -0.67 historically.
+
+Four different methods, one convergent conclusion. This is precisely the situation pre-reg discipline is designed to enable: multiple independent lines of evidence pointing at the same real effect, none of them the result of tuning on the same data.
+
+A v3 candidate combining v2's DXY filter with an extreme-M20-LONG filter is now the highest-leverage next research direction. It would need a fresh pre-reg with TRAIN 2010-2018 / OOS 2019-2026 chronological split, Bonferroni-N incremented for the M20-related discovery process across today's session, and locked thresholds before any backtest runs. Same discipline as v3_ry_level (rejected in the last session). But the underlying evidence is much stronger here.
+
+### End-of-day state (final)
+
+- Live product: NORTH v1, FLAT this week, 2 directional losses cumulative -4.02%. SPRT still CONTINUE.
+- v2 shadow, ensemble shadow: both tracking, forward window through 2027-01-22.
+- Rook heartbeat fix pending Vega deploy.
+- 5 new experiment docs today. 5 new scripts. ~2,000 lines of new research. No live rules changed.
+- Session index at `docs/experiments/2026-09-08_INDEX.md`.
+- Highest-leverage next work: draft the v3-candidate pre-reg (v2 minus extreme-M20-LONG). Do this cleanly, not in a rushed session. Multi-day drafting task.
 
 ---
 
