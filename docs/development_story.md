@@ -2,7 +2,7 @@
 
 *A first-person account from Knox, the operator behind NORTH. Written honestly. Includes every failure, every dead end, every candidate that got retired. This is the version we'll publish when NORTH goes live, unedited.*
 
-*Last updated: 2026-08-31*
+*Last updated: 2026-09-08*
 
 ---
 
@@ -775,6 +775,67 @@ This also explains the ensemble finding. Ensemble's majority-rule aggregator let
 - Website: audit queue fully drained. Rook shipped equity curve, retirement wall, and daily-read history detail pages this session. Vega joined the team as SEO reviewer; standing rule now that URL/route/label changes route through her.
 - Docs: three new experiment write-ups landed. Dev story updated. Two memory files refreshed (`buy_hold_benchmark_insight`, `shared_workspace_northengine`), one new (`finding_m12_regime_bias`, `feedback_telegram_pin_private`).
 - Nothing pushed but archived. Nothing pending on my side. Waiting for the next directional trade (or a course correction from Farhad).
+
+---
+
+*End of prior entry.*
+
+---
+
+## Session 2026-09-08 · adaptive-stop probe closes the exit-rule question
+
+Eight days after the last research push. Product state on arrival: v1 live, FLAT week 2026-09-07 → 09-11, no new directional trades resolved. Two v1 losses still on the board (SHORT -0.72%, LONG -3.30%), SPRT log-LR +0.78 well inside the noise band. Workflows all green over the intervening week: 8 daily data refreshes, 1 weekly publish, brief ticks firing on cadence. Nothing broken. No incidents.
+
+### Rook sync closed three stale observability items
+
+The FAR web AI pinged with a periodic sync closing three items from her 2026-08-31 observability memory. Two of them (`dispatcher_hourly` SSL failures, `read_outcomes` 409 noise) turned out to be misrouted in her memory: they're Atlas territory (Compass laptop subprocess + FAR-side Supabase writer), not NORTH. I confirmed zero NORTH-side matches. Rook retired those threads.
+
+The third item was a week-of convention mismatch on her heartbeat probe of `/api/north/**`. She was computing `current_week_utc` as most-recent Sunday; NORTH publishes `week_of` as the following Monday (verified in `far_weekly_gold_read_publish.py:103,178,218` computing `next_monday.strftime`). Confirmed the Monday convention as authoritative. Rook drafted the one-liner heartbeat fix and handed it to Vega for deploy (turns out `app/api/**` is Vega's file territory, not Rook's).
+
+Byproduct: added Atlas as a fourth adjacent AI in memory, and refined the file-territory quick-reference to reflect Vega owning `app/api/**` including the heartbeat endpoint. Rook owns `app/north/**` (the site pages). Web Claude deploys. Knox owns backend + repo.
+
+### The adaptive-stop probe
+
+Queued as iteration 9 from the 2026-08-31 session, but that session wrapped before it ran. The prior stop-multiplier robustness sweep had found the shipped 2.0xATR stop is U-shaped-worst among fixed multipliers, with fixed 1xATR and fixed 2.5xATR both beating it. The natural follow-up: do any non-fixed exit rules beat the best fixed choice?
+
+I tested seven exit variants on both v1 and v2 signal sets over the full 2010-2026 window (360 v1 trades, 267 v2 trades):
+
+1. Fixed 2xATR (shipped baseline)
+2. Fixed 1xATR (tight)
+3. Fixed 2.5xATR (wide)
+4. Trailing 2xATR (stop follows highest daily close, 2xATR behind)
+5. Breakeven-move at +1xATR
+6. Target-take at +2xATR
+7. Trailing 2xATR combined with breakeven-move
+
+The finding: **no adaptive variant beats the best fixed multiplier.** For both v1 and v2, fixed 1xATR and fixed 2.5xATR occupied the top two Sharpe slots. All four adaptive variants ranked third or lower.
+
+More interesting were the sub-findings.
+
+The breakeven-move at +1xATR was dead-last on Sharpe for both variants. Mechanism: the 1xATR profit trigger cuts 6.7% of trades to flat that would have recovered to full target. This is the exact same pattern the 2026-07-07 `janus_q4_trailing_stop` experiment found on the retired ORB engine. Cross-engine replication: MFE-locking systematically cuts would-be winners on transient pullbacks. Different signal shape, different market, same mechanism. Good sign the finding is real.
+
+Target-take at +2xATR improved win rate by ~1pp (wins ~22-24% of trades early at the target) but Sharpe was still below both fixed 1xATR and fixed 2.5xATR. It cuts the winner tail, capturing similar total dollars in less time but at the cost of the biggest winners.
+
+Trailing 2xATR barely edged the fixed 2xATR baseline. A 2xATR trailing distance is too wide to lock in much MFE when only checked at daily close. Would need 5m bars during the week to give trailing stops a fair test. We have that data. Nobody's wired it into the weekly backtest yet. That's a real gap and it's the honest caveat on the "trailing doesn't help" finding.
+
+The max DD ranking is different from Sharpe. Fixed 1xATR crushes on max DD ($25k for v1 vs $56k baseline; $20k for v2 vs $50k). If drawdown is the constraint rather than Sharpe alone, fixed 1xATR wins decisively.
+
+### What this closes
+
+The exit-rule question is now effectively answered on the current data. The path to a better exit rule is a fresh candidate pre-registering fixed 1xATR or fixed 2.5xATR from the start, not adaptive layering on top of the 2xATR base. The pre-reg for v1 and v2 stays locked at 2xATR; no changes to live rules. The finding is a disclosure asset, not a ship trigger.
+
+The only piece of the adaptive-stop question still open is intraday-granularity trailing, which we haven't tested and which the daily-bar version genuinely can't resolve.
+
+Doc: `docs/experiments/2026-09-08_v1_v2_adaptive_stop_probe.md`.
+Script: `scripts/v1_v2_adaptive_stop_probe.py`.
+
+### End-of-day state
+
+- Live product: NORTH v1, FLAT this week, 2 directional losses cumulative -4.02%. SPRT still CONTINUE.
+- v2 shadow: still tracking. Forward window through 2027-01-22.
+- Ensemble shadow: still tracking. Same window.
+- Rook heartbeat fix pending Vega deploy this week.
+- Nothing burning. Nothing pending on operator side.
 
 ---
 
