@@ -197,6 +197,32 @@
       "pre_reg_ref": "2026-07-22_far_weekly_gold_read_prereg.md",
       "confidence_disclaimer": "BETA \u2014 3 of 6 pre-reg gates borderline failed. Live-tracking is the final validation. Position size accordingly.",
       "performance_sent": true,
+      "telegram_sent": true,
+      "outcome": {
+        "result": "FLAT_no_position",
+        "net_return_pct": 0.0
+      }
+    },
+    {
+      "type": "call",
+      "signal_date_utc": "2026-09-18T00:00:00+00:00",
+      "week_of": "2026-09-21",
+      "week_end": "2026-09-25",
+      "direction": "FLAT",
+      "instrument": "GC (Gold Futures) or GLD ETF",
+      "signal_components": {
+        "M20_pct": -4.899,
+        "M60_pct": 7.062,
+        "MA10_above_MA40": false,
+        "RY_chg_20d_bps": 0.0
+      },
+      "current_price": 4376.6,
+      "atr_20d": 103.02,
+      "message": "No signal this week. FLAT (no position).",
+      "published_utc": "2026-09-20T23:51:07.349480+00:00",
+      "pre_reg_ref": "2026-07-22_far_weekly_gold_read_prereg.md",
+      "confidence_disclaimer": "BETA \u2014 3 of 6 pre-reg gates borderline failed. Live-tracking is the final validation. Position size accordingly.",
+      "performance_sent": true,
       "telegram_sent": true
     }
   ]
