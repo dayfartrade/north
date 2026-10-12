@@ -2,7 +2,7 @@
 
 *A first-person account from Knox, the operator behind NORTH. Written honestly. Includes every failure, every dead end, every candidate that got retired. This is the version we'll publish when NORTH goes live, unedited.*
 
-*Last updated: 2026-09-08*
+*Last updated: 2026-10-12*
 
 ---
 
@@ -932,6 +932,95 @@ A v3 candidate combining v2's DXY filter with an extreme-M20-LONG filter is now 
 - 5 new experiment docs today. 5 new scripts. ~2,000 lines of new research. No live rules changed.
 - Session index at `docs/experiments/2026-09-08_INDEX.md`.
 - Highest-leverage next work: draft the v3-candidate pre-reg (v2 minus extreme-M20-LONG). Do this cleanly, not in a rushed session. Multi-day drafting task.
+
+---
+
+## 2026-10-12 - The v3-m20 pre-reg, drafted the right way
+
+Five weeks passed between the 2026-09-08 session and today. Nothing material changed on the live side. v1 published five consecutive FLAT calls (M20 regime stayed firmly negative, M60 drift mostly negative, MA10 below MA40 since mid-September). Price pulled back from the Sept $4,376 peak to $4,190. No new directional trades. SPRT halt-check continues at CONTINUE. Both shadow strategies kept tracking.
+
+The 2026-09-08 session had closed with one explicit instruction to future-me: draft the v3-candidate pre-reg "v2 minus extreme-M20-LONG" cleanly, as a multi-day task, not a sprint. Four independent analyses that day had converged on extreme-M20-LONG as v1's structural weak point. The question for this session was not whether the finding is real. It was whether the pre-reg could be written honestly, with reject gates that would actually fire if the data were weaker than claimed.
+
+Did three things before writing the pre-reg itself.
+
+### The regime-disagreement rejection
+
+The 2026-09-08 agenda had queued one specific alternative hypothesis: maybe the extreme-M20-LONG problem is actually a regime-disagreement artifact. If M12 says LONG but M6 says SHORT, we are at a topping period, and the trades are bad for that reason, not because of M20 specifically.
+
+Tested it. For each weekly signal in 2010-2026, classified the (M12, M6, M3) regime triple into agreement cells (full agreement, M3-flip, M6-flip, SPLIT-LONG, SPLIT-SHORT, etc.) and compared trade performance by cell.
+
+The naive hypothesis was wrong. Disagreement did not make trades worse. On v2: LONG with full agreement Sharpe 1.24, LONG with any disagreement Sharpe 1.64. SHORT with full agreement Sharpe 0.30, SHORT with any disagreement Sharpe 0.85. Disagreement was uniformly BETTER than agreement on both directions.
+
+Only one specific cell was strongly negative: M6_FLIP SHORT (v2 n=9, Sharpe -3.37; v1 n=16, Sharpe -2.95). SHORTing when the 6-month trend disagrees with both the 3-month and 12-month. Small sample, striking effect, flagged as research debt. Not large enough to inform the pre-reg.
+
+Then the 2x2 cross-tab that mattered. Q5 extreme-M20-LONG trades, split by agreement cell. The pathology (cum -$36k on 28 trades) sits entirely in the Q5 x FULL_AGREE cell. Regime state is not a confound. Extreme M20 is its own problem.
+
+Doc: `docs/experiments/2026-10-12_regime_disagreement_trade_analysis.md`.
+
+### The rolling 52w comparator
+
+The 2026-09-08 distribution audit had used the full-16-year distribution as the benchmark for "is this live signal extreme?" The agenda asked whether a trailing 52-week benchmark would scope the problem differently. It does, by a lot.
+
+For 2026 LONG signals: 6 of 8 are "full-history top 20%" extreme, but only 3 of 8 are "trailing-52w top 20%" extreme. The two benchmarks differ by 2x on the LONG scoping. For SHORT, they are nearly identical.
+
+The ATR regime shift was fully visible. Live ATR readings sit at 97-100% of the full-history distribution and only at 57-72% of the trailing-52w. Anything that filtered on absolute ATR level in the full-history frame would mis-fire now.
+
+The pre-reg uses the fixed-threshold formulation (not the rolling-percentile one). Three reasons: the 2026-09-08 finding was explicitly keyed on M20 > 7% in full-history terms, using rolling-percentile would be a slide to a different hypothesis; simpler rules are more robust to overfitting critiques; rolling-percentile is legitimately a second candidate and should get its own pre-reg if pursued.
+
+Doc: `docs/experiments/2026-10-12_rolling_52w_percentile_comparator.md`.
+
+### The regime indicator design (deferred to Rook/Vega)
+
+Queue item was to add "M12 LONG vs M6 SHORT" as a disagreement indicator in the weekly report. Given that the trade analysis just rejected the "disagreement = caution" framing, I could not design the indicator as a caution signal. That would misrepresent the data.
+
+Instead proposed a neutral "price trend tape" field: `+18.4% up / +4.1% up / -3.2% down` for 1-year, 6-month, 3-month pct_change. Shows facts, no editorializing. Always visible (not just on disagreement). Belongs in the weekly report body, not the frozen header.
+
+Deferred to Rook (owns `app/north/**`) and Vega (owns `app/api/**`) for review before any implementation.
+
+Doc: `docs/experiments/2026-10-12_regime_disagreement_indicator_design.md`.
+
+### The pre-reg itself
+
+Candidate `far_weekly_gold_read_v3_m20`. One lever: LONG requires all v2 conditions AND M20 < 7.00%. SHORT unchanged. Threshold slightly tighter than the empirical Q5 boundaries (v1: 7.16%, v2: 7.07%) and set at a clean round number for pre-reg clarity.
+
+Chose 7.00% deliberately. Not 7.07%, not 7.16%, not 7.5%. Any post-hoc micro-adjust from 7.00% is defined as HARD REJECT in the reject-gate list. Same discipline that rejected v3_ry_level same-day on 2026-08-31.
+
+Six ship gates covering OOS Sharpe, OOS P&L, TRAIN Sharpe, trade count, matched-pair permutation test (p < 0.00556 Bonferroni-adjusted for N=9), and forward-paper requirements. Four reject gates. The matched-pair test is the honest comparison: compare v2 and v3-m20 on dates where both would trade identically, and for dates v3-m20 skips, compare v2's realized return to zero.
+
+Bonferroni accounting: 9 session-level discoveries across 2026-09-08 and today. Conservative count. Any permutation p-value for v3-m20 has to beat 0.00556.
+
+The pre-reg has an explicit cooling-off requirement: v3-m20 backtest MUST NOT run until (a) user review and signoff, and (b) at least one additional session has passed. This is the honest defense against same-session confirmation bias.
+
+Registry updated: `far_weekly_gold_read_v3_m20` added, verdict `pre_registered`.
+
+Doc: `docs/experiments/2026-10-12_far_weekly_v3_m20_extremity_prereg.md`.
+
+### What this session did not do
+
+Did not run the v3-m20 backtest. Explicitly forbidden by the pre-reg until cooling-off.
+
+Did not touch any live rule, any shadow, any publishing pipeline. All forward windows honored to 2027-01-22.
+
+Did not implement the regime indicator. Design doc only, awaiting Rook/Vega review.
+
+### What is honestly left as risk
+
+The Q5 pathology may be partially period-specific (post-2022 regime dominates the bad trades). The TRAIN gate catches this if TRAIN improvement is small or negative, but TRAIN and OOS share some overlapping regime years. The forward window is the honest gate; retrospective is a partial defense.
+
+The 7.00% threshold is arbitrary at the 10-basis-point level. The pre-reg accepts this. If the backtest fails and someone proposes trying 6.80% or 7.20%, that is HARD REJECT territory.
+
+The SHORT-side extremity pathology (n=11 on 09-08, n=9 on 10-12 for the specific M6_FLIP cell) is real-looking but under-sampled. Flagged as research debt. Will replicate on new data as it arrives.
+
+### End-of-day state (final)
+
+- Live product: NORTH v1, FLAT week 2026-10-12 -> 10-16. 5 consecutive FLAT calls since 09-08. SPRT CONTINUE, no new directional trades.
+- v2 shadow: tracking. Forward window through 2027-01-22.
+- Ensemble shadow: tracking. Same window.
+- Dukascopy data cutoff: 2026-07-20. Live daily CSV current to 2026-10-12.
+- Price $4,190 (down from $4,376 Sept peak).
+- 3 new experiment docs + 1 pre-reg. 2 new scripts. Registry updated. No live rules changed.
+- Session index at `docs/experiments/2026-10-12_INDEX.md`.
+- Next session agenda: user review of v3-m20 pre-reg, then (after cooling-off) run the backtest and accept the verdict.
 
 ---
 
