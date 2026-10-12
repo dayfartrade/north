@@ -21,7 +21,7 @@ REGISTRY = ROOT / "data" / "experiments" / "registry.json"
 OUT = ROOT / "docs" / "launch" / "retirement_wall.md"
 
 # Verdict categorization
-REJECTED_PREFIXES = ("rejected", "retired", "killed", "halted")
+REJECTED_PREFIXES = ("rejected", "retired", "killed", "halted", "voided")
 SHIPPED_PREFIXES = ("shipped", "live")
 
 
