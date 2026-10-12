@@ -231,7 +231,7 @@ def main():
     ap.add_argument("--dry-run", action="store_true",
                     help="print card to stdout, no Telegram, no log write")
     ap.add_argument("--audience", choices=["private", "public"], default="private")
-    ap.add_argument("--force", action="store_true",
+    ap.add_argument("--force", action="store_true",  # bypass-allowed: operational override of XAUUSD staleness guard. Daily brief has no pre-reg discipline component.
                     help="publish even if XAUUSD data is stale (for testing)")
     args = ap.parse_args()
 

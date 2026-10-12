@@ -1,4 +1,4 @@
-"""Silver GSR z-score reversion shadow log — daily updater.
+"""Silver GSR z-score reversion shadow log - daily updater.
 
 Source of truth:
     XAUUSD + XAGUSD spot from Dukascopy 5m bars, resampled to daily
@@ -219,7 +219,7 @@ def emit_signal_if_triggered(gsr_df: pd.DataFrame, z_ser: pd.Series,
         append_shadow(rec)
         print(f"[signal] {sid}: EMITTED ({direction})")
         notify_private(
-            f"🕯 SHADOW SIGNAL — silver GSR {direction}\n"
+            f"🕯 SHADOW SIGNAL - silver GSR {direction}\n"
             f"date: {today_date}\n"
             f"GSR: {float(today_row['gsr']):.3f}  z: {today_z:+.3f}\n"
             f"entry: silver same-bar close ${entry_price:.3f}\n"
@@ -289,7 +289,7 @@ def resolve_open_signals(gsr_df: pd.DataFrame, z_ser: pd.Series,
                     break
 
         if exit_price is None:
-            # Not yet at time limit — leave open
+            # Not yet at time limit - leave open
             if max_exit_idx - entry_idx < MAX_HOLD_DAYS:
                 continue
             # Time exit at max_exit_idx close
@@ -326,7 +326,7 @@ def resolve_open_signals(gsr_df: pd.DataFrame, z_ser: pd.Series,
             append_shadow(outcome)
             icon = "✅" if r_mult > 0 else "🟥"
             notify_private(
-                f"🕯 SHADOW RESOLVE — silver GSR {direction} {icon}\n"
+                f"🕯 SHADOW RESOLVE - silver GSR {direction} {icon}\n"
                 f"signal date: {sig_date}\n"
                 f"entry ${entry_price:.3f} → exit ${exit_price:.3f}\n"
                 f"reason: {exit_reason}\n"
@@ -351,7 +351,7 @@ def print_track_record(log: list[dict]):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--dry-run", action="store_true")
-    ap.add_argument("--force", action="store_true",
+    ap.add_argument("--force", action="store_true",  # bypass-allowed: stale-data override for shadow logging only. Shadow results do not go live, so no pre-reg discipline risk.
                     help="emit signals even if data is stale (for testing)")
     args = ap.parse_args()
 

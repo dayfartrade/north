@@ -1,7 +1,14 @@
 #!/usr/bin/env bash
-# NORTH pre-commit hook: refuse em-dashes in staged files.
+# NORTH pre-commit hook.
 #
 # To enable: git config core.hooksPath .githooks
 # To bypass in emergency: git commit --no-verify (but fix afterward)
 
+set -e
+
+# Writing style: refuse em-dashes in staged files.
 python scripts/check_em_dashes.py
+
+# Discipline: refuse argparse flags that could bypass pre-reg checks
+# without an explicit "# bypass-allowed: <reason>" marker.
+python scripts/check_no_discipline_bypass.py

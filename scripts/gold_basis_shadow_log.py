@@ -1,4 +1,4 @@
-"""Gold basis LONG-only shadow log — daily updater.
+"""Gold basis LONG-only shadow log - daily updater.
 
 Source of truth for spot:
     XAUUSD spot from Dukascopy 5m bars, resampled to daily
@@ -202,7 +202,7 @@ def emit_signal_if_triggered(basis_df: pd.DataFrame, existing_log: list[dict],
         append_shadow(rec)
         print(f"[signal] {sid}: EMITTED (LONG)")
         notify_private(
-            f"🕯 SHADOW SIGNAL — gold basis LONG-only\n"
+            f"🕯 SHADOW SIGNAL - gold basis LONG-only\n"
             f"date: {today_date}\n"
             f"basis: ${today_basis:.2f} (p2.5={p_low:.2f})\n"
             f"entry plan: next NY session GC=F open\n"
@@ -280,7 +280,7 @@ def resolve_open_signals(basis_df: pd.DataFrame, existing_log: list[dict],
             append_shadow(outcome)
             icon = "✅" if r_mult > 0 else "🟥"
             notify_private(
-                f"🕯 SHADOW RESOLVE — gold basis LONG-only {icon}\n"
+                f"🕯 SHADOW RESOLVE - gold basis LONG-only {icon}\n"
                 f"signal date: {sig_date}\n"
                 f"entry ${entry_price:.2f} → exit ${exit_price:.2f}\n"
                 f"reason: {exit_reason}\n"
@@ -305,7 +305,7 @@ def print_track_record(log: list[dict]):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--dry-run", action="store_true")
-    ap.add_argument("--force", action="store_true",
+    ap.add_argument("--force", action="store_true",  # bypass-allowed: stale-data override for shadow logging only. Shadow results do not go live, so no pre-reg discipline risk.
                     help="emit signals even if data is stale (for testing)")
     args = ap.parse_args()
 
@@ -323,7 +323,7 @@ def main():
     n_res = sum(1 for r in log if r.get("type") == "resolve")
     print(f"[shadow_log] {n_sig} signals, {n_res} resolves")
 
-    # Always try to resolve open signals — this uses whatever data we have
+    # Always try to resolve open signals - this uses whatever data we have
     resolve_open_signals(basis_df, log, args.dry_run)
 
     if not fresh and not args.force:

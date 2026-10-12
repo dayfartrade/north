@@ -1,11 +1,11 @@
-"""FAR Weekly Gold Read — live publisher.
+"""FAR Weekly Gold Read - live publisher.
 
 Runs weekly (Sunday 22:00 UTC via systemd timer on VPS). Computes signal
 for the upcoming week (Monday open -> Friday close) and publishes to:
 
-  1. data/far_weekly_calls.jsonl — machine-readable append-only log
-  2. site/data/far_weekly_current.json — current call (website consumes)
-  3. site/data/far_weekly_history.json — full history (website consumes)
+  1. data/far_weekly_calls.jsonl - machine-readable append-only log
+  2. site/data/far_weekly_current.json - current call (website consumes)
+  3. site/data/far_weekly_history.json - full history (website consumes)
 
 Also resolves LAST week's call (adds outcome to history + updates track record).
 
@@ -65,7 +65,7 @@ def compute_v2_shadow(today: pd.Timestamp) -> dict:
     """Compute v2 (DXY-conditioned) shadow signal for the same next Monday.
 
     Pre-reg: docs/experiments/2026-07-22_far_weekly_v2_dxy_prereg.md
-    NOT publicly published — appended to V2_SHADOW_LOG for internal tracking
+    NOT publicly published - appended to V2_SHADOW_LOG for internal tracking
     only. Ship decision requires 26+ weeks forward comparison vs v1.
     """
     start = today - pd.Timedelta(days=180)
@@ -120,7 +120,7 @@ def compute_ensemble_shadow(today: pd.Timestamp) -> dict:
     """Compute ensemble shadow signal (v1 + v2 + monthly-M12, >=2 agree).
 
     Pre-reg: docs/experiments/2026-07-24_ensemble_v1_v2_monthly_prereg.md
-    NOT publicly published — appended to ENSEMBLE_SHADOW_LOG for forward
+    NOT publicly published - appended to ENSEMBLE_SHADOW_LOG for forward
     validation. Ship decision requires 26+ weeks of live comparison.
     """
     # Wide window so we can compute a 12-month (~252 daily bar) momentum
@@ -238,7 +238,7 @@ def compute_current_signal(today: pd.Timestamp) -> dict:
     }
 
     if direction != "FLAT":
-        entry_price = float(latest["close"])  # proxy — real entry at Mon open
+        entry_price = float(latest["close"])  # proxy - real entry at Mon open
         atr = float(latest["ATR"])
         if direction == "LONG":
             stop_price = entry_price - 2 * atr
@@ -253,7 +253,7 @@ def compute_current_signal(today: pd.Timestamp) -> dict:
 
     call["published_utc"] = datetime.now(timezone.utc).isoformat()
     call["pre_reg_ref"] = "2026-07-22_far_weekly_gold_read_prereg.md"
-    call["confidence_disclaimer"] = ("BETA — 3 of 6 pre-reg gates borderline failed. "
+    call["confidence_disclaimer"] = ("BETA - 3 of 6 pre-reg gates borderline failed. "
                                      "Live-tracking is the final validation. "
                                      "Position size accordingly.")
     return call
@@ -382,7 +382,7 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--dry-run", action="store_true",
                     help="Compute + print but don't write to logs")
-    ap.add_argument("--force", action="store_true",
+    ap.add_argument("--force", action="store_true",  # bypass-allowed: operational override of kill switch and stale-data guard. Not pre-reg discipline. Used only when operator manually confirms publish during degraded upstream data.
                     help="Bypass kill switch and stale-data guard (use with care)")
     args = ap.parse_args()
 
@@ -404,7 +404,7 @@ def main() -> None:
                   "Rerun with --force after confirming data is intentional.")
             sys.exit(2)
 
-    # Compute current call — CATCH errors so bad data doesn't nuke pipeline
+    # Compute current call - CATCH errors so bad data doesn't nuke pipeline
     try:
         call = compute_current_signal(today)
     except Exception as e:
@@ -416,7 +416,7 @@ def main() -> None:
             "week_of": "unknown", "week_end": "unknown",
             "message": f"Signal computation failed: {type(e).__name__}",
             "published_utc": datetime.now(timezone.utc).isoformat(),
-            "confidence_disclaimer": "ERROR — signal computation failed. "
+            "confidence_disclaimer": "ERROR - signal computation failed. "
                                       "See publisher logs. No trade advice given.",
         }
     print(f"\nSignal: {call.get('direction', 'ERROR')}")
@@ -426,7 +426,7 @@ def main() -> None:
         print(f"  Week: {call.get('week_of')} -> {call.get('week_end')}")
     print(f"  Components: {call.get('signal_components')}")
 
-    # Load history + resolve prior weeks — non-fatal per prior
+    # Load history + resolve prior weeks - non-fatal per prior
     try:
         history = load_call_history()
     except Exception as e:
@@ -442,7 +442,7 @@ def main() -> None:
 
     # Add new call if not duplicate week
     if history and history[-1].get("week_of") == call.get("week_of"):
-        print(f"\n[note] already published call for week {call.get('week_of')} — not appending")
+        print(f"\n[note] already published call for week {call.get('week_of')} - not appending")
         history[-1] = call  # update in place
     else:
         history.append(call)
@@ -549,7 +549,7 @@ def main() -> None:
                         print(f"[telegram] resolve exception: {e}")
                     break
 
-            # (2) Performance snapshot — once per Sunday cycle
+            # (2) Performance snapshot - once per Sunday cycle
             if track and not current_row.get("performance_sent"):
                 try:
                     r = publish_weekly_performance(track, track_history_full or [],

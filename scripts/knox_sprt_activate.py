@@ -1,9 +1,11 @@
-"""Knox SPRT activation script — pre-registered dormant until Knox shadow n=50.
+"""Knox SPRT activation script - pre-registered dormant until Knox shadow n=50.
 
 Implements the protocol in docs/experiments/2026-07-18_knox_sprt_prereg.md:
   1. Load Knox research-dispatched shadow log entries (engine_b_takes=True with
      resolved outcomes).
-  2. Require n >= 50 (or --force to override for testing).
+  2. Require n >= 50. No bypass. The pre-reg's n>=50 gate exists to prevent
+     the author from seeing boundary parameters at low n and then "testing
+     properly" at n=50 with those parameters already in mind.
   3. Compute observed win rate, clamp to [0.45, 0.60] to get H0.
   4. H1 = H0 - 0.15, floored at 0.30.
   5. alpha = beta = 0.05, boundaries = +/- 2.944.
@@ -12,8 +14,12 @@ Implements the protocol in docs/experiments/2026-07-18_knox_sprt_prereg.md:
   8. Print calibration.
 
 Read-mostly: writes new state files + appends to registry. Never deletes.
-Idempotent — refuses to re-activate if knox_sprt_state.json already exists
+Idempotent - refuses to re-activate if knox_sprt_state.json already exists
 (prevents post-hoc hypothesis re-fitting per pre-reg discipline).
+
+The --force flag was REMOVED on 2026-10-12 after the v3-m20 pre-reg
+discipline violation lesson. See docs/development_story.md for the full
+reasoning. Bypass flags on pre-reg discipline are traps for the author.
 """
 from __future__ import annotations
 
@@ -68,8 +74,8 @@ def _boundaries(alpha: float, beta: float) -> tuple[float, float]:
     return a, b
 
 
-def _activate(force: bool, reason: str) -> int:
-    if STATE_FILE.exists() and not force:
+def _activate(reason: str) -> int:
+    if STATE_FILE.exists():
         print(f"REFUSE: {STATE_FILE} already exists. Refusing to re-activate "
               "(would allow post-hoc hypothesis re-fitting, violating pre-reg).",
               file=sys.stderr)
@@ -79,9 +85,9 @@ def _activate(force: bool, reason: str) -> int:
     n = len(rows)
     print(f"Engine-B-taken resolved rows: n={n}")
 
-    if n < MIN_N_ACTIVATE and not force:
-        print(f"INSUFFICIENT: need n >= {MIN_N_ACTIVATE} to activate. Use --force "
-              "to override for testing (state file will be prefixed 'TEST_').",
+    if n < MIN_N_ACTIVATE:
+        print(f"INSUFFICIENT: need n >= {MIN_N_ACTIVATE} to activate per pre-reg. "
+              "Wait for more Engine-B-taken resolved trades. No bypass.",
               file=sys.stderr)
         return 4
 
@@ -107,8 +113,7 @@ def _activate(force: bool, reason: str) -> int:
         "beta": BETA,
         "boundary_A_halt": A_halt,
         "boundary_B_safe": B_safe,
-        "force_mode": bool(force),
-        "trial_id": "knox_sprt_launch" if not force else "knox_sprt_launch_TEST",
+        "trial_id": "knox_sprt_launch",
     }
 
     STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
@@ -120,44 +125,40 @@ def _activate(force: bool, reason: str) -> int:
     print(f"  H1 = {h1:.4f}  (floored={state['h1_was_floored']})")
     print(f"  boundaries: HALT +{A_halt:.4f}  SAFE {B_safe:.4f}")
 
-    # Append trial to registry (production only, not --force)
-    if not force:
-        try:
-            reg = json.loads(REGISTRY.read_text())
-            reg["trials"].append({
-                "id": "knox_sprt_launch",
-                "registered_utc": state["activated_utc"],
-                "layer": "operational_halt",
-                "verdict": "pre_registered",
-                "sr_per_period": None,
-                "n_observations": n,
-                "notes": (
-                    f"ACTIVATED per pre-reg (docs/experiments/2026-07-18_knox_sprt_prereg.md). "
-                    f"Observed win rate {observed:.3f} at n={n}. H0={h0:.3f} "
-                    f"(clamped={state['h0_was_clamped']}), H1={h1:.3f} "
-                    f"(floored={state['h1_was_floored']}), alpha=beta=0.05, "
-                    f"boundaries +/-{A_halt:.3f}. Full state in data/knox_sprt_state.json."
-                ),
-            })
-            tmp = REGISTRY.with_suffix(".json.tmp")
-            tmp.write_text(json.dumps(reg, indent=2))
-            os.replace(tmp, REGISTRY)
-            print(f"Appended trial to {REGISTRY}")
-        except Exception as e:
-            print(f"WARN: registry append failed: {e}. State file still written.",
-                  file=sys.stderr)
+    try:
+        reg = json.loads(REGISTRY.read_text())
+        reg["trials"].append({
+            "id": "knox_sprt_launch",
+            "registered_utc": state["activated_utc"],
+            "layer": "operational_halt",
+            "verdict": "pre_registered",
+            "sr_per_period": None,
+            "n_observations": n,
+            "notes": (
+                f"ACTIVATED per pre-reg (docs/experiments/2026-07-18_knox_sprt_prereg.md). "
+                f"Observed win rate {observed:.3f} at n={n}. H0={h0:.3f} "
+                f"(clamped={state['h0_was_clamped']}), H1={h1:.3f} "
+                f"(floored={state['h1_was_floored']}), alpha=beta=0.05, "
+                f"boundaries +/-{A_halt:.3f}. Full state in data/knox_sprt_state.json."
+            ),
+        })
+        tmp = REGISTRY.with_suffix(".json.tmp")
+        tmp.write_text(json.dumps(reg, indent=2))
+        os.replace(tmp, REGISTRY)
+        print(f"Appended trial to {REGISTRY}")
+    except Exception as e:
+        print(f"WARN: registry append failed: {e}. State file still written.",
+              file=sys.stderr)
 
     return 0
 
 
 def main(argv: list[str]) -> int:
     p = argparse.ArgumentParser(description="Activate Knox SPRT per pre-reg protocol.")
-    p.add_argument("--force", action="store_true",
-                   help="Bypass n>=50 gate and pre-existing state check. TEST ONLY.")
     p.add_argument("--reason", default="",
                    help="Reason to record in state (e.g. 'triggered by n=50 milestone')")
     args = p.parse_args(argv[1:])
-    return _activate(args.force, args.reason)
+    return _activate(args.reason)
 
 
 if __name__ == "__main__":
