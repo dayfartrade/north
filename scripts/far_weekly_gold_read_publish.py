@@ -196,13 +196,37 @@ def compute_ensemble_shadow(today: pd.Timestamp) -> dict:
     }
 
 
+def _build_price_trend_tape(latest: pd.Series) -> dict:
+    """Three-horizon pct_change: 1y, 6mo, 3mo.
+
+    Regime-context transparency field, NOT a trade signal. Pre-reg: none
+    (no trading implication). Design doc:
+    docs/experiments/2026-10-12_regime_disagreement_indicator_design.md.
+    """
+    tape = {"pct_1y": None, "pct_6mo": None, "pct_3mo": None, "unavailable": []}
+    for horizon_key, col in (("pct_1y", "pct_1y"),
+                              ("pct_6mo", "pct_6mo"),
+                              ("pct_3mo", "pct_3mo")):
+        v = latest.get(col)
+        if pd.isna(v):
+            tape["unavailable"].append(horizon_key)
+        else:
+            tape[horizon_key] = round(float(v), 4)
+    return tape
+
+
 def compute_current_signal(today: pd.Timestamp) -> dict:
     """Compute signal for next Monday's entry based on data available now."""
-    # Backtest window: last 6 months of data ending today
-    start = today - pd.Timedelta(days=180)
+    # Need at least 252 trading days of history for the 1y horizon on
+    # price_trend_tape. 500 calendar days gives a safe cushion.
+    start = today - pd.Timedelta(days=500)
     daily = far_backtest.load_daily_bars(start, today)
     ry = far_backtest.load_macro_series(far_backtest.RY, "real_yield_10y")
     df = far_backtest.build_signals(daily, ry)
+    # Horizons for price_trend_tape (regime context, not a trade signal).
+    df["pct_1y"] = df["close"].pct_change(252)
+    df["pct_6mo"] = df["close"].pct_change(126)
+    df["pct_3mo"] = df["close"].pct_change(63)
 
     # Latest complete day (signal date)
     if len(df) < 60:
@@ -233,6 +257,7 @@ def compute_current_signal(today: pd.Timestamp) -> dict:
             "MA10_above_MA40": bool(latest["MA10"] > latest["MA40"]) if pd.notna(latest["MA10"]) else None,
             "RY_chg_20d_bps": round(float(latest["RY_chg"]) * 100, 1) if pd.notna(latest["RY_chg"]) else None,
         },
+        "price_trend_tape": _build_price_trend_tape(latest),
         "current_price": round(float(latest["close"]), 2),
         "atr_20d": round(float(latest["ATR"]), 2) if pd.notna(latest["ATR"]) else None,
     }
