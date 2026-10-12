@@ -108,6 +108,55 @@ def render(rows: list[dict]) -> str:
                  "after costs. Live results should converge toward that over quarters and years, "
                  "not weeks.")
     lines.append("")
+
+    # SPRT state (mechanical halt check)
+    if n_resolved > 0:
+        losses = n_resolved - wins
+        log_lr = losses * 0.3879 + wins * (-0.4682)
+        halt_boundary = 2.773
+        safe_boundary = -1.558
+        if log_lr >= halt_boundary:
+            sprt_verdict = "HALT fired. v1 is retired per pre-reg."
+        elif log_lr <= safe_boundary:
+            sprt_verdict = "SAFE. Baseline accepted."
+        else:
+            # how many more consecutive losses to halt
+            needed = 0
+            lr = log_lr
+            while lr < halt_boundary and needed < 50:
+                lr += 0.3879
+                needed += 1
+            sprt_verdict = (f"CONTINUE. Log-LR {log_lr:+.3f}, halt boundary +{halt_boundary}. "
+                            f"Needs {needed} more consecutive losses to halt.")
+        lines.append("## Mechanical halt check (SPRT)")
+        lines.append("")
+        lines.append(f"- **Verdict:** {sprt_verdict}")
+        lines.append("- **Rule:** pre-registered sequential test on win rate. Halt fires automatically "
+                     "if evidence crosses the pre-set boundary. No subjective call. Published alongside "
+                     "every weekly dispatch so you can audit it.")
+        lines.append("")
+
+    lines.append("## What we are doing about it")
+    lines.append("")
+    lines.append("Current research pipeline (public, same discipline as the shipped product):")
+    lines.append("")
+    lines.append("- **v2 shadow** (DXY-filtered v1): tracking since 2026-07-22. Forward window closes "
+                 "2027-01-22. If v2 forward beats v1 forward on Sharpe and mean weekly return, v2 "
+                 "becomes the ship candidate.")
+    lines.append("- **v3-m20 pre-reg** (`far_weekly_gold_read_v3_m20`, drafted 2026-10-12): v2 plus "
+                 "a filter that would skip LONG signals in the historically bad "
+                 "high-momentum-exhaustion bucket (M20 above 7%). Four converging analyses identified "
+                 "this zone as v1's structural weak point; the one resolved live LONG loss sat in it. "
+                 "Pre-reg is drafted but blocked by a cooling-off requirement before the backtest can "
+                 "run. See `docs/experiments/2026-10-12_far_weekly_v3_m20_extremity_prereg.md`.")
+    lines.append("- **No live rule change** while pre-reg windows are open. v1 continues to run as "
+                 "published. If and when v2 or v3-m20 earns promotion, the transition is documented "
+                 "with full before/after track records.")
+    lines.append("")
+    lines.append("What we are NOT doing: panic-shipping an unvalidated filter, retiring the engine "
+                 "on a two-trade sample, adding instruments or signals mid-drawdown. Every one of "
+                 "those is a documented failure mode in `docs/development_story.md`.")
+    lines.append("")
     return "\n".join(lines)
 
 
