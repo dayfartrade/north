@@ -16,13 +16,15 @@ import pandas as pd
 
 ROOT = Path(__file__).resolve().parent.parent
 
-# (label, path, timestamp column). Daily FRED series publish with a 1-2
-# business day lag, so 5 calendar days covers a long weekend.
+# (label, path, timestamp column, max age override in days or None).
+# Daily FRED series publish with a 1-2 business day lag, so the default
+# (--max-days, 5) covers a long weekend. DTWEXBGS is daily data released
+# weekly (Fed H.10, Mondays), so it is routinely 7-9 days old: allow 12.
 CHECKS = [
-    ("real_yield_10y (v1 live input)", "data/macro/real_yield_10y__DFII10.csv", "date"),
-    ("dxy_proxy (v2 shadow input)",    "data/macro/dxy_proxy__DTWEXBGS.csv",    "date"),
-    ("tnx_10y (regime context)",        "data/macro/tnx_10y__DGS10.csv",         "date"),
-    ("XAUUSD 5m (Dukascopy cache)",     "data/external/dukascopy/XAUUSD_5m.csv", "ts"),
+    ("real_yield_10y (v1 live input)", "data/macro/real_yield_10y__DFII10.csv", "date", None),
+    ("dxy_proxy (v2 shadow input)",    "data/macro/dxy_proxy__DTWEXBGS.csv",    "date", 12),
+    ("tnx_10y (regime context)",        "data/macro/tnx_10y__DGS10.csv",         "date", None),
+    ("XAUUSD 5m (Dukascopy cache)",     "data/external/dukascopy/XAUUSD_5m.csv", "ts",   None),
 ]
 
 
@@ -32,7 +34,8 @@ def main() -> int:
     args = ap.parse_args()
     now = pd.Timestamp.now(tz="UTC").tz_localize(None)
     stale = []
-    for label, rel, col in CHECKS:
+    for label, rel, col, override in CHECKS:
+        limit = override if override is not None else args.max_days
         p = ROOT / rel
         if not p.exists():
             print(f"[fresh] MISSING {label}: {rel}")
@@ -40,9 +43,9 @@ def main() -> int:
             continue
         last = pd.to_datetime(pd.read_csv(p, usecols=[col])[col], utc=True).max()
         age = (now - last.tz_localize(None)).days
-        flag = "STALE" if age > args.max_days else "ok"
-        print(f"[fresh] {flag:5s} {label}: last={last.date()} age={age}d")
-        if age > args.max_days:
+        flag = "STALE" if age > limit else "ok"
+        print(f"[fresh] {flag:5s} {label}: last={last.date()} age={age}d (max {limit}d)")
+        if age > limit:
             stale.append(label)
     if stale:
         print(f"[fresh] FAIL: {len(stale)} stale input(s): {', '.join(stale)}")
