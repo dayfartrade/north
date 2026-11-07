@@ -6,4 +6,4 @@ yfinance
 scipy
 matplotlib
 python-dateutil
-dukascopy_python
+dukascopy_python==4.0.1
