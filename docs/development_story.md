@@ -1071,6 +1071,28 @@ What this costs in session terms: the backtest-script-ready and the pre-reg-queu
 - Future v3-class work: deferred until (a) fresh data available (Dukascopy or equivalent), or (b) new live resolves accumulate. Any new pre-reg must disclose the prior exposure.
 - The extreme-M20-LONG finding is still real but not currently actionable via pre-reg.
 
+### 2026-11-07 - Two silent data outages, and why NORTH went quiet
+
+NORTH missed its 2026-11-01 weekly call. Vega flagged it from the web side. The cause turned out to be two separate outages, and the more serious one had been running for three months without anyone noticing.
+
+**Outage 1: the price feed (2026-10-28 to 2026-11-07).** `requirements.txt` listed `dukascopy_python` without a version. PyPI shipped 5.0.0 on 2026-10-28, and that release fails on import (`NameError: name 'requests' is not defined`). The data-refresh and daily-brief workflows wrap their Dukascopy steps in `continue-on-error`, so they kept reporting green while the price cache froze. Weekly-publish has no such guard. On 11-01 it found a stale cache, tried to refresh it, and crashed before publishing. Fix: pin `dukascopy_python==4.0.1` (`430c266`). No late 11-02 call was published. The gap stays on the track record.
+
+**Outage 2: the real-yield feed (2026-07-30 to 2026-11-07).** This one mattered more. Every FRED series in `data/macro/` stopped updating after late July because the public `fredgraph.csv` endpoint began timing out, both from GitHub runners and from the home connection. `continue-on-error` hid this too. v1 needs the 20-day change in the 10Y real yield to be negative for LONG and positive for SHORT. With the series frozen, that change read exactly 0 from about late August, which made every directional call impossible. The "5 consecutive FLAT calls" recorded in the 2026-10-12 entry were not market behavior. They were a disabled signal. The same freeze hit DTWEXBGS, so the v2 DXY shadow filter was blind over the same period.
+
+Fix (`28c8f8a`): `src/data_fred.py` now uses the keyed FRED JSON API (`FRED_API_KEY` repo secret), with the CSV endpoint kept as a fallback, three retries with backoff, and the key redacted from error messages. DFII10 is current to 2026-11-05 (2.60).
+
+**What the outage actually cost.** I replayed every call from 2026-08-24 to 2026-10-26 with live DFII10 against the published M20/M60/MA values. Only one call changes: 2026-08-31 would have been LONG instead of FLAT. Gold fell about 1.1% Friday to Friday that week, so the outage most likely spared a losing trade. Every other week stays FLAT under live data, because the other three conditions did not agree. Published calls are not being rewritten. Vega is adding a short data-issue notice on /north and in the November recap.
+
+**The structural lesson.** `continue-on-error` turns a broken feed into a silent one. Two outages ran for 10 days and 100 days while every workflow badge was green. New guard: `scripts/assert_data_fresh.py` runs at the end of data-refresh, after the commit step. It fails the job, and so sends the Telegram alert, if DFII10, DGS10 or XAUUSD is more than 5 days old, or DTWEXBGS more than 12 (it is published weekly). The Dukascopy cache save is now an explicit step, so a failing assert does not throw away a good price fetch. Verified green in run 42393390556.
+
+**Access lesson.** The push initially failed: the fine-grained token in `.github-token` had expired (created 2026-08-03, very likely on the 90-day default), and the owner account `dayfartrade` had been misplaced. It was recovered, and `arbabfar` is now a collaborator, so pushes no longer depend on an expiring token.
+
+### End-of-day state (2026-11-07)
+
+- Live product: NORTH v1. All inputs fresh for the first time since July. Next publish Sunday 2026-11-08 22:00 UTC for week_of 2026-11-09, the first call in about 10 weeks able to go directional.
+- The live record from 2026-08-31 to 2026-11-07 measured a disabled signal. The SPRT state is unchanged because FLAT weeks are not trades, but anything that reads the FLAT streak as evidence about v1 should be discounted.
+- v2 shadow: its DXY filter was blind over the same window. Keep that in mind when comparing v1 and v2 at the 2027-01-22 gate.
+
 ---
 
 *End of current entry. Story continues in subsequent updates.*
