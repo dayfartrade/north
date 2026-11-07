@@ -56,3 +56,5 @@ backups/memory_*/
 
 data/macro/cot_gold.csv
 data/macro/cot_gold_simplified.csv
+
+.fred-api-key
