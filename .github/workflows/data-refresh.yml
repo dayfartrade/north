@@ -36,8 +36,8 @@ jobs:
 
       # Cache Dukascopy files across runs. First run backfills from scratch;
       # subsequent runs restore + append incrementally.
-      - name: Cache Dukascopy 5m CSVs
-        uses: actions/cache@v4
+      - name: Restore Dukascopy 5m CSVs
+        uses: actions/cache/restore@v4
         with:
           path: data/external/dukascopy/
           key: dukascopy-${{ github.run_id }}
@@ -85,6 +85,8 @@ jobs:
         continue-on-error: true
 
       - name: Fetch FRED macro CSVs (normalized to date,value)
+        env:
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
         run: |
           PYTHONPATH=src python -c "from data_fred import snapshot_all; snapshot_all()"
         continue-on-error: true
@@ -105,6 +107,22 @@ jobs:
                   sleep $((attempt * 5))
               done
           fi
+
+      # Fetch steps above stay continue-on-error so one flaky source does not
+      # block committing the others. This step is the loud check: it runs
+      # after the commit and fails the job (and Telegram) if a live input
+      # is stale.
+      # Explicit save (not actions/cache post-step) so a good Dukascopy fetch
+      # is kept even when the freshness assert below fails the job.
+      - name: Save Dukascopy 5m CSVs
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: data/external/dukascopy/
+          key: dukascopy-${{ github.run_id }}
+
+      - name: Assert live inputs are fresh
+        run: python scripts/assert_data_fresh.py --max-days 5
 
       - name: Notify Telegram on failure
         if: failure()

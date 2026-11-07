@@ -1,4 +1,4 @@
-"""Fetch FRED macro series via public CSV endpoints (no API key required).
+"""Fetch FRED macro series. Keyed JSON API when FRED_API_KEY is set, public CSV fallback.
 
 We pull the data values (not release dates). Release timestamps are reconstructed
 in src/calendar_events.py from known schedules.
@@ -7,6 +7,8 @@ from __future__ import annotations
 from pathlib import Path
 from io import StringIO
 from datetime import datetime, timezone
+import os
+import time
 
 import pandas as pd
 import requests
@@ -33,23 +35,55 @@ SERIES = {
 }
 
 FRED_CSV = "https://fred.stlouisfed.org/graph/fredgraph.csv?id={sid}"
+FRED_API = "https://api.stlouisfed.org/fred/series/observations"
+# fredgraph.csv throttles GitHub runner IPs (all series timed out from CI
+# since ~2026-08). The keyed JSON API is the primary path when FRED_API_KEY
+# is set; the CSV endpoint stays as fallback (works from home IPs).
+BROWSER_UA = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+              "(KHTML, like Gecko) Chrome/130.0 Safari/537.36")
 
 
-def fetch_series(series_id: str, timeout: int = 30) -> pd.DataFrame:
-    url = FRED_CSV.format(sid=series_id)
-    r = requests.get(url, timeout=timeout,
-                     headers={"User-Agent": "golddaytrader/0.1"})
+def _normalize(df: pd.DataFrame) -> pd.DataFrame:
+    df["date"] = pd.to_datetime(df["date"])
+    # FRED uses '.' for missing values
+    df["value"] = pd.to_numeric(df["value"], errors="coerce")
+    return df[["date", "value"]].dropna(subset=["value"]).reset_index(drop=True)
+
+
+def _fetch_api(series_id: str, key: str, timeout: int) -> pd.DataFrame:
+    r = requests.get(FRED_API, timeout=timeout, params={
+        "series_id": series_id, "api_key": key, "file_type": "json"})
+    r.raise_for_status()
+    obs = r.json()["observations"]
+    return _normalize(pd.DataFrame(obs)[["date", "value"]])
+
+
+def _fetch_csv(series_id: str, timeout: int) -> pd.DataFrame:
+    r = requests.get(FRED_CSV.format(sid=series_id), timeout=timeout,
+                     headers={"User-Agent": BROWSER_UA})
     r.raise_for_status()
     df = pd.read_csv(StringIO(r.text))
     # Columns typically: ["observation_date" or "DATE", SERIES_ID]
     date_col = next(c for c in df.columns if c.lower() in ("observation_date", "date"))
     val_col = next(c for c in df.columns if c != date_col)
-    df = df.rename(columns={date_col: "date", val_col: "value"})
-    df["date"] = pd.to_datetime(df["date"])
-    # FRED uses '.' for missing values
-    df["value"] = pd.to_numeric(df["value"], errors="coerce")
-    df = df.dropna(subset=["value"]).reset_index(drop=True)
-    return df
+    return _normalize(df.rename(columns={date_col: "date", val_col: "value"}))
+
+
+def fetch_series(series_id: str, timeout: int = 30, retries: int = 3) -> pd.DataFrame:
+    key = os.environ.get("FRED_API_KEY", "").strip()
+    sources = ([("api", lambda: _fetch_api(series_id, key, timeout))] if key else [])
+    sources.append(("csv", lambda: _fetch_csv(series_id, timeout)))
+    errors = []
+    for name, fn in sources:
+        for attempt in range(1, retries + 1):
+            try:
+                return fn()
+            except Exception as e:  # noqa: BLE001
+                msg = str(e).replace(key, "***") if key else str(e)
+                errors.append(f"{name}#{attempt}: {msg}")
+                if attempt < retries:
+                    time.sleep(2 ** attempt)
+    raise RuntimeError(" | ".join(errors))
 
 
 def snapshot_all(verbose: bool = True) -> dict:
