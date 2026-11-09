@@ -6,8 +6,19 @@
     <atom:link href="https://faractionradar.com/feed.xml" rel="self" type="application/rss+xml"/>
     <description>One directional gold call per week. Long, short, or flat. Published Sunday · resolved Friday close. By Knox.</description>
     <language>en-us</language>
-    <lastBuildDate>Sun, 25 Oct 2026 23:49:05 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 09 Nov 2026 01:25:34 +0000</lastBuildDate>
     <ttl>1440</ttl>
+    <item>
+      <title>Week 2026-11-09: FLAT</title>
+      <link>https://faractionradar.com/track-record</link>
+      <guid isPermaLink="false">https://faractionradar.com/track-record#2026-11-09</guid>
+      <pubDate>Mon, 09 Nov 2026 01:25:34 +0000</pubDate>
+      <description>Direction: FLAT
+Week: 2026-11-09 to 2026-11-13
+Signal drivers: M20=-2.878%, M60=-6.965%, RY_chg=-31.0bps
+
+Full details, backtest, position calculator: https://faractionradar.com/track-record</description>
+    </item>
     <item>
       <title>Week 2026-10-26: FLAT</title>
       <link>https://faractionradar.com/track-record</link>
